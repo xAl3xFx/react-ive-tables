@@ -1,0 +1,37 @@
+{
+  "name": "react-ive-tables",
+  "version": "1.0.0",
+  "description": "A set of handy DataTable components based on PrimeReact.",
+  "repository": "https://github.com/xAl3xFx/react-ive-tables",
+  "scripts": {
+    "prepublish": "tsc && cp ./src/DataTable.css ./lib/DataTable.css"
+  },
+  "typings": "index.d.ts",
+  "types": "index.d.ts",
+  "main": "index.js",
+  "readme": "",
+  "author": "",
+  "license": "ISC",
+  "files": ["/lib", "index.d.ts"],
+  "devDependencies": {
+    "typescript": "^4.4.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "@types/react": "^17.0.30",
+    "@types/react-dom": "^17.0.9",
+    "axios" : "^0.23.0",
+    "@types/react-intl" : "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-intl": "^5.20.13",
+    "axios": "^0.23.0"
+  },
+  "dependencies": {
+    "primereact": "^6.6.0",
+    "moment": "^2.29.1",
+    "file-saver": "^2.0.5",
+    "lodash.clone" :  "^4.5.0"
+  }
+}
