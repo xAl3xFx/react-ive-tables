@@ -15,7 +15,7 @@
     "react-scripts": "4.0.3",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1",
-    "primereact": "7.0.0",
+    "primereact": "6.6.0",
     "react-transition-group": "4.4.2",
     "primeicons": "5.0.0",
     "react-intl": "^5.21.0",
