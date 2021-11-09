@@ -10,7 +10,7 @@ Just enter this command in the CLI of your project.
 
 ```
 npm install react-ive-tables //Using npm
-yar add react-ive-tables	 //Using yarn
+yarn add react-ive-tables	 //Using yarn
 ```
 
 ## Import
