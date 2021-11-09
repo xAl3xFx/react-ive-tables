@@ -1,2 +1,3 @@
 import {LazyDataTable} from './lib/LazyDataTable'
-export {LazyDataTable}
+import { SimpleDatatable } from './lib/SimpleDataTable'
+export {LazyDataTable, SimpleDatatable}
