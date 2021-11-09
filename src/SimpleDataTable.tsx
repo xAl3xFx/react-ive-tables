@@ -32,10 +32,11 @@ interface Props{
     xlsx? : string,
     ignoreColumns? : string[],
     columnTemplate? : {[key:string]: (rowData:any) => any},
-    create? : () => void
+    create? : () => void,
+    sort? : boolean
 }
 
-export const SimpleDatatable :  React.FC<Props> = (props) => {
+export const SimpleDataTable :  React.FC<Props> = (props) => {
     // const toastContext = useContext(ToastContext);
     const {formatMessage : f} = useIntl();
 
@@ -152,6 +153,7 @@ export const SimpleDatatable :  React.FC<Props> = (props) => {
                         if(props.columnTemplate && props.columnTemplate[cName] !== undefined) {
                             return <Column body={(rowData:any) => props.columnTemplate![cName](rowData)} style={{textAlign: "center"}} key={cName} field={cName}  header={columnHeader} />
                         }
+                        //@ts-ignore
                         return <Column style={{textAlign: "center"}} onEditorInit={props.cellEditHandler !== undefined && !props.ignoreEditableColumns!.includes(cName) ? onCellEditorInit : undefined}
                                        editor={edit && !props.ignoreEditableColumns!.includes(cName) ? (props) => createEditor(cName, props) : undefined} key={cName} field={cName} filter={props.showFilters}  filterMatchMode="contains" header={columnHeader} />
                     }
@@ -275,9 +277,9 @@ export const SimpleDatatable :  React.FC<Props> = (props) => {
             metaKeySelection={false}
             selectionMode={["single", "multiple"].includes(props.selectionMode!) ? props.selectionMode : undefined}
             className="p-datatable-sm p-datatable-striped"
-            sortField={sortField}
-            sortOrder={sortOrder}
-            onSort={sort}
+            sortField={props.sort ? sortField : undefined}
+            sortOrder={props.sort ? sortOrder : undefined}
+            onSort={props.sort ? sort : undefined}
             paginator
             rows={rows}
             editMode={props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell"}
@@ -309,7 +311,7 @@ export const SimpleDatatable :  React.FC<Props> = (props) => {
     </>
 };
 
-SimpleDatatable.defaultProps = {
+SimpleDataTable.defaultProps = {
     selectionHandler: () => 0,
     selectionMode: undefined,
     onRowUnselect : undefined,
@@ -318,5 +320,6 @@ SimpleDatatable.defaultProps = {
     ignoreColumns: [],
     specialColumn: {},
     columnTemplate: undefined,
-    showFilters: true
+    showFilters: true,
+    sort: false
 };
