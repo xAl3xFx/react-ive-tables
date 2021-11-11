@@ -15,7 +15,7 @@ input.p-column-filter {
     min-width: 20vw !important;
 }
 
-@media screen and (min-width: 600px) and (max-width: 670px){
+@media screen and (min-width: 600px) and (max-width: 670px){ 
     .datatableCalendar{
         min-width: 55vw !important;
     }
