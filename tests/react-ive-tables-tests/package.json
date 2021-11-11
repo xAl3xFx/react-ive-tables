@@ -10,16 +10,17 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "primeflex": "^2.0.0",
+    "primeicons": "5.0.0",
+    "primereact": "7.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-intl": "^5.21.0",
     "react-scripts": "4.0.3",
+    "react-transition-group": "4.4.2",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1",
-    "primereact": "6.6.0",
-    "react-transition-group": "4.4.2",
-    "primeicons": "5.0.0",
-    "react-intl": "^5.21.0",
-    "primeflex": "^2.0.0"
+    "xlsx": "^0.17.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -44,5 +45,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.3",
+    "@types/lodash.clone": "^4.5.6"
   }
 }
