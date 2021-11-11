@@ -36,7 +36,7 @@
     "file-saver": "^2.0.5",
     "lodash.clone": "^4.5.0",
     "moment": "^2.29.1",
-    "primereact": "^6.6.0",
+    "primereact": "^7.0.0",
     "xlsx": "^0.17.3"
   }
 }

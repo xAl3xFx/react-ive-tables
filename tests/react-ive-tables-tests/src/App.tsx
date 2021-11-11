@@ -7,21 +7,9 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 import { Card } from 'primereact/card'
-import {injectIntl, useIntl } from "react-intl";
-import {DataTable, DataTableSelectionModeType, DataTableSortOrderType} from "primereact/datatable";
-import {useEffect, useRef, useState} from "react";
-import {Column} from "primereact/column";
-import {Button} from "primereact/button";
-import {FormEvent} from "react";
-import {InputText} from "primereact/inputtext";
-import { ContextMenu } from 'primereact/contextmenu';
 import "./DataTable.css"
-import {useContext} from "react";
-import { MenuItem } from 'primereact/menuitem/menuitem';
-import { Tooltip } from 'primereact/tooltip';
-import moment from "moment";
 import customers from './lib/customers.json'
-import { DataTableFilterDemo } from './lib/test';
+import {Dropdown} from "primereact/dropdown";
 
 function App() {
 
@@ -111,6 +99,21 @@ function App() {
 ];
 
 
+
+  const nameTemplate = (options : any) => {
+    const people = [
+      {label: 'James Butt', value: 'James Butt'},
+      {label: 'Test2', value: 1},
+    ];
+    return <Dropdown value={options.value} options={people} onChange={(e) => options.filterApplyCallback(e.value)} />;
+  }
+
+  const getSpecialFilters = () => {
+    return {
+      'name' : nameTemplate
+    }
+  }
+
   return (
     <div className="App">
       <p>Hello world</p>
@@ -119,8 +122,7 @@ function App() {
         
     
         <Card>
-          <SimpleDataTable data={customers.data} selectionKey="id" columnOrder={["id", "name"]} /> 
-        <DataTableFilterDemo data={customers.data} />
+          <SimpleDataTable  data={customers.data} selectionKey="id" columnOrder={["id", "name"]} specialFilters={getSpecialFilters()} />
         </Card>
         {/* <LazyDataTable dataUrl={"asd"} columnOrder={[]}/> */}
       </IntlProvider>

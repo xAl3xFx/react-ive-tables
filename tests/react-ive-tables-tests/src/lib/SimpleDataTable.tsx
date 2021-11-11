@@ -1,34 +1,31 @@
 import * as React from 'react';
-import { useIntl } from "react-intl";
+import {useIntl} from "react-intl";
 import axios from 'axios'
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { Column } from "primereact/column";
-import { DataTable, DataTableSelectionModeType, DataTableSortOrderType } from "primereact/datatable";
-import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
+import {FormEvent, useEffect, useRef, useState} from "react";
+import {Column} from "primereact/column";
+import {DataTable, DataTableSelectionModeType, DataTableSortOrderType} from "primereact/datatable";
+import {InputText} from "primereact/inputtext";
+import {Button} from "primereact/button";
 import "./DataTable.css";
-import { DTFilterElement } from "./DTFilterElement"
-import { ContextMenu } from 'primereact/contextmenu';
-import { Tooltip } from 'primereact/tooltip';
+import {ContextMenu} from 'primereact/contextmenu';
+import {Tooltip} from 'primereact/tooltip';
 import moment from 'moment'
-import { saveAs } from 'file-saver'
-import { HeaderButton } from "../types";
+import {saveAs} from 'file-saver'
+import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
 import PrimeReact from 'primereact/api'
 
 
 interface Props {
     data: any[],
-    columnOrder: string[],
-    ignoreFilters?: string[],
-    specialFilters?: { [key: string]: { element: JSX.Element, type: string } },
+    columnOrder: string[], // works
+    ignoreFilters?: string[], //works
+    specialFilters?: { [key: string]: any },
     specialLabels?: { [key: string]: string; },
-    // additionalFilters? : {[key: string]: any;},
     showFilters?: boolean,
     showHeader?: boolean,
     setSelected?: (e: any) => void,
     contextMenu?: Object[],
-    // refresher? : number,
     rowEditHandler?: (element: Object) => void,
     cellEditHandler?: () => void,
     customEditors?: { [key: string]: JSX.Element },
@@ -40,17 +37,15 @@ interface Props {
     specialColumn?: { [key: string]: { element: JSX.Element, handler: (rowData: any) => void } },
     columnTemplate?: { [key: string]: (rowData: any) => any },
     xlsx?: string,
-    // refreshButton?: boolean,
-    // refreshButtonCallback? : () => void,
     formatDateToLocal?: boolean,
     toggleSelect?: { toggle: boolean, handler: () => void },
-    // xlsxAdditionalFilters? : () => Object[],
     onFiltersUpdated?: any,
-    headerButtons?: HeaderButton[]
+    headerButtons?: HeaderButton[],
+    sortableColumns?: string[]
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
-    const { formatMessage: f } = useIntl();
+    const {formatMessage: f} = useIntl();
 
     const [items, setItems] = useState<any>([]);
     const [filters, setFilters] = useState<any>(null);
@@ -121,7 +116,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     const initFilters = () => {
         const initialFilters = Object.keys(props.data[0]).reduce((acc: any, el: string) => {
-            return { ...acc, [el]: { value: null, matchMode: "contains" } }
+            return {...acc, [el]: {value: null, matchMode: "contains"}}
         }, {})
         console.log(initialFilters);
         setFilters(initialFilters);
@@ -190,11 +185,13 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                 })
             }
         }
-        return <InputText value={columnProps.rowData[columnProps.field]} onChange={(e) => { onEditorValueChange(e, columnProps) }} id={cName} />
+        return <InputText value={columnProps.rowData[columnProps.field]} onChange={(e) => {
+            onEditorValueChange(e, columnProps)
+        }} id={cName}/>
     };
 
     const onEditorValueChange = (event: any, eventProps: any) => {
-        let tempObject = { ...eventProps.value[eventProps.rowIndex] };
+        let tempObject = {...eventProps.value[eventProps.rowIndex]};
         tempObject[eventProps.field] = event.target.value;
         eventProps.rowData[eventProps.field] = event.target.value;
 
@@ -244,31 +241,43 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     if (props.specialLabels !== undefined) {
                         //@ts-ignore
                         if (Object.keys(props.specialLabels).includes(cName)) {
-                            columnHeader = f({ id: props.specialLabels[cName] });
+                            columnHeader = f({id: props.specialLabels[cName]});
                         } else {
-                            columnHeader = f({ id: cName });
+                            columnHeader = f({id: cName});
                         }
                     } else {
-                        columnHeader = f({ id: cName });
+                        columnHeader = f({id: cName});
                     }
                     console.log('cName', cName);
 
                     //TO BE TESTED
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
                     if (props.specialColumn && props.specialColumn[cName] !== undefined) {
-                        return <Column body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)} showFilterMenu={false} filterField={cName} style={{ textAlign: "center" }} key={cName} field={cName} header={columnHeader} />
+                        return <Column body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}
+                                       showFilterMenu={false} filterField={cName} style={{textAlign: "center"}}
+                                       key={cName} field={cName} header={columnHeader}/>
                     }
                     if (props.columnTemplate && props.columnTemplate[cName] !== undefined) {
-                        return <Column body={(rowData: any) => props.columnTemplate![cName](rowData)} style={{ textAlign: "center" }} showFilterMenu={false} filterField={cName} filter={(props.specialFilters && props.specialFilters[cName]) ? true : false} key={cName} field={cName} header={columnHeader} />
+                        return <Column body={(rowData: any) => props.columnTemplate![cName](rowData)}
+                                       style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
+                                       filter={(props.specialFilters && props.specialFilters[cName]) ? true : false}
+                                       key={cName} field={cName} header={columnHeader}/>
                     }
                     //@ts-ignore
-                    return <Column style={{textAlign: "center"}} key={cName} field={cName} editor={edit ? (props) => createEditor(cName, props) : undefined} header={columnHeader} filter={props.showFilters ? (!props.ignoreFilters!.includes(cName)) : false} filterField={cName} />
+                    return <Column style={{textAlign: "center"}} key={cName} field={cName}
+                                   editor={edit ? (props) => createEditor(cName, props) : undefined}
+                                   header={columnHeader} showFilterMenu={false}
+                                   sortable={props.sortableColumns?.includes(cName)}
+                                   filterElement={props.specialFilters![cName]}
+                                   filter={props.showFilters ? (!props.ignoreFilters!.includes(cName)) : false}
+                                   filterField={cName}/>
                     //return <Column key={cName} field={cName} editor={props.editable ? (props) => editorForRowEditing(props, 'color') : null} filter={props.showFilters ? (!props.ignoreFilters.includes(cName)) : false} filterElement={props.showFilters ? (props.ignoreFilters.includes(cName) ? null : createInputForFilter(cName)) : null} header={columnHeader}/>
                 });
                 if (props.rowEditHandler !== undefined)
-                    tempColumns.push(<Column rowEditor headerStyle={{ width: '7rem' }} bodyStyle={{ textAlign: 'center' }} />);
+                    tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
+                                             bodyStyle={{textAlign: 'center'}}/>);
                 if (props.selectionMode === "checkbox")
-                    tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{ width: '3em' }} />);
+                    tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
                 setColumns(tempColumns);
             } else if (props.toggleSelect) {
                 const firstColumn = columns[0];
@@ -361,8 +370,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const generateExcel = () => {
         import('xlsx').then(xlsx => {
             const worksheet = xlsx.utils.json_to_sheet(items);
-            const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-            const excelBuffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const workbook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
+            const excelBuffer = xlsx.write(workbook, {bookType: 'xlsx', type: 'array'});
             saveAsExcelFile(excelBuffer);
         });
     }
@@ -379,18 +388,21 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }
 
     const getHeader = () => {
-        return <div className="export-buttons" style={{ display: "flex", justifyContent: "space-between" }}>
+        return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
             <div>
                 {props.xlsx ?
-                    <Button type="button" icon="pi pi-file-excel" onClick={generateExcel} className="p-button-success p-mr-2" data-pr-tooltip="XLS" />
+                    <Button type="button" icon="pi pi-file-excel" onClick={generateExcel}
+                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
                     : null
                 }
                 {props.toggleSelect ?
-                    <Button type="button" icon="fas fa-check-square" onClick={props.toggleSelect.handler} className="p-button-success p-mr-2" data-pr-tooltip="XLS" />
+                    <Button type="button" icon="fas fa-check-square" onClick={props.toggleSelect.handler}
+                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
                     : null
                 }
                 {
-                    props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick} className={`${el.className} table-header-left-align-buttons p-mr-2`} />)
+                    props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
+                                                           className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>
             {/* <div>
@@ -437,7 +449,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         setSelectedRowPerPage(newSelectedRowsPerPage)
         setSelectedRow(newElementsForPage);
 
-        if (props.selectionHandler) props.selectionHandler({ value: newSelectedRow });
+        if (props.selectionHandler) props.selectionHandler({value: newSelectedRow});
         //@ts-ignore
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
 
@@ -447,8 +459,10 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         {showTable && filters ?
             <>
                 <div className="datatable-responsive-demo">
-                    {props.contextMenu ? <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)} appendTo={document.body} /> : null}
-                    <Tooltip target=".export-buttons>button" position="bottom" />
+                    {props.contextMenu ?
+                        <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
+                                     appendTo={document.body}/> : null}
+                    <Tooltip target=".export-buttons>button" position="bottom"/>
 
                     <DataTable
                         rowHover
@@ -465,12 +479,10 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         className="p-datatable-sm p-datatable-striped p-datatable-responsive-demo"
                         filterDisplay={'row'}
                         // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
-                        sortField={sortField}
-                        sortOrder={sortOrder}
-                        onSort={sort}
+                        sortMode={'multiple'}
                         //@ts-ignore
                         selectionMode={["single", "multiple"].includes(props.selectionMode!) ? props.selectionMode : undefined}
-                        
+
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
                         style={{marginBottom: "40px"}}
@@ -479,24 +491,24 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         header={props.showHeader ? getHeader() : null}
                         rowsPerPageOptions={[20, 30, 50]}
                         editMode={props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell"}
-                        onRowEditInit={(e:any) => onRowEditInit(e)}
-                        onRowEditCancel={(e:any) => onRowEditCancel(e)}
+                        onRowEditInit={(e: any) => onRowEditInit(e)}
+                        onRowEditCancel={(e: any) => onRowEditCancel(e)}
                         onRowEditSave={(e) => props.rowEditHandler!(editElement!)}
                         // onPage={onPage}
                         loading={loading}
-                        
+
                         onRowUnselect={props.onRowUnselect}
                         totalRecords={totalRecords}
-                        onContextMenuSelectionChange={(e:any) => {
+                        onContextMenuSelectionChange={(e: any) => {
                             //set{selectedRow: e.value});
 
-                            if (props.setSelected !== undefined && props.contextMenu){
+                            if (props.setSelected !== undefined && props.contextMenu) {
                                 props.setSelected(e.value);
                             }
                         }}
                         onContextMenu={e => {
                             //if(items[0].id !== null)
-                            if(props.contextMenu)
+                            if (props.contextMenu)
                                 cm.current!.show(e.originalEvent)
                         }}>
                         {columns}
@@ -525,7 +537,8 @@ SimpleDataTable.defaultProps = {
     selectionKey: "id",
     formatDateToLocal: true,
     // refreshButton: true,
-    headerButtons: []
+    headerButtons: [],
+    sortableColumns: []
 }
 
 
