@@ -1,7 +1,7 @@
 import React from 'react';
 import {IntlProvider} from 'react-intl';
 import './App.css';
-import { LazyDataTable, SimpleDataTable } from './react-ive-tables'
+import { SimpleDataTable } from './lib/SimpleDataTable'
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'
@@ -20,11 +20,14 @@ import {useContext} from "react";
 import { MenuItem } from 'primereact/menuitem/menuitem';
 import { Tooltip } from 'primereact/tooltip';
 import moment from "moment";
+import customers from './lib/customers.json'
+import { DataTableFilterDemo } from './lib/test';
 
 function App() {
 
   const data = [
     {
+      "id": 1,
       "firstName": "Jefferson",
       "middleName": "Schwartz",
       "isActive": false,
@@ -37,6 +40,7 @@ function App() {
       "phone": "+1 (974) 545-2317"
     },
     {
+      "id": 2,
       "firstName": "Ora",
       "middleName": "Vasquez",
       "isActive": false,
@@ -49,6 +53,7 @@ function App() {
       "phone": "+1 (850) 408-2834"
     },
     {
+      "id": 3,
       "firstName": "Barbra",
       "middleName": "Chavez",
       "isActive": true,
@@ -61,6 +66,7 @@ function App() {
       "phone": "+1 (809) 530-2451"
     },
     {
+      "id": 4,
       "firstName": "Ware",
       "middleName": "Valencia",
       "isActive": true,
@@ -73,6 +79,7 @@ function App() {
       "phone": "+1 (952) 584-3893"
     },
     {
+      "id": 5,
       "firstName": "Potts",
       "middleName": "Mathews",
       "isActive": true,
@@ -86,6 +93,22 @@ function App() {
     }
   ]
 
+  const menuModel = [
+    {
+        label: "Update" , 
+        icon: 'pi pi-fw pi-search', 
+        command: (e:any) => {
+            alert("Item ready to be updated")
+        }
+    },
+    {
+        label: "Delete" , 
+        icon: 'pi pi-fw pi-trash', 
+        command: (e:any) => {
+            alert("Item deleted")
+        }
+    }
+];
 
 
   return (
@@ -96,9 +119,8 @@ function App() {
         
     
         <Card>
-          <SimpleDataTable data={data} setSelected={() => {}}/> 
-        
-
+          <SimpleDataTable data={customers.data} selectionKey="id" columnOrder={["id", "name"]} /> 
+        <DataTableFilterDemo data={customers.data} />
         </Card>
         {/* <LazyDataTable dataUrl={"asd"} columnOrder={[]}/> */}
       </IntlProvider>
