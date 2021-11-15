@@ -54,23 +54,17 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     const [items, setItems] = useState<any>([]);
     const [filters, setFilters] = useState<any>(null);
-    const [filterElements, setFilterElements] = useState<any>([]);
     const [columns, setColumns] = useState<any>([]);
     const [rows, setRows] = useState(20);
     const [totalRecords, setTotalRecords] = useState(0);
     const [first, setFirst] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [currRecord, setCurrRecord] = useState(0);
-    const [originalItemCopy, setOriginalItemCopy] = useState<Object[]>([]);
-    const [editElement, setEditElement] = useState<{ [key: string]: string | number }>({});
-    const [sortField, setSortField] = useState<string>();
-    const [sortOrder, setSortOrder] = useState<DataTableSortOrderType>();
     const [showTable, setShowTable] = useState(false);
     const [selectedRow, setSelectedRow] = useState<any>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const [refresher, setRefresher] = useState<number>();
     const [selectedElement, setSelectedElement] = useState(null);
-    // const [selectionMode, setSelectionMode] = useState<any>();
+    const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
 
@@ -185,7 +179,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
                     if (props.columnTemplate && props.columnTemplate[cName] !== undefined) {
                         return <Column body={(rowData: any) => props.columnTemplate![cName](rowData)}
-                                       editor={textEditor}
+                                       editor={editMode ? textEditor : undefined}
                                        sortable={props.sortableColumns?.includes(cName)}
                                        filterElement={props.specialFilters![cName]}
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
@@ -195,7 +189,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     }
                     //@ts-ignore
                     return <Column style={{textAlign: "center"}} key={cName} field={cName}
-                                   editor={props.specialEditors![cName] || textEditor}
+                                   editor={props.specialEditors![cName] || editMode ? textEditor : undefined}
                                    header={columnHeader} showFilterMenu={false}
                                    sortable={props.sortableColumns?.includes(cName)}
                                    filterElement={props.specialFilters![cName]}
@@ -373,7 +367,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         tableStyle={{tableLayout: "auto"}}
                         header={props.showHeader ? getHeader() : null}
                         rowsPerPageOptions={[20, 30, 50]}
-                        editMode={props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell"}
+                        editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
                         // onPage={onPage}
                         loading={loading}

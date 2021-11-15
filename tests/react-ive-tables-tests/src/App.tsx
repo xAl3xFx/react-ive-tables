@@ -142,7 +142,7 @@ function App() {
                 <Card>
                     <SimpleDataTable data={customers.data} selectionKey="id" columnOrder={["id", "name"]}
                                      specialFilters={getSpecialFilters()} showHeader={true}
-                                     setSelected={setSelectedRow} selectionMode={'checkbox'}
+                                     setSelected={setSelectedRow}
                                      contextMenu={menuModel}
                                      cellEditHandler={(e: any) => console.log('cellEditHandler', e)}
                                      specialEditors={getSpecialEditors()} xlsx={'asd'}/>
