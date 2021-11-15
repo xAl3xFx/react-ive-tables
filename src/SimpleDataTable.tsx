@@ -419,7 +419,8 @@ SimpleDataTable.defaultProps = {
     headerButtons: [],
     sortableColumns: [],
     specialEditors: {},
-    specialColumns: {}
+    specialColumns: {},
+    specialFilters: {}
 }
 
 
