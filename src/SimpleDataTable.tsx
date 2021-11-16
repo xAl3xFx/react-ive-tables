@@ -14,6 +14,7 @@ import {saveAs} from 'file-saver'
 import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
 import PrimeReact from 'primereact/api'
+import {Skeleton} from "primereact/skeleton";
 
 interface Props {
     data: any[],
@@ -332,6 +333,10 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     }
 
+    const skeletonTemplate = () => {
+        return <Skeleton></Skeleton>
+    }
+
 
     return <>
         {showTable && filters ?
@@ -392,7 +397,11 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                 </div>
             </>
             :
-            null
+            <DataTable value={items} rows={rows} paginator={true} className="p-datatable-striped">
+                {
+                    props.columnOrder.map(column => <Column field={column} header={f({id: column})} style={{ width: `${100 / props.columnOrder.length}%` }} body={skeletonTemplate} />)
+                }
+            </DataTable>
         }
     </>
 };
