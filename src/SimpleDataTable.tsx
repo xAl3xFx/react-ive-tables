@@ -174,13 +174,13 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                        editor={editMode ? textEditor : undefined}
                                        sortable={props.sortableColumns?.includes(cName)}
                                        filterElement={props.specialFilters![cName]}
-                                       style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
+                                      showFilterMenu={false} filterField={cName}
                                        onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                                        filter={(props.specialFilters && props.specialFilters[cName]) ? true : false}
                                        key={cName} field={cName} header={columnHeader}/>
                     }
                     //@ts-ignore
-                    return <Column style={{textAlign: "center"}} key={cName} field={cName}
+                    return <Column key={cName} field={cName}
                                    editor={props.specialEditors![cName] || editMode ? textEditor : undefined}
                                    header={columnHeader} showFilterMenu={false}
                                    sortable={props.sortableColumns?.includes(cName)}
@@ -191,8 +191,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     //return <Column key={cName} field={cName} editor={props.editable ? (props) => editorForRowEditing(props, 'color') : null} filter={props.showFilters ? (!props.ignoreFilters.includes(cName)) : false} filterElement={props.showFilters ? (props.ignoreFilters.includes(cName) ? null : createInputForFilter(cName)) : null} header={columnHeader}/>
                 });
                 if (props.rowEditHandler !== undefined)
-                    tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
-                                             bodyStyle={{textAlign: 'center'}}/>);
+                    tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}/>);
                 if (props.selectionMode === "checkbox")
                     tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
                 //Put specialColumns in columns

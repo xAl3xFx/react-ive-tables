@@ -2,6 +2,10 @@ th.p-sortable-column{
     white-space: nowrap !important;
 }
 
+.p-column-header-content{
+    justify-content: center !important;
+}
+
 input.p-column-filter {
     width: 80% !important;
 }
