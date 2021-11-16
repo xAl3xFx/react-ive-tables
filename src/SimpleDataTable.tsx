@@ -71,7 +71,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     useEffect(() => {
         // initFilters();
-        if (props.data) {
+        if (props.data && props.data.length > 0) {
             setItems(props.data);
             setShowTable(true);
         }
@@ -83,7 +83,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [columns])
 
     useEffect(() => {
-        generateColumns();
+        if(props.toggleSelect)
+            generateColumns();
     }, [props.toggleSelect])
 
     useEffect(() => {
@@ -337,6 +338,17 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         return <Skeleton></Skeleton>
     }
 
+    const getFakeData = () => {
+        let res = [];
+        for(let i = 0; i < rows; i++){
+            const row = props.columnOrder.reduce((acc, elem) => {
+                return {...acc, [elem]: ''}
+            }, {});
+            res.push(row);
+        }
+        return res;
+    }
+
 
     return <>
         {showTable && filters ?
@@ -397,7 +409,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                 </div>
             </>
             :
-            <DataTable value={items} rows={rows} paginator={true} className="p-datatable-striped">
+            <DataTable value={getFakeData()} rows={rows} paginator={true} className="p-datatable-striped">
                 {
                     props.columnOrder.map(column => <Column field={column} header={f({id: column})} style={{ width: `${100 / props.columnOrder.length}%` }} body={skeletonTemplate} />)
                 }
