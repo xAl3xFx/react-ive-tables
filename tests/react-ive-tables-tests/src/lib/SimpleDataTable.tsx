@@ -410,7 +410,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                 {
                     props.columnOrder.map(column => <Column field={column} header={getColumnHeaderTranslated(column)}
                                                             style={{width: `${100 / props.columnOrder.length}%`}}
-                                                            body={skeletonTemplate}/>)
+                                                            body={skeletonTemplate} key={column}/>)
                 }
             </DataTable>
         }
