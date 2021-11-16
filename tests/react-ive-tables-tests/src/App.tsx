@@ -18,9 +18,7 @@ function App() {
     const [data, setData] = useState<any>([]);
 
     useEffect(() => {
-        setTimeout(() => {
-            setData(customers.data);
-        }, 2000)
+        setData(customers.data);
     }, []);
 
 
@@ -51,7 +49,7 @@ function App() {
     ];
 
     const nameTemplate = (options: any) => {
-        return <Dropdown value={options.value} options={people}
+        return <Dropdown value={options.value} options={people} placeholder={'Choose'} style={{textAlign : "left"}}
                          onChange={(e) => options.filterApplyCallback(e.value)}/>;
     }
 
@@ -74,7 +72,6 @@ function App() {
         }
     }
 
-
     return (
         <div className="App">
             <p>Hello world</p>
@@ -82,7 +79,7 @@ function App() {
                 <Card>
                     <SimpleDataTable data={data} selectionKey="id" columnOrder={["id", "name"]}
                                      specialFilters={getSpecialFilters()} showHeader={true}
-                                     setSelected={setSelectedRow} showFilters={false}
+                                     setSelected={setSelectedRow}
                                      contextMenu={menuModel}
                                      cellEditHandler={(e: any) => console.log('cellEditHandler', e)}
                                      specialEditors={getSpecialEditors()} xlsx={'asd'}/>
