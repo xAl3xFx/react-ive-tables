@@ -83,7 +83,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [columns])
 
     useEffect(() => {
-        if(props.toggleSelect)
+        if (props.toggleSelect)
             generateColumns();
     }, [props.toggleSelect])
 
@@ -129,22 +129,22 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     const exportExcel = () => {
         import('xlsx').then(xlsx => {
-            const itemsToExport = items.map((row : any) => {
+            const itemsToExport = items.map((row: any) => {
                 return Object.keys(row).reduce((acc, el) => {
-                    if(props.columnOrder.includes(el)){
-                        return {...acc, [el] : row[el]}
+                    if (props.columnOrder.includes(el)) {
+                        return {...acc, [el]: row[el]}
                     }
                     return acc;
                 }, {});
             })
             const worksheet = xlsx.utils.json_to_sheet(itemsToExport);
-            const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-            const excelBuffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const workbook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
+            const excelBuffer = xlsx.write(workbook, {bookType: 'xlsx', type: 'array'});
             saveAsExcelFile(excelBuffer, f({id: props.xlsx}));
         });
     }
 
-    const saveAsExcelFile = (buffer : any, fileName : any) => {
+    const saveAsExcelFile = (buffer: any, fileName: any) => {
         import('file-saver').then(FileSaver => {
             let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
             let EXCEL_EXTENSION = '.xlsx';
@@ -164,17 +164,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         if (items.length > 0 && items[0] || props.columnOrder) {
             if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle)) {
                 const tempColumns = (props.columnOrder ? props.columnOrder : Object.keys(items[0])).map((cName: string) => {
-                    let columnHeader;
-                    if (props.specialLabels !== undefined) {
-                        //@ts-ignore
-                        if (Object.keys(props.specialLabels).includes(cName)) {
-                            columnHeader = f({id: props.specialLabels[cName]});
-                        } else {
-                            columnHeader = f({id: cName});
-                        }
-                    } else {
-                        columnHeader = f({id: cName});
-                    }
+                    let columnHeader = getColumnHeaderTranslated(cName);
                     console.log('cName', cName);
 
                     //TO BE TESTED
@@ -207,10 +197,11 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
                 //Put specialColumns in columns
                 Object.keys(props.specialColumns || []).forEach(cName => {
-                    const col = <Column field={cName} header={f({id: cName})} body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)} />
-                    if(props.specialColumns![cName].atStart){
+                    const col = <Column field={cName} header={f({id: cName})}
+                                        body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
+                    if (props.specialColumns![cName].atStart) {
                         tempColumns.unshift(col);
-                    }else{
+                    } else {
                         tempColumns.push(col);
                     }
                 })
@@ -340,13 +331,19 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     const getFakeData = () => {
         let res = [];
-        for(let i = 0; i < rows; i++){
+        for (let i = 0; i < rows; i++) {
             const row = props.columnOrder.reduce((acc, elem) => {
                 return {...acc, [elem]: ''}
             }, {});
             res.push(row);
         }
         return res;
+    }
+
+    const getColumnHeaderTranslated = (cName: string) => {
+        if (props.specialLabels && props.specialLabels[cName])
+            return f({id: props.specialLabels[cName]})
+        return f({id: cName});
     }
 
 
@@ -411,7 +408,9 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             :
             <DataTable value={getFakeData()} rows={rows} paginator={true} className="p-datatable-striped">
                 {
-                    props.columnOrder.map(column => <Column field={column} header={f({id: column})} style={{ width: `${100 / props.columnOrder.length}%` }} body={skeletonTemplate} />)
+                    props.columnOrder.map(column => <Column field={column} header={getColumnHeaderTranslated(column)}
+                                                            style={{width: `${100 / props.columnOrder.length}%`}}
+                                                            body={skeletonTemplate}/>)
                 }
             </DataTable>
         }
