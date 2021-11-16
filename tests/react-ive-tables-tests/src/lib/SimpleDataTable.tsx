@@ -355,7 +355,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         paginator={true}
                         dataKey={props.selectionKey}
                         className="p-datatable-sm p-datatable-striped p-datatable-responsive-demo"
-                        filterDisplay={'row'}
+                        filterDisplay={props.showFilters ? 'row' : undefined}
                         // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
                         sortMode={'multiple'}
                         //@ts-ignore
