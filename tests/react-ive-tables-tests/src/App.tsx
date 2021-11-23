@@ -14,7 +14,7 @@ import {Button} from "primereact/button";
 
 function App() {
 
-    const [selectedRow, setSelectedRow] = useState({});
+    const [selectedRow, setSelectedRow] = useState(null);
     const [data, setData] = useState<any>([]);
 
     useEffect(() => {
@@ -75,14 +75,15 @@ function App() {
     return (
         <div className="App">
             <p>Hello world</p>
-            <IntlProvider locale={"bg-BG"} messages={{}}>
+            <IntlProvider locale={"bg-BG"} messages={{"id" : "ID", "name" : "Name"}}>
                 <Card>
                     <SimpleDataTable data={data} selectionKey="id" columnOrder={["id", "name"]}
                                      specialFilters={getSpecialFilters()} showHeader={true}
                                      setSelected={setSelectedRow}
                                      contextMenu={menuModel}
-                                     cellEditHandler={(e: any) => console.log('cellEditHandler', e)}
-                                     specialEditors={getSpecialEditors()} xlsx={'asd'}/>
+                                     selectionMode={'single'}
+                                     // cellEditHandler={(e: any) => console.log('cellEditHandler', e)} specialEditors={getSpecialEditors()}
+                                      xlsx={'asd'}/>
                 </Card>
                 {/* <LazyDataTable dataUrl={"asd"} columnOrder={[]}/> */}
             </IntlProvider>
