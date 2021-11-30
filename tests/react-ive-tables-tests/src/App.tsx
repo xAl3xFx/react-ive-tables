@@ -72,6 +72,15 @@ function App() {
         }
     }
 
+    const getHeaderButtons = () => {
+            return [{
+                onClick: () => 0,
+                icon: 'pi pi-plus',
+                className: '',
+                tooltipLabel: 'asd'
+            }]
+    }
+
     return (
         <div className="App">
             <p>Hello world</p>
@@ -82,6 +91,7 @@ function App() {
                                      setSelected={setSelectedRow}
                                      contextMenu={menuModel}
                                      selectionMode={'single'}
+                                     headerButtons={getHeaderButtons()}
                                      // cellEditHandler={(e: any) => console.log('cellEditHandler', e)} specialEditors={getSpecialEditors()}
                                       xlsx={'asd'}/>
                 </Card>
