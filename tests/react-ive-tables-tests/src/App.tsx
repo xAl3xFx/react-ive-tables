@@ -81,6 +81,19 @@ function App() {
             }]
     }
 
+    const getRightHeaderButtons = () => {
+        return [{
+            onClick: () => 0,
+            icon: 'pi pi-plus',
+            className: '',
+            tooltipLabel: 'asd'
+        },{
+            onClick: () => 0,
+            icon: 'pi pi-minus',
+            className: '',
+            tooltipLabel: 'asd'
+        }]
+    }
     return (
         <div className="App">
             <p>Hello world</p>
@@ -92,6 +105,7 @@ function App() {
                                      contextMenu={menuModel}
                                      selectionMode={'single'}
                                      headerButtons={getHeaderButtons()}
+                                     rightHeaderButtons={getRightHeaderButtons()}
                                      // cellEditHandler={(e: any) => console.log('cellEditHandler', e)} specialEditors={getSpecialEditors()}
                                       xlsx={'asd'}/>
                 </Card>

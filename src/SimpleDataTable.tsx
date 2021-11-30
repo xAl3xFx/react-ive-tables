@@ -47,6 +47,7 @@ interface Props {
     formatDateToLocal?: boolean,                                // Specifies whether dates should be formatted to local or not.
     toggleSelect?: { toggle: boolean, handler: () => void },    // Toggles checkbox column used for excel. Not very template prop.
     headerButtons?: HeaderButton[],                             // Array with buttons to be shown in the header.
+    rightHeaderButtons?: HeaderButton[],                        // Array with buttons to be shown in the header (from the right side).
     sortableColumns?: string[]                                  // Array of columns which should be sortable.
 }
 
@@ -261,6 +262,12 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                                            tooltipOptions={{position: 'top'}} className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>
+            <div>
+                {
+                    props.rightHeaderButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick} tooltip={el.tooltipLabel}
+                                                                tooltipOptions={{position: 'top'}} className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
+                }
+            </div>
         </div>
     };
 
@@ -432,6 +439,7 @@ SimpleDataTable.defaultProps = {
     formatDateToLocal: true,
     // refreshButton: true,
     headerButtons: [],
+    rightHeaderButtons: [],
     sortableColumns: [],
     specialEditors: {},
     specialColumns: {},
