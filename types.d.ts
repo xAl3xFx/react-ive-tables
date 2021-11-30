@@ -1,6 +1,7 @@
 export interface HeaderButton {
     onClick : (() => void) | undefined,
-    icon: string,
+    icon?: string,
     className: string,
-    tooltipLabel? : string
+    tooltipLabel? : string,
+    label?: string
 }

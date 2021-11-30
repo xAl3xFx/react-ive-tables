@@ -258,13 +258,13 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     : null
                 }
                 {
-                    props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick} tooltip={el.tooltipLabel}
+                    props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick} tooltip={el.tooltipLabel} label={el.label}
                                                            tooltipOptions={{position: 'top'}} className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>
             <div>
                 {
-                    props.rightHeaderButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick} tooltip={el.tooltipLabel}
+                    props.rightHeaderButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick} tooltip={el.tooltipLabel} label={el.label}
                                                                 tooltipOptions={{position: 'top'}} className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>

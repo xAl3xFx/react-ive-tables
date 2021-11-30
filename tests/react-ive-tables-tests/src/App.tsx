@@ -89,9 +89,8 @@ function App() {
             tooltipLabel: 'asd'
         },{
             onClick: () => 0,
-            icon: 'pi pi-minus',
             className: '',
-            tooltipLabel: 'asd'
+            label: "asd"
         }]
     }
     return (
