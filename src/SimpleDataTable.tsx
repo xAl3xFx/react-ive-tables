@@ -174,7 +174,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         return <Column body={(rowData: any) => props.columnTemplate![cName](rowData)}
                                        editor={editMode ? textEditor : undefined}
                                        sortable={props.sortableColumns?.includes(cName)}
-                                       filterElement={props.specialFilters![cName]}
+                                       filterElement={props.specialFilters![cName]} showClearButton={false}
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
                                        onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                                        filter={(props.specialFilters && props.specialFilters[cName]) ? true : false}
@@ -185,7 +185,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                    editor={props.specialEditors![cName] || editMode ? textEditor : undefined}
                                    header={columnHeader} showFilterMenu={false}
                                    sortable={props.sortableColumns?.includes(cName)}
-                                   filterElement={props.specialFilters![cName]}
+                                   filterElement={props.specialFilters![cName]} showClearButton={false}
                                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                                    filter={props.showFilters ? (!props.ignoreFilters!.includes(cName)) : false}
                                    filterField={cName}/>

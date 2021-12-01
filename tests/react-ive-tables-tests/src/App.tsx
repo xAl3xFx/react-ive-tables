@@ -11,11 +11,13 @@ import "./DataTable.css"
 import customers from './lib/customers.json'
 import {Dropdown} from "primereact/dropdown";
 import {Button} from "primereact/button";
+import {ManyColumns} from "./components/ManyColumns";
 
 function App() {
 
     const [selectedRow, setSelectedRow] = useState(null);
     const [data, setData] = useState<any>([]);
+    const [selectedTable, setSelectedTable] = useState(<ManyColumns />);
 
     useEffect(() => {
         setData(customers.data);
@@ -95,18 +97,24 @@ function App() {
     }
     return (
         <div className="App">
-            <p>Hello world</p>
             <IntlProvider locale={"bg-BG"} messages={{"id" : "ID", "name" : "Name"}}>
                 <Card>
-                    <SimpleDataTable data={data} selectionKey="id" columnOrder={["id", "name"]}
-                                     specialFilters={getSpecialFilters()} showHeader={true}
-                                     setSelected={setSelectedRow}
-                                     contextMenu={menuModel}
-                                     selectionMode={'single'}
-                                     headerButtons={getHeaderButtons()}
-                                     rightHeaderButtons={getRightHeaderButtons()}
-                                     // cellEditHandler={(e: any) => console.log('cellEditHandler', e)} specialEditors={getSpecialEditors()}
-                                      xlsx={'asd'}/>
+
+                    <h1>Select Table</h1>
+                    <div className={'p-mb-3'}>
+                        <Button onClick={() => setSelectedTable(<ManyColumns />)}>Many Columns</Button>
+
+                    </div>
+                    {selectedTable}
+                    {/*<SimpleDataTable data={data} selectionKey="id" columnOrder={["id", "name"]}*/}
+                    {/*                 specialFilters={getSpecialFilters()} showHeader={true}*/}
+                    {/*                 setSelected={setSelectedRow}*/}
+                    {/*                 contextMenu={menuModel}*/}
+                    {/*                 selectionMode={'single'}*/}
+                    {/*                 headerButtons={getHeaderButtons()}*/}
+                    {/*                 rightHeaderButtons={getRightHeaderButtons()}*/}
+                    {/*                 // cellEditHandler={(e: any) => console.log('cellEditHandler', e)} specialEditors={getSpecialEditors()}*/}
+                    {/*                  xlsx={'asd'}/>*/}
                 </Card>
                 {/* <LazyDataTable dataUrl={"asd"} columnOrder={[]}/> */}
             </IntlProvider>
