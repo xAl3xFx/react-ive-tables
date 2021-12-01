@@ -1,10 +1,10 @@
 {
   "name": "react-ive-tables",
-  "version": "1.1.14",
+  "version": "1.2.0",
   "description": "A set of handy DataTable components based on PrimeReact.",
   "repository": "https://github.com/xAl3xFx/react-ive-tables",
   "scripts": {
-    "prepublish": "tsc && cp ./src/DataTable.css ./lib/DataTable.css",
+    "prepublish": "tsc && cp ./src/DataTable.css ./lib/DataTable.css && cp ./src/TreeTable.css ./lib/TreeTable.css",
     "pub": "npm run prepublish && npm version patch --force && npm publish"
   },
   "typings": "index.d.ts",

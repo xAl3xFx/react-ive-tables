@@ -58,7 +58,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const [filters, setFilters] = useState<any>(null);
     const [columns, setColumns] = useState<any>([]);
     const [rows, setRows] = useState(20);
-    const [totalRecords, setTotalRecords] = useState(0);
     const [first, setFirst] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showTable, setShowTable] = useState(false);
@@ -177,7 +176,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
                                        onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                       filter={(props.specialFilters && props.specialFilters[cName]) ? true : false}
+                                       filter={props.specialFilters && props.specialFilters[cName]}
                                        key={cName} field={cName} header={columnHeader}/>
                     }
                     //@ts-ignore
@@ -393,7 +392,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         // onPage={onPage}
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
-                        totalRecords={totalRecords}
                         onContextMenuSelectionChange={(e: any) => {
                             //set{selectedRow: e.value});
                             if (props.setSelected !== undefined && props.contextMenu) {
