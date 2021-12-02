@@ -63,7 +63,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const [showTable, setShowTable] = useState(false);
     const [selectedRow, setSelectedRow] = useState<any>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
-    const [refresher, setRefresher] = useState<number>();
     const [selectedElement, setSelectedElement] = useState(null);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
@@ -197,7 +196,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
                 //Put specialColumns in columns
                 Object.keys(props.specialColumns || []).forEach(cName => {
-                    const col = <Column field={cName} header={f({id: cName})}
+                    const col = <Column field={cName} header={f({id: cName})} style={{textAlign: "center"}}
                                         body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
                     if (props.specialColumns![cName].atStart) {
                         tempColumns.unshift(col);
@@ -216,7 +215,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         }
     };
 
-    //TO BE TESTED
     const generateColumnBodyTemplate = (column: string, rowData: any) => {
         return React.cloneElement(props.specialColumns![column].element, {
             onClick: (e: any) => props.specialColumns![column].handler(rowData)

@@ -23,7 +23,15 @@ interface Props {
     additionalFilters? : {[key: string]: any;},
     showHeader? : boolean,
     contextMenu? : Object[],
-    sortableColumns?: string[]                                  // Array of columns which should be sortable.
+    sortableColumns?: string[],                                  // Array of columns which should be sortable.
+    specialColumns?: {                                          // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
+        [key: string]:                                          // if the column should be put at the beginning or at the end.
+            {
+                element: JSX.Element,
+                handler: (rowData: any) => void,
+                atStart: boolean
+            }
+    }
 }
 
 export const SimpleTreeTable :  React.FC<Props> = (props) => {
@@ -37,13 +45,9 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
     const [selectedElement, setSelectedElement] = useState(null);
     const [expandedKeys, setExpandedKeys] = useState<any>({});
     const [selectedElementIndex, setSelectedElementIndex] = useState<string | null>(null);
-    const [lastSelectedElementClick, setLastSelectedElementClick] = useState(new Date().getTime());
     const cm = useRef<any>();
 
-
-
     const generateColumns = () => {
-
         let columns: any[] = [];
         if (items && items.length > 0 && items[0] || props.columnOrder) {
 
@@ -58,10 +62,19 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                                        sortable={props.sortableColumns?.includes(cName)}
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        showFilterMenu={false} filterField={cName}
-                                       filter={!!(props.specialFilters && props.specialFilters[cName])}
+                                       filter={props.showFilters && !props.ignoreFilters?.includes(cName)}
                                        key={cName} field={cName} header={label}/>
                     }
             }))
+            Object.keys(props.specialColumns || []).forEach(cName => {
+                const col = <Column field={cName} header={f({id: cName})}
+                                    body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
+                if (props.specialColumns![cName].atStart) {
+                    columns.unshift(col);
+                } else {
+                    columns.push(col);
+                }
+            })
         }
         // if(props.extraButton !== undefined)
         //     columns.push(<Column key={counter + 1} field={"extraButton"} header={""} />);
@@ -74,6 +87,15 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
             const result = insertElementAtLevel(items, parseInt(Object.keys(props.extraButton!)[0]), Object.values(props.extraButton!)[0], 0);
         }
     };
+
+    const generateColumnBodyTemplate = (column: string, rowData: any) => {
+        return React.cloneElement(props.specialColumns![column].element, {
+            onClick: (e: any) => {
+                e.stopPropagation();
+                props.specialColumns![column].handler(rowData)
+            }
+        })
+    }
 
     const insertElementAtLevel = (data : any, level : number, element : JSX.Element, currLevel : number) => {
         if(currLevel > level || data === undefined)
@@ -112,21 +134,14 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
 
     const handleSelection = (e: any) => {
         const currentSelectedElementIndex = e.value;
-        if(!isNaN(+currentSelectedElementIndex) && selectedElementIndex && !isNaN(+selectedElementIndex)){
-            if(selectedElementIndex === currentSelectedElementIndex){
-                if(new Date().getTime() - lastSelectedElementClick >= 500){
-                    setLastSelectedElementClick(new Date().getTime());
-                    return;
-                }
-                const newExpandedKeys = {...expandedKeys};
-                if(newExpandedKeys[currentSelectedElementIndex]){
-                    delete newExpandedKeys[currentSelectedElementIndex];
-                }else{
-                    newExpandedKeys[currentSelectedElementIndex] = true
-                }
-                setLastSelectedElementClick(new Date().getTime());
-                setExpandedKeys(newExpandedKeys);
+        if(!isNaN(+currentSelectedElementIndex)){
+            const newExpandedKeys = {...expandedKeys};
+            if(newExpandedKeys[currentSelectedElementIndex]){
+                delete newExpandedKeys[currentSelectedElementIndex];
+            }else{
+                newExpandedKeys[currentSelectedElementIndex] = true
             }
+            setExpandedKeys(newExpandedKeys);
         }
         setSelectedElementIndex(e.value);
 
