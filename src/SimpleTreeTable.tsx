@@ -32,6 +32,8 @@ interface Props {
                 atStart: boolean
             }
     }
+    scrollable?: boolean                                        // When true scrolling is enabled and paginator is hidden
+    scrollHeight?: string                                       // Height for the scroll
 }
 
 export const SimpleTreeTable :  React.FC<Props> = (props) => {
@@ -81,7 +83,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
 
         setColumns(columns);
 
-        //
+
         // //TUKA EI TUI
         // if(props.extraButton !== undefined){
         //     const result = insertElementAtLevel(items, parseInt(Object.keys(props.extraButton!)[0]), Object.values(props.extraButton!)[0], 0);
@@ -168,6 +170,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                 onSelectionChange={handleSelection}
                 selectionKeys={selectedElementIndex}
                 selectionMode={'single'}
+                scrollable={props.scrollable} scrollHeight={props.scrollHeight}
                 onContextMenuSelectionChange={(e:any) => {
                     //set{selectedRow: e.value});
 
@@ -197,5 +200,7 @@ SimpleTreeTable.defaultProps = {
     columnOrder: [],
     showHeader: true,
     sortableColumns: [],
-    specialFilters: {}
+    specialFilters: {},
+    scrollable: false,
+    scrollHeight: undefined
 };
