@@ -49,6 +49,8 @@ interface Props {
     headerButtons?: HeaderButton[],                             // Array with buttons to be shown in the header.
     rightHeaderButtons?: HeaderButton[],                        // Array with buttons to be shown in the header (from the right side).
     sortableColumns?: string[]                                  // Array of columns which should be sortable.
+    virtualScroll?: boolean                                     // When true virtual scroller is enabled and paginator is hidden
+    scrollHeight?: string                                       // Height for the scroll
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -63,6 +65,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const [showTable, setShowTable] = useState(false);
     const [selectedRow, setSelectedRow] = useState<any>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
+    const [refresher, setRefresher] = useState<number>();
     const [selectedElement, setSelectedElement] = useState(null);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
@@ -196,7 +199,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
                 //Put specialColumns in columns
                 Object.keys(props.specialColumns || []).forEach(cName => {
-                    const col = <Column field={cName} header={f({id: cName})} style={{textAlign: "center"}}
+                    const col = <Column field={cName} header={f({id: cName})}
                                         body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
                     if (props.specialColumns![cName].atStart) {
                         tempColumns.unshift(col);
@@ -215,6 +218,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         }
     };
 
+    //TO BE TESTED
     const generateColumnBodyTemplate = (column: string, rowData: any) => {
         return React.cloneElement(props.specialColumns![column].element, {
             onClick: (e: any) => props.specialColumns![column].handler(rowData)
@@ -370,7 +374,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         filters={filters}
                         first={first}
                         rows={rows}
-                        paginator={true}
+                        paginator={!props.virtualScroll}
                         dataKey={props.selectionKey}
                         className="p-datatable-sm p-datatable-striped p-datatable-responsive-demo"
                         filterDisplay={props.showFilters ? 'row' : undefined}
@@ -387,6 +391,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         rowsPerPageOptions={[20, 30, 50]}
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
+                        scrollable={props.virtualScroll} scrollHeight={props.scrollHeight} virtualScrollerOptions={{ itemSize: 40 }}
                         // onPage={onPage}
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
@@ -439,7 +444,9 @@ SimpleDataTable.defaultProps = {
     sortableColumns: [],
     specialEditors: {},
     specialColumns: {},
-    specialFilters: {}
+    specialFilters: {},
+    virtualScroll: false,
+    scrollHeight: undefined
 }
 
 

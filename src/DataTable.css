@@ -104,3 +104,7 @@ input.p-column-filter {
         border-bottom: 1px solid var(--surface-d);
     }
 }
+
+.p-datatable-wrapper{
+    overflow: auto !important;
+}
