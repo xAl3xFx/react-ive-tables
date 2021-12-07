@@ -8,7 +8,7 @@ export const ManyColumns = () => {
 
     return <>
         <SimpleDataTable data={customers.data}
-                         columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
+                         columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance', 'id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
                          selectionMode={'single'}
          />
     </>

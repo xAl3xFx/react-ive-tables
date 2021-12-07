@@ -49,6 +49,8 @@ interface Props {
     headerButtons?: HeaderButton[],                             // Array with buttons to be shown in the header.
     rightHeaderButtons?: HeaderButton[],                        // Array with buttons to be shown in the header (from the right side).
     sortableColumns?: string[]                                  // Array of columns which should be sortable.
+    virtualScroll?: boolean                                     // When true virtual scroller is enabled and paginator is hidden
+    scrollHeight?: string                                       // Height for the scroll
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -372,7 +374,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         filters={filters}
                         first={first}
                         rows={rows}
-                        paginator={true}
+                        paginator={!props.virtualScroll}
                         dataKey={props.selectionKey}
                         className="p-datatable-sm p-datatable-striped p-datatable-responsive-demo"
                         filterDisplay={props.showFilters ? 'row' : undefined}
@@ -389,6 +391,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         rowsPerPageOptions={[20, 30, 50]}
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
+                        scrollable={props.virtualScroll} scrollHeight={props.scrollHeight} virtualScrollerOptions={{ itemSize: 40 }}
                         // onPage={onPage}
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
@@ -441,7 +444,9 @@ SimpleDataTable.defaultProps = {
     sortableColumns: [],
     specialEditors: {},
     specialColumns: {},
-    specialFilters: {}
+    specialFilters: {},
+    virtualScroll: false,
+    scrollHeight: undefined
 }
 
 
