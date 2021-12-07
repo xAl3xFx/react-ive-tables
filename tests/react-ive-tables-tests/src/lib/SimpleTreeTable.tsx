@@ -159,7 +159,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                 tableStyle={{tableLayout: "auto"}} 
                 // @ts-ignore
                 value={items} 
-                paginator
+                paginator={!props.scrollable}
                 loading={loading}
                 first={first}
                 rowsPerPageOptions={[20, 30, 50]}
