@@ -129,10 +129,10 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                     //set{selectedRow: e.value});
 
                     if (props.setSelected !== undefined && props.contextMenu) {
-                        const index = e.value.split("-")[0];
-                        const key = e.value.split("-")[1];
-                        const selectedItem = key ? items[index].children[key].data : items[index].data
-                        props.setSelected(selectedItem);   
+                        // const index = e.value.split("-")[0];
+                        // const key = e.value.split("-")[1];
+                        // const selectedItem = key ? items[index].children[key].data : items[index].data
+                        props.setSelected(e.value);
                     }
                 }}
                 onContextMenu={e => {

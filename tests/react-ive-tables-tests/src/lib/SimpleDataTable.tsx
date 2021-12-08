@@ -356,7 +356,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
 
     return <>
-        {showTable && filters ?
+        {showTable && filters && props.data.length > 0 ?
             <>
                 <div className="datatable-responsive-demo">
                     {props.contextMenu ?
