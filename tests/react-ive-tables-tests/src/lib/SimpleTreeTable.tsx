@@ -18,7 +18,7 @@ interface Props {
     extraButton? : {[key: number] : JSX.Element},
     ignoreFilters? : string[],
     specialFilters? :  {[key: string]: {element: JSX.Element, type: string}},
-    setSelected? : (e : Event) => void,
+    setSelected? : (key : string, contextMenuClick: boolean) => void,
     showFilters? : boolean,
     additionalFilters? : {[key: string]: any;},
     showHeader? : boolean,
@@ -101,7 +101,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
         }
         setSelectedElementIndex(e.value);
 
-        if(props.setSelected) props.setSelected(e.value);
+        if(props.setSelected) props.setSelected(e.value, false);
     };
 
     return <>
@@ -132,7 +132,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                         // const index = e.value.split("-")[0];
                         // const key = e.value.split("-")[1];
                         // const selectedItem = key ? items[index].children[key].data : items[index].data
-                        props.setSelected(e.value);
+                        props.setSelected(e.value, true);
                     }
                 }}
                 onContextMenu={e => {
