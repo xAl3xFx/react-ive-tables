@@ -7,21 +7,21 @@ import {Button} from "primereact/button";
 
 export const BasicTreeTableExample = () => {
 
-    const getSpecialColumns = () => {
+    const getColumnsTemplate = () => {
         return {
-            'copy' : {
-                handler: () => console.log("asd"),
-                element: <Button icon={'pi pi-copy'} />,
-                atStart: false
+            test: (node : any, column : any) => {
+                return node.key.indexOf('-') === -1 ? null : <div>
+                    <Button onClick={e => e.stopPropagation()} type="button" icon="pi pi-search" className="p-button-success" style={{ marginRight: '.5em' }}></Button>
+                </div>;
             }
         }
     }
 
     return <>
         <SimpleTreeTable data={data.root}
+                         columnsTemplate={getColumnsTemplate()}
                          showHeader={false}
-                         specialColumns={getSpecialColumns()}
-                         columnOrder={['name', 'size', 'type']}
+                         columnOrder={['name', 'size', 'type', 'test']}
         />
     </>
 }

@@ -24,16 +24,9 @@ interface Props {
     showHeader? : boolean,
     contextMenu? : Object[],
     sortableColumns?: string[],                                  // Array of columns which should be sortable.
-    specialColumns?: {                                          // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
-        [key: string]:                                          // if the column should be put at the beginning or at the end.
-            {
-                element: JSX.Element,
-                handler: (rowData: any) => void,
-                atStart: boolean
-            }
-    }
     scrollable?: boolean                                        // When true scrolling is enabled and paginator is hidden
     scrollHeight?: string                                       // Height for the scroll
+    columnsTemplate? : any
 }
 
 export const SimpleTreeTable :  React.FC<Props> = (props) => {
@@ -60,56 +53,17 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                         label = f({id: props.specialLabels[cName]});
 
                     if(props.columnOrder.includes(cName)){
-                        return <Column expander={index===0}
+                        return <Column expander={index===0} body={props.columnsTemplate[cName]}
                                        sortable={props.sortableColumns?.includes(cName)}
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        showFilterMenu={false} filterField={cName}
                                        filter={props.showFilters && !props.ignoreFilters?.includes(cName)}
                                        key={cName} field={cName} header={label}/>
                     }
-            }))
-            Object.keys(props.specialColumns || []).forEach(cName => {
-                const col = <Column field={cName} header={f({id: cName})}
-                                    body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
-                if (props.specialColumns![cName].atStart) {
-                    columns.unshift(col);
-                } else {
-                    columns.push(col);
-                }
-            })
+            }));
         }
-        // if(props.extraButton !== undefined)
-        //     columns.push(<Column key={counter + 1} field={"extraButton"} header={""} />);
 
         setColumns(columns);
-
-
-        //TUKA EI TUI
-        if(props.extraButton !== undefined){
-            const result = insertElementAtLevel(items, parseInt(Object.keys(props.extraButton!)[0]), Object.values(props.extraButton!)[0], 0);
-        }
-    };
-
-    const generateColumnBodyTemplate = (column: string, rowData: any) => {
-        return React.cloneElement(props.specialColumns![column].element, {
-            onClick: (e: any) => {
-                e.stopPropagation();
-                props.specialColumns![column].handler(rowData)
-            }
-        })
-    }
-
-    const insertElementAtLevel = (data : any, level : number, element : JSX.Element, currLevel : number) => {
-        if(currLevel > level || data === undefined)
-            return;
-
-        if(currLevel === level){
-            data.map((s : any) => {
-                s.data.extraButton = React.cloneElement(element, {id: s.id});
-            });
-        }else{
-            data.map((s:any) => insertElementAtLevel(s.children, level, element, currLevel+1))
-        }
     };
 
     useEffect(() => {
@@ -202,5 +156,6 @@ SimpleTreeTable.defaultProps = {
     sortableColumns: [],
     specialFilters: {},
     scrollable: false,
-    scrollHeight: undefined
+    scrollHeight: undefined,
+    columnsTemplate: {}
 };
