@@ -17,8 +17,15 @@ export const BasicTreeTableExample = () => {
         }
     }
 
+    const menuModel = [
+        {label: 'asd', icon: 'pi pi-plus', command: 0}
+    ];
+
     return <>
         <SimpleTreeTable data={data.root}
+                         setSelected={() => 0}
+                         contextMenu={menuModel}
+                         showContextMenuOnRootElements={false}
                          columnsTemplate={getColumnsTemplate()}
                          showHeader={false}
                          columnOrder={['name', 'size', 'type', 'test']}
