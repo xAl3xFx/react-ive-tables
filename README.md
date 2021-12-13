@@ -1,8 +1,7 @@
 # react-ive-tables (interactive-viable-efficient)
 
-react-ive-tables is a library built on the top of [PrimeReact](#https://www.npmjs.com/package/primereact). It provides data grid components which are flexible and easy to use.
-
-
+react-ive-tables is a library built on the top of [PrimeReact](#https://www.npmjs.com/package/primereact). It provides
+data grid components which are flexible and easy to use.
 
 ## Download
 
@@ -16,12 +15,12 @@ yarn add react-ive-tables	 //Using yarn
 ## Import
 
 ```js
-import { LazyDataTable } from 'react-ive-tables';
+import {LazyDataTable} from 'react-ive-tables';
 ```
 
 ## Dependencies
 
-```json
+```
 dependencies: {
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -33,8 +32,6 @@ dependencies: {
 ## Documentation
 
 To be added soon.
-
-
 
 ## TypeScript
 

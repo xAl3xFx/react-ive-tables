@@ -381,7 +381,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
                         sortMode={'multiple'}
                         //@ts-ignore
-                        selectionMode={["single", "multiple"].includes(props.selectionMode!) ? props.selectionMode : undefined}
+                        selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
                         style={{marginBottom: "40px"}}
