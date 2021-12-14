@@ -398,8 +398,13 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         onContextMenuSelectionChange={(e: any) => {
                             //set{selectedRow: e.value});
                             if (props.setSelected !== undefined && props.contextMenu) {
-                                props.setSelected(e.value);
-                                setSelectedRow(e.value);
+                                if(["multiple", 'checkbox'].includes(props.selectionMode!)){
+                                    props.setSelected([e.value]);
+                                    setSelectedRow([e.value]);
+                                }else{
+                                    props.setSelected(e.value);
+                                    setSelectedRow(e.value);
+                                }
                             }
                         }}
                         onContextMenu={e => {

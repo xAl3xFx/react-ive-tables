@@ -18,7 +18,7 @@ function App() {
 
     const [selectedRow, setSelectedRow] = useState(null);
     const [data, setData] = useState<any>([]);
-    const [selectedTable, setSelectedTable] = useState(<BasicTreeTableExample />);
+    const [selectedTable, setSelectedTable] = useState(<ManyColumns />);
 
     useEffect(() => {
         setData(customers.data);
