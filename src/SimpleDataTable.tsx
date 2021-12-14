@@ -401,6 +401,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                 if(["multiple", 'checkbox'].includes(props.selectionMode!)){
                                     props.setSelected([e.value]);
                                     setSelectedRow([e.value]);
+                                    const page = Math.floor(first / rows) + 1;
+                                    setSelectedRowPerPage({[page]: [e.value]});
                                 }else{
                                     props.setSelected(e.value);
                                     setSelectedRow(e.value);

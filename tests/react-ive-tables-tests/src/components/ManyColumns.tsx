@@ -12,7 +12,7 @@ export const ManyColumns = () => {
     return <>
         <SimpleDataTable data={customers.data} contextMenu={menuModel} setSelected={e => console.log(e)}
                          columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
-                         selectionMode={'single'}
+                         selectionMode={'checkbox'}
          />
     </>
 }
