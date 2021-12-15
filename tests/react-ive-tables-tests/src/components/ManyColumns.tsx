@@ -1,6 +1,7 @@
 import {SimpleDataTable} from "../lib/SimpleDataTable";
 import React from "react";
 import * as customers from './../lib/customers.json'
+import {Button} from "primereact/button";
 
 
 export const ManyColumns = () => {

@@ -26,7 +26,7 @@ interface Props {
     sortableColumns?: string[],                                  // Array of columns which should be sortable.
     scrollable?: boolean                                        // When true scrolling is enabled and paginator is hidden
     scrollHeight?: string                                       // Height for the scroll
-    columnsTemplate? : any
+    columnTemplate? : any
     showContextMenuOnRootElements?: boolean
 }
 
@@ -54,7 +54,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                         label = f({id: props.specialLabels[cName]});
 
                     if(props.columnOrder.includes(cName)){
-                        return <Column expander={index===0} body={props.columnsTemplate[cName]}
+                        return <Column expander={index===0} body={props.columnTemplate[cName]}
                                        sortable={props.sortableColumns?.includes(cName)}
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        showFilterMenu={false} filterField={cName}
@@ -122,6 +122,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                 rowsPerPageOptions={[20, 30, 50]}
                 header={props.showHeader ? getHeader() : null}
                 expandedKeys={expandedKeys}
+                className="p-treetable-sm"
                 rows={rows}
                 emptyMessage="No records found"
                 onSelectionChange={handleSelection}
@@ -168,6 +169,6 @@ SimpleTreeTable.defaultProps = {
     specialFilters: {},
     scrollable: false,
     scrollHeight: undefined,
-    columnsTemplate: {},
+    columnTemplate: {},
     showContextMenuOnRootElements: true
 };

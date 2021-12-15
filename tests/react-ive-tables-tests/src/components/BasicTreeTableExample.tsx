@@ -26,7 +26,7 @@ export const BasicTreeTableExample = () => {
                          setSelected={() => 0}
                          contextMenu={menuModel}
                          showContextMenuOnRootElements={false}
-                         columnsTemplate={getColumnsTemplate()}
+                         columnTemplate={getColumnsTemplate()}
                          showHeader={false}
                          columnOrder={['name', 'size', 'type', 'test']}
         />

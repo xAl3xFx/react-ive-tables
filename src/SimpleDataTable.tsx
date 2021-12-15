@@ -3,7 +3,7 @@ import {useIntl} from "react-intl";
 import axios from 'axios'
 import {FormEvent, useEffect, useRef, useState} from "react";
 import {Column} from "primereact/column";
-import {DataTable, DataTableSelectionModeType, DataTableSortOrderType} from "primereact/datatable";
+import {DataTable, DataTableProps, DataTableSelectionModeType, DataTableSortOrderType} from "primereact/datatable";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import "./DataTable.css";
@@ -24,7 +24,8 @@ interface Props {
     specialLabels?: { [key: string]: string; },                 // Used for special labels. By default the table is trying to use intl for translation of each label. If specialLabels is used it overrides the column name for translation. The key is the cName and the value is the translation string used in text properties for intl.
     showFilters?: boolean,                                      // Should filters be rendered.
     showHeader?: boolean,                                       // Should header be rendered.
-    setSelected?: (e: any) => void,                             // Callback for selection. Provides the selected row/rows.
+    setSelected?: (value: any,                                  // Callback for selection. Provides the selected row/rows.
+                   contextMenuClick: boolean) => void,
     contextMenu?: Object[],                                     // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
     rowEditHandler?: (element: Object) => void,                 // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
     specialEditors?: { [key: string]: any },                    // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
@@ -51,6 +52,7 @@ interface Props {
     sortableColumns?: string[]                                  // Array of columns which should be sortable.
     virtualScroll?: boolean                                     // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string                                       // Height for the scroll
+    dtProps?: Partial<DataTableProps>                           // Additional properties to be passed directly to the datatable.
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -259,14 +261,18 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     : null
                 }
                 {
-                    props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick} tooltip={el.tooltipLabel} label={el.label}
-                                                           tooltipOptions={{position: 'top'}} className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
+                    props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
+                                                           tooltip={el.tooltipLabel} label={el.label}
+                                                           tooltipOptions={{position: 'top'}}
+                                                           className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>
             <div>
                 {
-                    props.rightHeaderButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick} tooltip={el.tooltipLabel} label={el.label}
-                                                                tooltipOptions={{position: 'top'}} className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
+                    props.rightHeaderButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
+                                                                tooltip={el.tooltipLabel} label={el.label}
+                                                                tooltipOptions={{position: 'top'}}
+                                                                className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>
         </div>
@@ -277,7 +283,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             cm.current.hide(e.originalEvent);
         }
         if (!Array.isArray(e.value)) {
-            if (props.setSelected) props.setSelected(e.value)
+            if (props.setSelected) props.setSelected(e.value, false)
             if (props.selectionHandler) props.selectionHandler(e);
             setSelectedRow(e.value);
             return;
@@ -366,7 +372,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
                     <DataTable
                         rowHover
-
+                        {...props.dtProps}
                         //editMode={"row"} rowEditorValidator={props.onRowEditorValidator} onRowEditInit={props.onRowEditInit} onRowEditSave={props.onRowEditSave} onRowEditCancel={props.onRowEditCancel}
                         //footerColumnGroup={props.subTotals ? buildSubTotals() : null}
                         ref={dt}
@@ -391,20 +397,21 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         rowsPerPageOptions={[20, 30, 50]}
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
-                        scrollable={props.virtualScroll} scrollHeight={props.scrollHeight} virtualScrollerOptions={{ itemSize: 40 }}
+                        scrollable={props.virtualScroll} scrollHeight={props.scrollHeight}
+                        virtualScrollerOptions={{itemSize: 40}}
                         // onPage={onPage}
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
                         onContextMenuSelectionChange={(e: any) => {
                             //set{selectedRow: e.value});
                             if (props.setSelected !== undefined && props.contextMenu) {
-                                if(["multiple", 'checkbox'].includes(props.selectionMode!)){
-                                    props.setSelected([e.value]);
+                                if (["multiple", 'checkbox'].includes(props.selectionMode!)) {
+                                    props.setSelected([e.value], true);
                                     setSelectedRow([e.value]);
                                     const page = Math.floor(first / rows) + 1;
                                     setSelectedRowPerPage({[page]: [e.value]});
-                                }else{
-                                    props.setSelected(e.value);
+                                } else {
+                                    props.setSelected(e.value, true);
                                     setSelectedRow(e.value);
                                 }
                             }

@@ -108,3 +108,11 @@ input.p-column-filter {
 .p-datatable-wrapper{
     overflow: auto !important;
 }
+
+.p-treetable .p-treetable-thead > tr:first-child {
+    height: 4rem;
+}
+
+.p-datatable-table .p-datatable-thead > tr:first-child {
+    height: 4rem;
+}
