@@ -53,6 +53,7 @@ interface Props {
     virtualScroll?: boolean                                     // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string                                       // Height for the scroll
     dtProps?: Partial<DataTableProps>                           // Additional properties to be passed directly to the datatable.
+    doubleClick? : (e:any) => void                              // Double click on table body, where the value of the prop is the callback to be executed
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -72,6 +73,14 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
+
+    useEffect(() => {
+        if(props.doubleClick && showTable && filters && props.data.length > 0) {
+            const body = document.getElementsByClassName("p-datatable-tbody");
+            //@ts-ignore
+            body[0].addEventListener('dblclick', props.doubleClick);
+        }
+    }, [showTable,filters,props.data.length])
 
     useEffect(() => {
         // initFilters();

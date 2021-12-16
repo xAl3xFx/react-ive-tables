@@ -52,7 +52,8 @@ interface Props {
     sortableColumns?: string[]                                  // Array of columns which should be sortable.
     virtualScroll?: boolean                                     // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string                                       // Height for the scroll
-    dtProps?: Partial<DataTableProps>                           // Additional properties to be passed directly to the datatable.
+    dtProps?: Partial<DataTableProps>,                          // Additional properties to be passed directly to the datatable.
+    doubleClick? : (e:any) => void
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -72,6 +73,16 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
+
+    useEffect(() => {
+        if(props.doubleClick && showTable && filters && props.data.length > 0) {
+            const body = document.getElementsByClassName("p-datatable-tbody");
+            //@ts-ignore
+            body[0].addEventListener('dblclick', props.doubleClick);
+        }
+    }, [showTable,filters,props.data.length])
+
+    
 
     useEffect(() => {
         // initFilters();
@@ -104,7 +115,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         const initialFilters = Object.keys(props.data[0]).reduce((acc: any, el: string) => {
             return {...acc, [el]: {value: null, matchMode: "contains"}}
         }, {})
-        console.log(initialFilters);
         setFilters(initialFilters);
     }
 
@@ -169,7 +179,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle)) {
                 const tempColumns = (props.columnOrder ? props.columnOrder : Object.keys(items[0])).map((cName: string) => {
                     let columnHeader = getColumnHeaderTranslated(cName);
-                    console.log('cName', cName);
 
                     //TO BE TESTED
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
