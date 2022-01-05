@@ -210,7 +210,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
                 //Put specialColumns in columns
                 Object.keys(props.specialColumns || []).forEach(cName => {
-                    const col = <Column field={cName} header={f({id: cName})}
+                    const col = <Column field={cName} header={f({id: cName})} style={{textAlign: "center"}}
                                         body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
                     if (props.specialColumns![cName].atStart) {
                         tempColumns.unshift(col);
