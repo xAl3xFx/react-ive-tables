@@ -99,7 +99,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     useEffect(() => {
         // initFilters();
-        if (props.data && props.data.length > 0) {
+        if ((props.data && props.data.length > 0)|| !props.showSkeleton) {
             setItems(props.data);
             setShowTable(true);
         }
@@ -125,6 +125,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [props.selectedIds]);
 
     const initFilters = () => {
+        if(props.data.length === 0) return;
         const initialFilters = Object.keys(props.data[0]).reduce((acc: any, el: string) => {
             return {...acc, [el]: {value: null, matchMode: "contains"}}
         }, {})
@@ -188,7 +189,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }
 
     const generateColumns = () => {
-        if (items.length > 0 && items[0] || props.columnOrder) {
+        if ((items.length > 0 && items[0]) || props.columnOrder) {
             if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle)) {
                 const tempColumns = (props.columnOrder ? props.columnOrder : Object.keys(items[0])).map((cName: string) => {
                     let columnHeader = getColumnHeaderTranslated(cName);
@@ -202,7 +203,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
                                        onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                       filter={props.specialFilters && props.specialFilters[cName]}
+                                       filter={props.specialFilters && props.specialFilters[cName] && props.showSkeleton}
                                        key={cName} field={cName} header={columnHeader}/>
                     }
                     //@ts-ignore
@@ -212,7 +213,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                    sortable={props.sortableColumns?.includes(cName)}
                                    filterElement={props.specialFilters![cName]} showClearButton={false}
                                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                   filter={props.showFilters ? (!props.ignoreFilters!.includes(cName)) : false}
+                                   filter={props.showFilters ? (!props.ignoreFilters!.includes(cName)) && props.showSkeleton: false}
                                    filterField={cName}/>
                     //return <Column key={cName} field={cName} editor={props.editable ? (props) => editorForRowEditing(props, 'color') : null} filter={props.showFilters ? (!props.ignoreFilters.includes(cName)) : false} filterElement={props.showFilters ? (props.ignoreFilters.includes(cName) ? null : createInputForFilter(cName)) : null} header={columnHeader}/>
                 });
@@ -384,7 +385,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
 
     return <>
-        {(showTable && filters && props.data.length > 0) || !props.showSkeleton  ?
+        {showTable && ((filters && props.data.length > 0) || !props.showSkeleton)  ?
             <>
                 <div className="datatable-responsive-demo">
                     {props.contextMenu ?

@@ -17,7 +17,7 @@ export const ManyColumns = () => {
     }
 
     return <>
-        <SimpleDataTable data={customers.data} contextMenu={menuModel} setSelected={setSelected}
+        <SimpleDataTable data={[]} contextMenu={menuModel} setSelected={setSelected} showSkeleton={false}
                          columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
                          selectionMode={'single'} doubleClick={dbClickCb} selectionKey="id"
          />
