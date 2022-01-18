@@ -15,6 +15,7 @@ import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
 import PrimeReact from 'primereact/api'
 import {Skeleton} from "primereact/skeleton";
+import { useCallback } from 'react';
 
 interface Props {
     data: any[],
@@ -74,15 +75,24 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const cm = useRef<any>();
     const dt = useRef<any>();
 
-    useEffect(() => {
+    // const doubleClickHandler = useCallback((e:any) => {
+    //     props.doubleClick!(selectedElement);
+    // }, [selectedElement])
+
+
+ useEffect(() => {
         if(props.doubleClick && showTable && filters && props.data.length > 0) {
             const body = document.getElementsByClassName("p-datatable-tbody");
             //@ts-ignore
             body[0].addEventListener('dblclick', props.doubleClick);
         }
-    }, [showTable,filters,props.data.length])
 
-    
+        return () => {
+            const body = document.getElementsByClassName("p-datatable-tbody");
+            //@ts-ignore
+            body[0].removeEventListener('dblclick', props.doubleClick);
+        }
+    }, [showTable,filters,props.data.length, props.doubleClick])
 
     useEffect(() => {
         // initFilters();
