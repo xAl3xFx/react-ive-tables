@@ -88,9 +88,11 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         }
 
         return () => {
-            const body = document.getElementsByClassName("p-datatable-tbody");
-            //@ts-ignore
-            body[0].removeEventListener('dblclick', props.doubleClick);
+            if(props.doubleClick) {
+                const body = document.getElementsByClassName("p-datatable-tbody");
+                //@ts-ignore
+                body[0].removeEventListener('dblclick', props.doubleClick);
+            }
         }
     }, [showTable,filters,props.data.length, props.doubleClick])
 
