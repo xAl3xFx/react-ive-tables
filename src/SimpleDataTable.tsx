@@ -413,7 +413,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
-                        style={{marginBottom: "40px"}}
                         emptyMessage="No records found"
                         tableStyle={{tableLayout: "auto"}}
                         header={props.showHeader ? getHeader() : null}
