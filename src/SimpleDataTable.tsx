@@ -56,6 +56,7 @@ interface Props {
     dtProps?: Partial<DataTableProps>;                          // Additional properties to be passed directly to the datatable.
     doubleClick? : (e:any) => void;                             // Double click handler function
     showSkeleton?: boolean;                                     // Used to indicate whether a skeleton should be shown or not *defaults to true*
+    selectionResetter?: number;                                 // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -70,7 +71,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const [showTable, setShowTable] = useState(false);
     const [selectedRow, setSelectedRow] = useState<any>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
-    const [refresher, setRefresher] = useState<number>();
+    const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
     const [selectedElement, setSelectedElement] = useState(null);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
@@ -123,6 +124,15 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     useEffect(() => {
         handleExternalSelection();
     }, [props.selectedIds]);
+
+    useEffect(() => {
+        if(props.selectionResetter && props.selectionResetter !== selectionResetter){
+            setSelectedRow(null);
+            setSelectedRowPerPage({});
+            setSelectedElement(null);
+            setSelectionResetter(props.selectionResetter);
+        }
+    }, [props.selectionResetter]);
 
     const initFilters = () => {
         if(props.data.length === 0) return;

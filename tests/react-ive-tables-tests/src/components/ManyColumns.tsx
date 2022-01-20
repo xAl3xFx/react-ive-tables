@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 export const ManyColumns = () => {
     const [selected, setSelected] = useState();
+    const [resetter, setResetter] = useState(0);
 
     const menuModel = [
         {label: "Add", icon: 'pi pi-plus', command: () => 0},
@@ -17,9 +18,10 @@ export const ManyColumns = () => {
     }
 
     return <>
-        <SimpleDataTable data={[]} contextMenu={menuModel} setSelected={setSelected} showSkeleton={false}
+        <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())} />
+        <SimpleDataTable data={customers.data} contextMenu={menuModel} setSelected={setSelected} showSkeleton={false} selectionResetter={resetter}
                          columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
-                         selectionMode={'single'} doubleClick={dbClickCb} selectionKey="id"
+                         selectionMode={'checkbox'} doubleClick={dbClickCb} selectionKey={"id"}
          />
     </>
 }
