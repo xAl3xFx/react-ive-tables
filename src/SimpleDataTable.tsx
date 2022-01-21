@@ -18,24 +18,24 @@ import {Skeleton} from "primereact/skeleton";
 import { useCallback } from 'react';
 
 interface Props {
-    data: any[],
-    columnOrder: string[],                                      // Defines order for the columns. NB! Only the specified columns here will be rendered.
-    ignoreFilters?: string[],                                   // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
-    specialFilters?: { [key: string]: any },                    // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
-    specialLabels?: { [key: string]: string; },                 // Used for special labels. By default the table is trying to use intl for translation of each label. If specialLabels is used it overrides the column name for translation. The key is the cName and the value is the translation string used in text properties for intl.
-    showFilters?: boolean,                                      // Should filters be rendered.
-    showHeader?: boolean,                                       // Should header be rendered.
+    data: any[];
+    columnOrder: string[];                                      // Defines order for the columns. NB! Only the specified columns here will be rendered.
+    ignoreFilters?: string[];                                   // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
+    specialFilters?: { [key: string]: any };                    // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
+    specialLabels?: { [key: string]: string; };                 // Used for special labels. By default the table is trying to use intl for translation of each label. If specialLabels is used it overrides the column name for translation. The key is the cName and the value is the translation string used in text properties for intl.
+    showFilters?: boolean;                                      // Should filters be rendered.
+    showHeader?: boolean;                                       // Should header be rendered.
     setSelected?: (value: any,                                  // Callback for selection. Provides the selected row/rows.
-                   contextMenuClick: boolean) => void,
-    contextMenu?: Object[],                                     // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
-    rowEditHandler?: (element: Object) => void,                 // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
-    specialEditors?: { [key: string]: any },                    // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
-    cellEditHandler?: (element: Object) => void,                // Same as rowEditHandler.
-    selectionHandler?: (e: any) => void,                        // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
-    selectionMode?: DataTableSelectionModeType | undefined,     // Selection mode.
-    selectionKey?: string,                                      // Key used for selection. Default value is 'id'. Important for proper selection.
-    onRowUnselect?: (e: any) => void,                           // Callback invoked when row is unselected.
-    selectedIds?: string[],                                     // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
+                   contextMenuClick: boolean) => void;
+    contextMenu?: Object[];                                     // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
+    rowEditHandler?: (element: Object) => void;                 // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
+    specialEditors?: { [key: string]: any };                    // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
+    cellEditHandler?: (element: Object) => void;                // Same as rowEditHandler.
+    selectionHandler?: (e: any) => void;                        // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
+    selectionMode?: DataTableSelectionModeType | undefined;     // Selection mode.
+    selectionKey?: string;                                      // Key used for selection. Default value is 'id'. Important for proper selection.
+    onRowUnselect?: (e: any) => void;                           // Callback invoked when row is unselected.
+    selectedIds?: string[];                                     // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
     specialColumns?: {                                          // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
         [key: string]:                                          // if the column should be put at the beginning or at the end.
             {
@@ -43,18 +43,20 @@ interface Props {
                 handler: (rowData: any) => void,
                 atStart: boolean
             }
-    },
-    columnTemplate?: { [key: string]: (rowData: any) => any },  // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
-    xlsx?: string,                                              // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
-    formatDateToLocal?: boolean,                                // Specifies whether dates should be formatted to local or not.
-    toggleSelect?: { toggle: boolean, handler: () => void },    // Toggles checkbox column used for excel. Not very template prop.
-    headerButtons?: HeaderButton[],                             // Array with buttons to be shown in the header.
-    rightHeaderButtons?: HeaderButton[],                        // Array with buttons to be shown in the header (from the right side).
-    sortableColumns?: string[]                                  // Array of columns which should be sortable.
-    virtualScroll?: boolean                                     // When true virtual scroller is enabled and paginator is hidden
-    scrollHeight?: string                                       // Height for the scroll
-    dtProps?: Partial<DataTableProps>,                          // Additional properties to be passed directly to the datatable.
-    doubleClick? : (e:any) => void
+    };
+    columnTemplate?: { [key: string]: (rowData: any) => any };  // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
+    xlsx?: string;                                              // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
+    formatDateToLocal?: boolean;                                // Specifies whether dates should be formatted to local or not.
+    toggleSelect?: { toggle: boolean, handler: () => void };    // Toggles checkbox column used for excel. Not very template prop.
+    headerButtons?: HeaderButton[];                             // Array with buttons to be shown in the header.
+    rightHeaderButtons?: HeaderButton[];                        // Array with buttons to be shown in the header (from the right side).
+    sortableColumns?: string[];                                 // Array of columns which should be sortable.
+    virtualScroll?: boolean;                                    // When true virtual scroller is enabled and paginator is hidden
+    scrollHeight?: string;                                      // Height for the scroll
+    dtProps?: Partial<DataTableProps>;                          // Additional properties to be passed directly to the datatable.
+    doubleClick? : (e:any) => void;                             // Double click handler function
+    showSkeleton?: boolean;                                     // Used to indicate whether a skeleton should be shown or not *defaults to true*
+    selectionResetter?: number;                                 // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -69,7 +71,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const [showTable, setShowTable] = useState(false);
     const [selectedRow, setSelectedRow] = useState<any>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
-    const [refresher, setRefresher] = useState<number>();
+    const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
     const [selectedElement, setSelectedElement] = useState(null);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
@@ -98,7 +100,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     useEffect(() => {
         // initFilters();
-        if (props.data && props.data.length > 0) {
+        if ((props.data && props.data.length > 0)|| !props.showSkeleton) {
             setItems(props.data);
             setShowTable(true);
         }
@@ -123,7 +125,17 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         handleExternalSelection();
     }, [props.selectedIds]);
 
+    useEffect(() => {
+        if(props.selectionResetter && props.selectionResetter !== selectionResetter){
+            setSelectedRow(null);
+            setSelectedRowPerPage({});
+            setSelectedElement(null);
+            setSelectionResetter(props.selectionResetter);
+        }
+    }, [props.selectionResetter]);
+
     const initFilters = () => {
+        if(props.data.length === 0) return;
         const initialFilters = Object.keys(props.data[0]).reduce((acc: any, el: string) => {
             return {...acc, [el]: {value: null, matchMode: "contains"}}
         }, {})
@@ -187,7 +199,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }
 
     const generateColumns = () => {
-        if (items.length > 0 && items[0] || props.columnOrder) {
+        if ((items.length > 0 && items[0]) || props.columnOrder) {
             if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle)) {
                 const tempColumns = (props.columnOrder ? props.columnOrder : Object.keys(items[0])).map((cName: string) => {
                     let columnHeader = getColumnHeaderTranslated(cName);
@@ -201,7 +213,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
                                        onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                       filter={props.specialFilters && props.specialFilters[cName]}
+                                       filter={props.specialFilters && props.specialFilters[cName] && props.showSkeleton}
                                        key={cName} field={cName} header={columnHeader}/>
                     }
                     //@ts-ignore
@@ -211,7 +223,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                    sortable={props.sortableColumns?.includes(cName)}
                                    filterElement={props.specialFilters![cName]} showClearButton={false}
                                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                   filter={props.showFilters ? (!props.ignoreFilters!.includes(cName)) : false}
+                                   filter={props.showFilters ? (!props.ignoreFilters!.includes(cName)) && props.showSkeleton: false}
                                    filterField={cName}/>
                     //return <Column key={cName} field={cName} editor={props.editable ? (props) => editorForRowEditing(props, 'color') : null} filter={props.showFilters ? (!props.ignoreFilters.includes(cName)) : false} filterElement={props.showFilters ? (props.ignoreFilters.includes(cName) ? null : createInputForFilter(cName)) : null} header={columnHeader}/>
                 });
@@ -383,7 +395,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
 
     return <>
-        {showTable && filters && props.data.length > 0 ?
+        {showTable && ((filters && props.data.length > 0) || !props.showSkeleton)  ?
             <>
                 <div className="datatable-responsive-demo">
                     {props.contextMenu ?
@@ -411,7 +423,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
-                        style={{marginBottom: "40px"}}
                         emptyMessage="No records found"
                         tableStyle={{tableLayout: "auto"}}
                         header={props.showHeader ? getHeader() : null}
@@ -481,7 +492,8 @@ SimpleDataTable.defaultProps = {
     specialColumns: {},
     specialFilters: {},
     virtualScroll: false,
-    scrollHeight: undefined
+    scrollHeight: undefined,
+    showSkeleton: true
 }
 
 
