@@ -35,7 +35,7 @@ interface Props {
     selectionMode?: DataTableSelectionModeType | undefined,     // Selection mode.
     selectionKey?: string,                                      // Key used for selection. Default value is 'id'. Important for proper selection.
     onRowUnselect?: (e: any) => void,                           // Callback invoked when row is unselected.
-    selectedIds?: string[],                                     // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
+    selectedIds?: string[] | number[],                                     // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
     specialColumns?: {                                          // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
         [key: string]:                                          // if the column should be put at the beginning or at the end.
             {
@@ -55,6 +55,7 @@ interface Props {
     scrollHeight?: string                                       // Height for the scroll
     dtProps?: Partial<DataTableProps>,                          // Additional properties to be passed directly to the datatable.
     doubleClick? : (e:any) => void
+    externalSelection?: any
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -123,6 +124,13 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         handleExternalSelection();
     }, [props.selectedIds]);
 
+    useEffect(() => {
+        console.log("EXTERNAL SELECTION USE EFFECT", props.externalSelection)
+        if(props.externalSelection && items.length > 0) {
+            setSelectedElement(props.externalSelection);
+        }
+    }, [props.externalSelection])
+
     const initFilters = () => {
         const initialFilters = Object.keys(props.data[0]).reduce((acc: any, el: string) => {
             return {...acc, [el]: {value: null, matchMode: "contains"}}
@@ -149,6 +157,11 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                 setSelectedRow(copy);
             } else {
                 //TODO implement logic for external management of selectedRow when single selection mode is being used
+                //@ts-ignore
+                const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
+                console.log("SELECTED ELEMENTS ARE: ", elements);
+                const copy = clone(elements[0]);
+                setSelectedRow(copy);
             }
         }
     };

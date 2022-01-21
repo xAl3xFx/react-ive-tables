@@ -7,6 +7,11 @@ import { useEffect } from "react";
 
 export const ManyColumns = () => {
     const [selected, setSelected] = useState();
+    const [tempSelection, setTempSelection] = useState<any>();
+
+    setTimeout(() => {
+        setTempSelection(customers.data[0]);
+    }, 2000)
 
     const menuModel = [
         {label: "Add", icon: 'pi pi-plus', command: () => 0},
@@ -16,10 +21,12 @@ export const ManyColumns = () => {
         console.log("DOUBLE CLICKED!", selected);
     }
 
+
+
     return <>
         <SimpleDataTable data={customers.data} contextMenu={menuModel} setSelected={setSelected}
                          columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
-                         selectionMode={'single'} doubleClick={dbClickCb} selectionKey="id"
+                         selectionMode={'single'} doubleClick={dbClickCb} selectionKey="id" selectedIds={[1000]}
          />
     </>
 }
