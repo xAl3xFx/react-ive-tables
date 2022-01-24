@@ -26,16 +26,16 @@ interface Props {
     showFilters?: boolean;                                      // Should filters be rendered.
     showHeader?: boolean;                                       // Should header be rendered.
     setSelected?: (value: any,                                  // Callback for selection. Provides the selected row/rows.
-                   contextMenuClick: boolean) => void;
-    contextMenu?: Object[];                                     // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
-    rowEditHandler?: (element: Object) => void;                 // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
-    specialEditors?: { [key: string]: any };                    // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
-    cellEditHandler?: (element: Object) => void;                // Same as rowEditHandler.
-    selectionHandler?: (e: any) => void;                        // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
-    selectionMode?: DataTableSelectionModeType | undefined;     // Selection mode.
-    selectionKey?: string;                                      // Key used for selection. Default value is 'id'. Important for proper selection.
-    onRowUnselect?: (e: any) => void;                           // Callback invoked when row is unselected.
-    selectedIds?: string[];                                     // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
+                   contextMenuClick: boolean) => void,
+    contextMenu?: Object[],                                     // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
+    rowEditHandler?: (element: Object) => void,                 // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
+    specialEditors?: { [key: string]: any },                    // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
+    cellEditHandler?: (element: Object) => void,                // Same as rowEditHandler.
+    selectionHandler?: (e: any) => void,                        // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
+    selectionMode?: DataTableSelectionModeType | undefined,     // Selection mode.
+    selectionKey?: string,                                      // Key used for selection. Default value is 'id'. Important for proper selection.
+    onRowUnselect?: (e: any) => void,                           // Callback invoked when row is unselected.
+    selectedIds?: string[] | number[],                                     // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
     specialColumns?: {                                          // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
         [key: string]:                                          // if the column should be put at the beginning or at the end.
             {
@@ -161,6 +161,11 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                 setSelectedRow(copy);
             } else {
                 //TODO implement logic for external management of selectedRow when single selection mode is being used
+                //@ts-ignore
+                const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
+                console.log("SELECTED ELEMENTS ARE: ", elements);
+                const copy = clone(elements[0]);
+                setSelectedRow(copy);
             }
         }
     };
