@@ -435,7 +435,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
                         scrollable={props.virtualScroll} scrollHeight={props.scrollHeight? props.scrollHeight : undefined}
-                        virtualScrollerOptions={props.scrollHeight ? {itemSize: 40} : undefined}
+                        virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
                         // onPage={onPage}
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
