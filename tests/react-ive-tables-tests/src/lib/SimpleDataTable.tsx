@@ -57,6 +57,7 @@ interface Props {
     doubleClick? : (e:any) => void;                             // Double click handler function
     showSkeleton?: boolean;                                     // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                 // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
+    disableArrowKeys?: boolean;                                 // When true arrow keys will not select rows above or below
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -69,6 +70,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const [first, setFirst] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showTable, setShowTable] = useState(false);
+    const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0); //Used for handling arrowUp and arrowDown. This is the index of the current selected row.
     const [selectedRow, setSelectedRow] = useState<any>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
@@ -117,9 +119,37 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [props.toggleSelect])
 
     useEffect(() => {
-        if (showTable)
+        if (showTable){
             generateColumns();
+        }
     }, [showTable]);
+
+    const listener = (event : any) => {
+        console.log(event.code)
+        if(event.code === "ArrowUp"){
+            const newSelectedElement = items[selectedRowIndex - 1];
+            setSelectedRowIndex(selectedRowIndex - 1);
+            setSelectedRow(newSelectedElement);
+        } else if(event.code === "ArrowDown"){
+            const newSelectedElement = items[selectedRowIndex + 1];
+            setSelectedRowIndex(selectedRowIndex + 1);
+            setSelectedRow(newSelectedElement);
+        } else if(event.code === "ArrowRight"){
+            // if(first + rows < items.length)
+            //     setFirst(first + rows);
+        } else if(event.code === "ArrowLeft"){
+            // if(first - rows >= 0)
+            //     setFirst(first - rows);
+        }
+    }
+    //
+    //  useEffect(() => {
+    //      if(dt.current){
+    //          dt.current.table.addEventListener("keydown", listener);
+    //      }
+    //
+    //      return () => dt.current.table.removeEventListener("keydown", listener);
+    //  }, [selectedRow])
 
     useEffect(() => {
         handleExternalSelection();
@@ -169,6 +199,27 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             }
         }
     };
+
+    // const attachArrowKeysListener = () => {
+    //     const listener = (event : KeyboardEvent) => {
+    //         console.log(selectedRowIndex)
+    //         if(event.code === "ArrowUp"){
+    //             const newSelectedElement = clone(items[selectedRowIndex - 1]);
+    //             setSelectedRowIndex(selectedRowIndex - 1);
+    //             setSelectedRow(newSelectedElement);
+    //         } else if(event.code === "ArrowDown"){
+    //             const newSelectedElement = clone(items[selectedRowIndex + 1]);
+    //             setSelectedRowIndex(selectedRowIndex + 1);
+    //             setSelectedRow(newSelectedElement);
+    //         }
+    //     }
+    //     if(dt.current){
+    //         dt.current.table.addEventListener("keydown", listener);
+    //         console.log(dt.current.table)
+    //     }
+    //
+    //     return listener;
+    // }
 
     const exportExcel = () => {
         import('xlsx').then(xlsx => {
@@ -265,6 +316,21 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         })
     }
 
+    const onPage = (event : any) => {
+        setFirst(event.first);
+    }
+
+    //Used for changing page with arrow keys.
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         const firstRow = document.querySelectorAll('tr')[2];
+    //         if(firstRow){
+    //             document.querySelectorAll('tr')[2].click()
+    //             document.querySelectorAll('tr')[2].focus()
+    //         }
+    //     }, 100);
+    // }, [first]);
+
     const comparator = (e: any, a: any, b: any) => {
 
         if (!a[e.sortField])
@@ -317,14 +383,28 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     };
 
     const handleSelection = (e: any) => {
+        console.log("handleSelection")
         if (cm.current) {
             cm.current.hide(e.originalEvent);
         }
         if (!Array.isArray(e.value)) {
             if (props.setSelected) props.setSelected(e.value, false)
             if (props.selectionHandler) props.selectionHandler(e);
+            for(let i =0; i < items.length; i++){
+                if(items[i][props.selectionKey!] === e.value[props.selectionKey!]){
+                    setSelectedRowIndex(i);
+                    break;
+                }
+            }
             setSelectedRow(e.value);
             return;
+        }else{
+            for(let i =0; i < items.length; i++){
+                if(items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]){
+                    setSelectedRowIndex(i);
+                    break;
+                }
+            }
         }
         const page = Math.floor(first / rows) + 1;
         const newSelectedRowsPerPage = clone(selectedRowsPerPage);
@@ -357,7 +437,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         if (props.selectionHandler) props.selectionHandler({value: newSelectedRow});
         //@ts-ignore
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
-
     };
 
     const onRowEditComplete = (e: any) => {
@@ -402,7 +481,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     return <>
         {showTable && ((filters && props.data.length > 0) || !props.showSkeleton)  ?
             <>
-                <div className="datatable-responsive-demo">
+                <div onKeyDown={props.disableArrowKeys? () => 0 : listener} className="datatable-responsive-demo">
                     {props.contextMenu ?
                         <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
                                      appendTo={document.body}/> : null}
@@ -436,7 +515,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         onRowEditComplete={onRowEditComplete}
                         scrollable={props.virtualScroll} scrollHeight={props.scrollHeight? props.scrollHeight : undefined}
                         virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
-                        // onPage={onPage}
+                        onPage={onPage}
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
                         onContextMenuSelectionChange={(e: any) => {
@@ -447,9 +526,21 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                     setSelectedRow([e.value]);
                                     const page = Math.floor(first / rows) + 1;
                                     setSelectedRowPerPage({[page]: [e.value]});
+                                    for(let i =0; i < items.length; i++){
+                                        if(items[i][props.selectionKey!] === e.value[props.selectionKey!]){
+                                            setSelectedRowIndex(i);
+                                            break;
+                                        }
+                                    }
                                 } else {
                                     props.setSelected(e.value, true);
                                     setSelectedRow(e.value);
+                                    for(let i =0; i < items.length; i++){
+                                        if(items[i][props.selectionKey!] === e.value[props.selectionKey!]){
+                                            setSelectedRowIndex(i);
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }}
@@ -498,7 +589,8 @@ SimpleDataTable.defaultProps = {
     specialFilters: {},
     virtualScroll: false,
     scrollHeight: undefined,
-    showSkeleton: true
+    showSkeleton: true,
+    disableArrowKeys: false
 }
 
 
