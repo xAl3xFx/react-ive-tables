@@ -125,15 +125,26 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [showTable]);
 
     const listener = (event : any) => {
-        console.log(event.code)
         if(event.code === "ArrowUp"){
-            const newSelectedElement = items[selectedRowIndex - 1];
-            setSelectedRowIndex(selectedRowIndex - 1);
-            setSelectedRow(newSelectedElement);
+            if(selectedRowIndex - 1 >= 0){
+                const newSelectedElement = items[selectedRowIndex - 1];
+                setSelectedRowIndex(selectedRowIndex - 1);
+                if(props.selectionMode === "multiple" || props.selectionMode === "checkbox"){
+                    setSelectedRow([newSelectedElement]);
+                }else {
+                    setSelectedRow(newSelectedElement);
+                }
+            }
         } else if(event.code === "ArrowDown"){
-            const newSelectedElement = items[selectedRowIndex + 1];
-            setSelectedRowIndex(selectedRowIndex + 1);
-            setSelectedRow(newSelectedElement);
+            if(selectedRowIndex + 1 < items.length){
+                const newSelectedElement = items[selectedRowIndex + 1];
+                setSelectedRowIndex(selectedRowIndex + 1);
+                if(props.selectionMode === "multiple" || props.selectionMode === "checkbox"){
+                    setSelectedRow([newSelectedElement]);
+                }else {
+                    setSelectedRow(newSelectedElement);
+                }
+            }
         } else if(event.code === "ArrowRight"){
             // if(first + rows < items.length)
             //     setFirst(first + rows);
@@ -142,14 +153,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             //     setFirst(first - rows);
         }
     }
-    //
-    //  useEffect(() => {
-    //      if(dt.current){
-    //          dt.current.table.addEventListener("keydown", listener);
-    //      }
-    //
-    //      return () => dt.current.table.removeEventListener("keydown", listener);
-    //  }, [selectedRow])
 
     useEffect(() => {
         handleExternalSelection();
@@ -174,52 +177,64 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
 
     const handleExternalSelection = () => {
-        if (selectedRow !== undefined) {
+        // if (selectedRow !== undefined) {
             if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
-                //@ts-ignore
-                const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
-                const copy = clone(elements);
-                setSelectedRow(copy);
+                const elements : typeof items = [];
+                let selectedRowIndex = undefined;
+                for(let i=0; i < items.length; i++){
+                    //@ts-ignore
+                    if(props.selectedIds!.includes(items[i][props.selectionKey!])){
+                        if(!selectedRowIndex){
+                            selectedRowIndex = i;
+                        }
+                        elements.push({...items[i]});
+                    }
+                }
+                // const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
+                if(selectedRow)
+                    setSelectedRow([...selectedRow, ...elements]);
+                else
+                    setSelectedRow([...elements]);
+                if(selectedRowIndex !== undefined)
+                    setSelectedRowIndex(selectedRowIndex);
             } else {
-                //TODO implement logic for external management of selectedRow when single selection mode is being used
+                let element : any = undefined;
+                for(let i=0; i < items.length; i++){
+                    //@ts-ignore
+                    if(props.selectedIds!.includes(items[i][props.selectionKey!])){
+                        element = {...items[i]};
+                        setSelectedRowIndex(i);
+                        break;
+                    }
+                }
+                setSelectedRow(element);
             }
-        } else {
-            if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
-                //@ts-ignore
-                const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
-                const copy = clone(elements);
-                setSelectedRow(copy);
-            } else {
-                //TODO implement logic for external management of selectedRow when single selection mode is being used
-                //@ts-ignore
-                const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
-                console.log("SELECTED ELEMENTS ARE: ", elements);
-                const copy = clone(elements[0]);
-                setSelectedRow(copy);
-            }
-        }
+        // } else {
+        //     if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
+        //         //@ts-ignore
+        //         const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
+        //         const copy = clone(elements);
+        //         setSelectedRow(copy);
+        //     } else {
+        //         //TODO implement logic for external management of selectedRow when single selection mode is being used
+        //         //@ts-ignore
+        //         const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
+        //         console.log("SELECTED ELEMENTS ARE: ", elements);
+        //         const copy = clone(elements[0]);
+        //         setSelectedRow(copy);
+        //     }
+        // }
     };
 
-    // const attachArrowKeysListener = () => {
-    //     const listener = (event : KeyboardEvent) => {
-    //         console.log(selectedRowIndex)
-    //         if(event.code === "ArrowUp"){
-    //             const newSelectedElement = clone(items[selectedRowIndex - 1]);
-    //             setSelectedRowIndex(selectedRowIndex - 1);
-    //             setSelectedRow(newSelectedElement);
-    //         } else if(event.code === "ArrowDown"){
-    //             const newSelectedElement = clone(items[selectedRowIndex + 1]);
-    //             setSelectedRowIndex(selectedRowIndex + 1);
-    //             setSelectedRow(newSelectedElement);
-    //         }
-    //     }
-    //     if(dt.current){
-    //         dt.current.table.addEventListener("keydown", listener);
-    //         console.log(dt.current.table)
-    //     }
-    //
-    //     return listener;
-    // }
+    useEffect(() => {
+        const newPage = Math.floor(selectedRowIndex / rows) + 1;
+        setFirst((newPage - 1) * rows);
+    }, [selectedRowIndex]);
+
+    useEffect(() => {
+        if(dt.current)
+            dt.current.table.querySelectorAll('tr')[2].focus();
+    }, [first]);
 
     const exportExcel = () => {
         import('xlsx').then(xlsx => {
@@ -248,7 +263,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
         });
     }
-
 
     const textEditor = (options: any) => {
         return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)}/>;
@@ -383,7 +397,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     };
 
     const handleSelection = (e: any) => {
-        console.log("handleSelection")
+        console.log(e.value);
         if (cm.current) {
             cm.current.hide(e.originalEvent);
         }

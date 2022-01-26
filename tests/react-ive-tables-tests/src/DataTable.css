@@ -67,7 +67,9 @@ input.p-column-filter {
     right: 30% !important;
 }
 
-
+.p-datatable .p-datatable-tbody > tr{
+    outline: none;
+}
 
 .datatable-responsive-demo .p-datatable-responsive-demo .p-datatable-tbody > tr > td .p-column-title {
     display: none;
