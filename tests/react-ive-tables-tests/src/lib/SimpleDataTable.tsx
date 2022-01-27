@@ -331,6 +331,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }
 
     const onPage = (event : any) => {
+        setRows(event.rows);
         setFirst(event.first);
     }
 
