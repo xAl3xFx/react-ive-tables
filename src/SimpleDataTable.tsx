@@ -2,8 +2,14 @@ import * as React from 'react';
 import {useIntl} from "react-intl";
 import axios from 'axios'
 import {FormEvent, useEffect, useRef, useState} from "react";
-import {Column} from "primereact/column";
-import {DataTable, DataTableProps, DataTableSelectionModeType, DataTableSortOrderType} from "primereact/datatable";
+import {Column, ColumnFilterParams} from "primereact/column";
+import {
+    DataTable,
+    DataTableFilterParams,
+    DataTableProps,
+    DataTableSelectionModeType,
+    DataTableSortOrderType
+} from "primereact/datatable";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import "./DataTable.css";
@@ -64,6 +70,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const {formatMessage: f} = useIntl();
 
     const [items, setItems] = useState<any>([]);
+    const [originalItems, setOriginalItems] = useState<any>([]);
     const [filters, setFilters] = useState<any>(null);
     const [columns, setColumns] = useState<any>([]);
     const [rows, setRows] = useState(20);
@@ -104,6 +111,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         // initFilters();
         if ((props.data && props.data.length > 0)|| !props.showSkeleton) {
             setItems(props.data);
+            setOriginalItems(props.data);
             setShowTable(true);
         }
     }, [props.data])
@@ -264,6 +272,32 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         });
     }
 
+    const handleFilter = (e: DataTableFilterParams) => {
+        let result;
+        const actualFilters = Object.keys(e.filters).reduce((acc: any,key: string) => {
+            //@ts-ignore
+            if(e.filters[key].value === null || e.filters[key].value === '')
+                return acc;
+            acc[key] = {...e.filters[key]};
+            return acc;
+        }, {});
+
+        //@ts-ignore
+        if(Object.keys(actualFilters).length === 0){
+            result = clone(originalItems);
+            setItems(result);
+        }else{
+            result = originalItems.filter((el : any) => {
+                // @ts-ignore
+                return Object.keys(actualFilters).reduce((acc, filterKey) => {
+                    //@ts-ignore
+                    return acc && String(el[filterKey]).indexOf(actualFilters[filterKey].value) !== -1;
+                }, true)
+            });
+            setItems(result);
+        }
+    }
+
     const textEditor = (options: any) => {
         return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)}/>;
     }
@@ -279,6 +313,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     if (props.columnTemplate && props.columnTemplate[cName] !== undefined) {
                         return <Column body={(rowData: any) => props.columnTemplate![cName](rowData)}
                                        editor={editMode ? textEditor : undefined}
+                                       filterFunction={handleFilter}
                                        sortable={props.sortableColumns?.includes(cName)}
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
@@ -290,6 +325,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     return <Column style={{textAlign: "center"}} key={cName} field={cName}
                                    editor={props.specialEditors![cName] || editMode ? textEditor : undefined}
                                    header={columnHeader} showFilterMenu={false}
+                                   filterFunction={handleFilter}
                                    sortable={props.sortableColumns?.includes(cName)}
                                    filterElement={props.specialFilters![cName]} showClearButton={false}
                                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
@@ -513,6 +549,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         first={first}
                         rows={rows}
                         paginator={!props.virtualScroll}
+                        onFilter={handleFilter}
                         dataKey={props.selectionKey}
                         className="p-datatable-sm p-datatable-striped p-datatable-responsive-demo"
                         filterDisplay={props.showFilters ? 'row' : undefined}
