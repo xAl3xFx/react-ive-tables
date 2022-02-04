@@ -116,3 +116,7 @@ input.p-column-filter {
 .p-datatable-table .p-datatable-thead > tr:first-child {
     height: 4rem;
 }
+
+.p-datatable .p-column-header-content{
+    justify-content: center !important;
+}

@@ -2,6 +2,10 @@ th.p-sortable-column{
     white-space: nowrap !important;
 }
 
+.p-column-header-content{
+    justify-content: center !important;
+}
+
 input.p-column-filter {
     width: 80% !important;
 }
@@ -67,9 +71,7 @@ input.p-column-filter {
     right: 30% !important;
 }
 
-.p-datatable .p-datatable-tbody > tr{
-    outline: none;
-}
+
 
 .datatable-responsive-demo .p-datatable-responsive-demo .p-datatable-tbody > tr > td .p-column-title {
     display: none;
@@ -101,4 +103,20 @@ input.p-column-filter {
     .datatable-responsive-demo .p-datatable.p-datatable-responsive-demo .p-datatable-tbody > tr > td:last-child {
         border-bottom: 1px solid var(--surface-d);
     }
+}
+
+.p-datatable-wrapper{
+    overflow: auto !important;
+}
+
+.p-treetable .p-treetable-thead > tr:first-child {
+    height: 4rem;
+}
+
+.p-datatable-table .p-datatable-thead > tr:first-child {
+    height: 4rem;
+}
+
+.p-datatable .p-column-header-content{
+    justify-content: center !important;
 }
