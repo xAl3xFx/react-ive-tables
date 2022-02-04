@@ -64,6 +64,7 @@ interface Props {
     showSkeleton?: boolean;                                     // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                 // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
     disableArrowKeys?: boolean;                                 // When true arrow keys will not select rows above or below
+    tableHeight? : string;                                      // Specify custom height for the table.
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -529,6 +530,12 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }
 
 
+    const setRef = (ref : any) => {
+        dt.current = ref;
+        if(ref && props.tableHeight)
+            ref.table.style.height = props.tableHeight;
+    }
+
     return <>
         {showTable && ((filters && props.data.length > 0) || !props.showSkeleton)  ?
             <>
@@ -543,7 +550,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         {...props.dtProps}
                         //editMode={"row"} rowEditorValidator={props.onRowEditorValidator} onRowEditInit={props.onRowEditInit} onRowEditSave={props.onRowEditSave} onRowEditCancel={props.onRowEditCancel}
                         //footerColumnGroup={props.subTotals ? buildSubTotals() : null}
-                        ref={dt}
+                        ref={setRef}
                         value={items}
                         filters={filters}
                         first={first}
@@ -565,7 +572,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         rowsPerPageOptions={[20, 30, 50]}
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
-                        scrollable={props.virtualScroll} scrollHeight={props.scrollHeight? props.scrollHeight : undefined}
+                        scrollable={props.virtualScroll}
+                        scrollHeight={props.scrollHeight? props.scrollHeight : undefined}
                         virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
                         onPage={onPage}
                         loading={loading}
