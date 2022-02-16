@@ -24,7 +24,7 @@ export const ManyColumns = () => {
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())} />
         <Button label={"Add selectedIDs"} onClick={addSelectedIds} />
         <SimpleDataTable data={customers.data.slice(0,10)} contextMenu={menuModel} setSelected={setSelected}
-                         tableHeight={"55rem"}
+                         tableHeight={"1000px"}
                          columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']} selectedIds={selectedIds}
                          selectionMode={'multiple'} doubleClick={dbClickCb} selectionKey={"id"}
          />

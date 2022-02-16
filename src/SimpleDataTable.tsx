@@ -64,7 +64,7 @@ interface Props {
     showSkeleton?: boolean;                                     // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                 // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
     disableArrowKeys?: boolean;                                 // When true arrow keys will not select rows above or below
-    tableHeight? : string;
+    tableHeight? : string;                                      // Specify custom height for the table.
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -435,7 +435,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     };
 
     const handleSelection = (e: any) => {
-        console.log(e.value);
         if (cm.current) {
             cm.current.hide(e.originalEvent);
         }
@@ -532,14 +531,16 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     const setRef = (ref : any) => {
         dt.current = ref;
-        if(ref && props.tableHeight)
-            ref.table.style.height = props.tableHeight;
+        if(ref && props.tableHeight){
+            console.log(ref.table);
+            ref.table.parentElement.style.height = props.tableHeight;
+        }
     }
 
     return <>
         {showTable && ((filters && props.data.length > 0) || !props.showSkeleton)  ?
             <>
-                <div onKeyDown={props.disableArrowKeys? () => 0 : listener} className="datatable-responsive-demo">
+                <div onKeyDown={props.disableArrowKeys? () => 0 : listener} className="datatable-responsive-demo" >
                     {props.contextMenu ?
                         <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
                                      appendTo={document.body}/> : null}
