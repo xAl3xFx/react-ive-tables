@@ -1,5 +1,5 @@
 import {SimpleDataTable} from "../lib/SimpleDataTable";
-import React, { useCallback, useState } from "react";
+import React, {useCallback, useRef, useState} from "react";
 import * as customers from './../lib/customers.json'
 import {Button} from "primereact/button";
 import { useEffect } from "react";
