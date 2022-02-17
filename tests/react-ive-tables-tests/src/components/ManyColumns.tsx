@@ -3,6 +3,7 @@ import React, {useCallback, useRef, useState} from "react";
 import * as customers from './../lib/customers.json'
 import {Button} from "primereact/button";
 import { useEffect } from "react";
+import {Checkbox} from "primereact/checkbox";
 
 
 export const ManyColumns = () => {
@@ -24,7 +25,9 @@ export const ManyColumns = () => {
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())} />
         <Button label={"Add selectedIDs"} onClick={addSelectedIds} />
         <SimpleDataTable data={customers.data.slice(0,10)} contextMenu={menuModel} setSelected={setSelected}
-                         tableHeight={"1000px"}
+                         tableHeight={"1000px"} showSkeleton={false}
+                         cellEditHandler={console.log}
+                         specialEditors={{name: (options : any) => <Checkbox />}}
                          columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']} selectedIds={selectedIds}
                          selectionMode={'multiple'} doubleClick={dbClickCb} selectionKey={"id"}
          />

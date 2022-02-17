@@ -314,7 +314,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
                     if (props.columnTemplate && props.columnTemplate[cName] !== undefined) {
                         return <Column body={(rowData: any) => props.columnTemplate![cName](rowData)}
-                                       editor={props.specialEditors![cName] || editMode ? textEditor : undefined}
+                                       editor={props.specialEditors![cName] || (editMode ? textEditor : undefined)}
                                        filterFunction={handleFilter}
                                        sortable={props.sortableColumns?.includes(cName)}
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
@@ -325,7 +325,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     }
                     //@ts-ignore
                     return <Column style={{textAlign: "center"}} key={cName} field={cName}
-                                   editor={props.specialEditors![cName] || editMode ? textEditor : undefined}
+                                   editor={props.specialEditors![cName] || (editMode ? textEditor : undefined)}
                                    header={columnHeader} showFilterMenu={false}
                                    filterFunction={handleFilter}
                                    sortable={props.sortableColumns?.includes(cName)}
