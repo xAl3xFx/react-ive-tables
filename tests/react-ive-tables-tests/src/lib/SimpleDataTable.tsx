@@ -86,6 +86,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
+    const skeletonDtRef = useRef<any>();
 
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
@@ -319,7 +320,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
                                        onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                       filter={props.specialFilters && props.specialFilters[cName] && props.showSkeleton}
+                                       filter={props.specialFilters && props.specialFilters[cName]}
                                        key={cName} field={cName} header={columnHeader}/>
                     }
                     //@ts-ignore
@@ -330,7 +331,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                    sortable={props.sortableColumns?.includes(cName)}
                                    filterElement={props.specialFilters![cName]} showClearButton={false}
                                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                   filter={props.showFilters ? (!props.ignoreFilters!.includes(cName)) && props.showSkeleton: false}
+                                   filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
                                    filterField={cName}/>
                     //return <Column key={cName} field={cName} editor={props.editable ? (props) => editorForRowEditing(props, 'color') : null} filter={props.showFilters ? (!props.ignoreFilters.includes(cName)) : false} filterElement={props.showFilters ? (props.ignoreFilters.includes(cName) ? null : createInputForFilter(cName)) : null} header={columnHeader}/>
                 });
@@ -532,13 +533,19 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const setRef = (ref : any) => {
         dt.current = ref;
         if(ref && props.tableHeight){
-            console.log(ref.table);
+            ref.table.parentElement.style.height = props.tableHeight;
+        }
+    }
+
+    const setSkeletonDtRef = (ref : any) => {
+        skeletonDtRef.current = ref;
+        if(ref && props.tableHeight){
             ref.table.parentElement.style.height = props.tableHeight;
         }
     }
 
     return <>
-        {showTable && ((filters && props.data.length > 0) || !props.showSkeleton)  ?
+        {showTable && ((filters && props.data.length > 0) || (filters && !props.showSkeleton))  ?
             <>
                 <div onKeyDown={props.disableArrowKeys? () => 0 : listener} className="datatable-responsive-demo" >
                     {props.contextMenu ?
@@ -618,7 +625,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                 </div>
             </>
             :
-            <DataTable value={getFakeData()} rows={rows} paginator={true} className="p-datatable-striped">
+            <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={rows} paginator={true} className="p-datatable-striped">
                 {
                     props.columnOrder.map(column => <Column field={column} header={getColumnHeaderTranslated(column)}
                                                             style={{width: `${100 / props.columnOrder.length}%`}}
