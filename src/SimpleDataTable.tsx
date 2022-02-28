@@ -64,7 +64,8 @@ interface Props {
     showSkeleton?: boolean;                                     // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                 // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
     disableArrowKeys?: boolean;                                 // When true arrow keys will not select rows above or below
-    tableHeight? : string;                                      // Specify custom height for the table.
+    tableHeight? : string;                                      // Specify custom height for the table.   
+    forOverlay?: boolean;                                       // Specifies if the datatable will be shown in an overlay panel
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -545,7 +546,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }
 
     return <>
-        {showTable && ((filters && props.data.length > 0) || (filters && !props.showSkeleton))  ?
+        {props.forOverlay || (showTable && ((filters && props.data.length > 0) || !props.showSkeleton))  ?
             <>
                 <div onKeyDown={props.disableArrowKeys? () => 0 : listener} className="datatable-responsive-demo" >
                     {props.contextMenu ?
@@ -658,7 +659,8 @@ SimpleDataTable.defaultProps = {
     virtualScroll: false,
     scrollHeight: undefined,
     showSkeleton: true,
-    disableArrowKeys: false
+    disableArrowKeys: false,
+    forOverlay: false
 }
 
 
