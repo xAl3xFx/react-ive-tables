@@ -25,11 +25,8 @@ export const ManyColumns = () => {
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())} />
         <Button label={"Add selectedIDs"} onClick={addSelectedIds} />
         <SimpleDataTable data={customers.data.slice(0,10)} contextMenu={menuModel} setSelected={setSelected}
-                         tableHeight={"1000px"} showSkeleton={false}
-                         cellEditHandler={console.log}
-                         specialEditors={{name: (options : any) => <Checkbox />}}
-                         columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']} selectedIds={selectedIds}
-                         selectionMode={'multiple'} doubleClick={dbClickCb} selectionKey={"id"}
+                         columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
+                         selectionMode={'checkbox'} doubleClick={dbClickCb} selectionKey={"id"}
          />
     </>
 }

@@ -437,6 +437,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     };
 
     const handleSelection = (e: any) => {
+        console.log(e);
         if (cm.current) {
             cm.current.hide(e.originalEvent);
         }
@@ -444,6 +445,10 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             if (props.setSelected) props.setSelected(e.value, false)
             if (props.selectionHandler) props.selectionHandler(e);
             for(let i =0; i < items.length; i++){
+                if(e.value.length === 0) {
+                    setSelectedRowIndex(0);
+                    break;
+                }
                 if(items[i][props.selectionKey!] === e.value[props.selectionKey!]){
                     setSelectedRowIndex(i);
                     break;
@@ -453,6 +458,10 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             return;
         }else{
             for(let i =0; i < items.length; i++){
+                if(e.value.length === 0) {
+                    setSelectedRowIndex(0);
+                    break;
+                }
                 if(items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]){
                     setSelectedRowIndex(i);
                     break;
@@ -506,7 +515,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         let {rowData, newValue, field, originalEvent: event} = e;
         rowData[field] = newValue;
         props.cellEditHandler!(e);
-
     }
 
     const skeletonTemplate = () => {
