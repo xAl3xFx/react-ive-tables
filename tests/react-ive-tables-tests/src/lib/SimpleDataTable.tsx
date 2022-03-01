@@ -437,7 +437,6 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     };
 
     const handleSelection = (e: any) => {
-        console.log(e);
         if (cm.current) {
             cm.current.hide(e.originalEvent);
         }

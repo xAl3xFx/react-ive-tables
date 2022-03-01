@@ -19,13 +19,18 @@ export const ManyColumns = () => {
         console.log("DOUBLE CLICKED!", selected);
     }
 
-    const addSelectedIds = () => setSelectedIds([1021,1022])
+    const addSelectedIds = () => setSelectedIds([1000,1001])
+
+    const handleSelection = (e: any ) => {
+
+    }
 
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())} />
         <Button label={"Add selectedIDs"} onClick={addSelectedIds} />
         <SimpleDataTable data={customers.data.slice(0,10)} contextMenu={menuModel} setSelected={setSelected}
                          columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
+                         selectedIds={selectedIds} selectionHandler={handleSelection}
                          selectionMode={'checkbox'} doubleClick={dbClickCb} selectionKey={"id"}
          />
     </>
