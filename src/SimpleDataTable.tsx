@@ -17,7 +17,7 @@ import {ContextMenu} from 'primereact/contextmenu';
 import {Tooltip} from 'primereact/tooltip';
 import moment from 'moment'
 import {saveAs} from 'file-saver'
-import {HeaderButton} from "../types";
+import {HeaderButton} from "../lib/types";
 import clone from 'lodash.clone';
 import PrimeReact from 'primereact/api'
 import {Skeleton} from "primereact/skeleton";
