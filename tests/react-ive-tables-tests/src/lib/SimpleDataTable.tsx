@@ -19,9 +19,9 @@ import moment from 'moment'
 import {saveAs} from 'file-saver'
 import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
-import PrimeReact from 'primereact/api'
+import PrimeReact, {FilterOperator} from 'primereact/api'
 import {Skeleton} from "primereact/skeleton";
-import { useCallback } from 'react';
+import {useCallback} from 'react';
 
 interface Props {
     data: any[];
@@ -60,11 +60,11 @@ interface Props {
     virtualScroll?: boolean;                                    // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string;                                      // Height for the scroll
     dtProps?: Partial<DataTableProps>;                          // Additional properties to be passed directly to the datatable.
-    doubleClick? : (e:any) => void;                             // Double click handler function
+    doubleClick?: (e: any) => void;                             // Double click handler function
     showSkeleton?: boolean;                                     // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                 // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
     disableArrowKeys?: boolean;                                 // When true arrow keys will not select rows above or below
-    tableHeight? : string;                                      // Specify custom height for the table.   
+    tableHeight?: string;                                      // Specify custom height for the table.
     forOverlay?: boolean;                                       // Specifies if the datatable will be shown in an overlay panel
 }
 
@@ -94,25 +94,26 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     // }, [selectedElement])
 
 
- useEffect(() => {
-        if(props.doubleClick && showTable && filters && props.data.length > 0) {
+    useEffect(() => {
+        if (props.doubleClick && showTable && filters && props.data.length > 0) {
             const body = document.getElementsByClassName("p-datatable-tbody");
             //@ts-ignore
             body[0].addEventListener('dblclick', props.doubleClick);
         }
 
         return () => {
-            if(props.doubleClick) {
+            if (props.doubleClick) {
                 const body = document.getElementsByClassName("p-datatable-tbody");
                 //@ts-ignore
-                body[0].removeEventListener('dblclick', props.doubleClick);
+                if(body && body[0])
+                    body[0].removeEventListener('dblclick', props.doubleClick);
             }
         }
-    }, [showTable,filters,props.data.length, props.doubleClick])
+    }, [showTable, filters, props.data.length, props.doubleClick])
 
     useEffect(() => {
         // initFilters();
-        if ((props.data && props.data.length > 0)|| !props.showSkeleton) {
+        if ((props.data && props.data.length > 0) || !props.showSkeleton) {
             setItems(props.data);
             setOriginalItems(props.data);
             setShowTable(true);
@@ -130,36 +131,36 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [props.toggleSelect])
 
     useEffect(() => {
-        if (showTable){
+        if (showTable) {
             generateColumns();
         }
     }, [showTable]);
 
-    const listener = (event : any) => {
-        if(event.code === "ArrowUp"){
-            if(selectedRowIndex - 1 >= 0){
+    const listener = (event: any) => {
+        if (event.code === "ArrowUp") {
+            if (selectedRowIndex - 1 >= 0) {
                 const newSelectedElement = items[selectedRowIndex - 1];
                 setSelectedRowIndex(selectedRowIndex - 1);
-                if(props.selectionMode === "multiple" || props.selectionMode === "checkbox"){
+                if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
                     setSelectedRow([newSelectedElement]);
-                }else {
+                } else {
                     setSelectedRow(newSelectedElement);
                 }
             }
-        } else if(event.code === "ArrowDown"){
-            if(selectedRowIndex + 1 < items.length){
+        } else if (event.code === "ArrowDown") {
+            if (selectedRowIndex + 1 < items.length) {
                 const newSelectedElement = items[selectedRowIndex + 1];
                 setSelectedRowIndex(selectedRowIndex + 1);
-                if(props.selectionMode === "multiple" || props.selectionMode === "checkbox"){
+                if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
                     setSelectedRow([newSelectedElement]);
-                }else {
+                } else {
                     setSelectedRow(newSelectedElement);
                 }
             }
-        } else if(event.code === "ArrowRight"){
+        } else if (event.code === "ArrowRight") {
             // if(first + rows < items.length)
             //     setFirst(first + rows);
-        } else if(event.code === "ArrowLeft"){
+        } else if (event.code === "ArrowLeft") {
             // if(first - rows >= 0)
             //     setFirst(first - rows);
         }
@@ -170,7 +171,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [props.selectedIds]);
 
     useEffect(() => {
-        if(props.selectionResetter && props.selectionResetter !== selectionResetter){
+        if (props.selectionResetter && props.selectionResetter !== selectionResetter) {
             setSelectedRow(null);
             setSelectedRowPerPage({});
             setSelectedElement(null);
@@ -179,47 +180,48 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [props.selectionResetter]);
 
     const initFilters = () => {
-        if(props.data.length === 0) return;
+        if (props.data.length === 0) return;
         const initialFilters = Object.keys(props.data[0]).reduce((acc: any, el: string) => {
             return {...acc, [el]: {value: null, matchMode: "contains"}}
-        }, {})
+        }, {});
+
         setFilters(initialFilters);
     }
 
 
     const handleExternalSelection = () => {
         // if (selectedRow !== undefined) {
-            if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
-                const elements : typeof items = [];
-                let selectedRowIndex = undefined;
-                for(let i=0; i < items.length; i++){
-                    //@ts-ignore
-                    if(props.selectedIds!.includes(items[i][props.selectionKey!])){
-                        if(!selectedRowIndex){
-                            selectedRowIndex = i;
-                        }
-                        elements.push({...items[i]});
+        if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
+            const elements: typeof items = [];
+            let selectedRowIndex = undefined;
+            for (let i = 0; i < items.length; i++) {
+                //@ts-ignore
+                if (props.selectedIds!.includes(items[i][props.selectionKey!])) {
+                    if (!selectedRowIndex) {
+                        selectedRowIndex = i;
                     }
+                    elements.push({...items[i]});
                 }
-                // const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
-                if(selectedRow)
-                    setSelectedRow([...selectedRow, ...elements]);
-                else
-                    setSelectedRow([...elements]);
-                if(selectedRowIndex !== undefined)
-                    setSelectedRowIndex(selectedRowIndex);
-            } else {
-                let element : any = undefined;
-                for(let i=0; i < items.length; i++){
-                    //@ts-ignore
-                    if(props.selectedIds!.includes(items[i][props.selectionKey!])){
-                        element = {...items[i]};
-                        setSelectedRowIndex(i);
-                        break;
-                    }
-                }
-                setSelectedRow(element);
             }
+            // const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
+            if (selectedRow)
+                setSelectedRow([...selectedRow, ...elements]);
+            else
+                setSelectedRow([...elements]);
+            if (selectedRowIndex !== undefined)
+                setSelectedRowIndex(selectedRowIndex);
+        } else {
+            let element: any = undefined;
+            for (let i = 0; i < items.length; i++) {
+                //@ts-ignore
+                if (props.selectedIds!.includes(items[i][props.selectionKey!])) {
+                    element = {...items[i]};
+                    setSelectedRowIndex(i);
+                    break;
+                }
+            }
+            setSelectedRow(element);
+        }
         // } else {
         //     if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
         //         //@ts-ignore
@@ -243,7 +245,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [selectedRowIndex]);
 
     useEffect(() => {
-        if(dt.current)
+        if (dt.current)
             dt.current.table.querySelectorAll('tr')[2].focus();
     }, [first]);
 
@@ -277,20 +279,21 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     const handleFilter = (e: DataTableFilterParams) => {
         let result;
-        const actualFilters = Object.keys(e.filters).reduce((acc: any,key: string) => {
+        console.log(e);
+        const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
             //@ts-ignore
-            if(e.filters[key].value === null || e.filters[key].value === '')
+            if (e.filters[key].value === null || e.filters[key].value === '' || e.filters[key].value === undefined)
                 return acc;
             acc[key] = {...e.filters[key]};
             return acc;
         }, {});
 
         //@ts-ignore
-        if(Object.keys(actualFilters).length === 0){
+        if (Object.keys(actualFilters).length === 0) {
             result = clone(originalItems);
             setItems(result);
-        }else{
-            result = originalItems.filter((el : any) => {
+        } else {
+            result = originalItems.filter((el: any) => {
                 // @ts-ignore
                 return Object.keys(actualFilters).reduce((acc, filterKey) => {
                     //@ts-ignore
@@ -322,7 +325,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
                                        onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                                        filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
-                                       // filter={props.specialFilters && props.specialFilters[cName]}
+                            // filter={props.specialFilters && props.specialFilters[cName]}
                                        key={cName} field={cName} header={columnHeader}/>
                     }
                     //@ts-ignore
@@ -370,7 +373,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         })
     }
 
-    const onPage = (event : any) => {
+    const onPage = (event: any) => {
         setRows(event.rows);
         setFirst(event.first);
     }
@@ -444,25 +447,25 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         if (!Array.isArray(e.value)) {
             if (props.setSelected) props.setSelected(e.value, false)
             if (props.selectionHandler) props.selectionHandler(e);
-            for(let i =0; i < items.length; i++){
-                if(e.value.length === 0) {
+            for (let i = 0; i < items.length; i++) {
+                if (e.value.length === 0) {
                     setSelectedRowIndex(0);
                     break;
                 }
-                if(items[i][props.selectionKey!] === e.value[props.selectionKey!]){
+                if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
                     setSelectedRowIndex(i);
                     break;
                 }
             }
             setSelectedRow(e.value);
             return;
-        }else{
-            for(let i =0; i < items.length; i++){
-                if(e.value.length === 0) {
+        } else {
+            for (let i = 0; i < items.length; i++) {
+                if (e.value.length === 0) {
                     setSelectedRowIndex(0);
                     break;
                 }
-                if(items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]){
+                if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
                     setSelectedRowIndex(i);
                     break;
                 }
@@ -539,24 +542,24 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }
 
 
-    const setRef = (ref : any) => {
+    const setRef = (ref: any) => {
         dt.current = ref;
-        if(ref && props.tableHeight){
+        if (ref && props.tableHeight) {
             ref.table.parentElement.style.height = props.tableHeight;
         }
     }
 
-    const setSkeletonDtRef = (ref : any) => {
+    const setSkeletonDtRef = (ref: any) => {
         skeletonDtRef.current = ref;
-        if(ref && props.tableHeight){
+        if (ref && props.tableHeight) {
             ref.table.parentElement.style.height = props.tableHeight;
         }
     }
 
     return <>
-        {props.forOverlay || (showTable && ((filters && props.data.length > 0) || !props.showSkeleton))  ?
+        {props.forOverlay || (showTable && ((filters && props.data.length > 0) || !props.showSkeleton)) ?
             <>
-                <div onKeyDown={props.disableArrowKeys? () => 0 : listener} className="datatable-responsive-demo" >
+                <div onKeyDown={props.disableArrowKeys ? () => 0 : listener} className="datatable-responsive-demo">
                     {props.contextMenu ?
                         <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
                                      appendTo={document.body}/> : null}
@@ -590,7 +593,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
                         scrollable={props.virtualScroll}
-                        scrollHeight={props.scrollHeight? props.scrollHeight : undefined}
+                        scrollHeight={props.scrollHeight ? props.scrollHeight : undefined}
                         virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
                         onPage={onPage}
                         loading={loading}
@@ -603,8 +606,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                     setSelectedRow([e.value]);
                                     const page = Math.floor(first / rows) + 1;
                                     setSelectedRowPerPage({[page]: [e.value]});
-                                    for(let i =0; i < items.length; i++){
-                                        if(items[i][props.selectionKey!] === e.value[props.selectionKey!]){
+                                    for (let i = 0; i < items.length; i++) {
+                                        if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
                                             setSelectedRowIndex(i);
                                             break;
                                         }
@@ -612,8 +615,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                 } else {
                                     props.setSelected(e.value, true);
                                     setSelectedRow(e.value);
-                                    for(let i =0; i < items.length; i++){
-                                        if(items[i][props.selectionKey!] === e.value[props.selectionKey!]){
+                                    for (let i = 0; i < items.length; i++) {
+                                        if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
                                             setSelectedRowIndex(i);
                                             break;
                                         }
@@ -634,7 +637,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                 </div>
             </>
             :
-            <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={rows} paginator={true} className="p-datatable-striped">
+            <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={rows} paginator={true}
+                       className="p-datatable-striped">
                 {
                     props.columnOrder.map(column => <Column field={column} header={getColumnHeaderTranslated(column)}
                                                             style={{width: `${100 / props.columnOrder.length}%`}}
