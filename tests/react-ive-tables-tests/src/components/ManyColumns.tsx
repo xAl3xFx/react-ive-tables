@@ -4,6 +4,7 @@ import * as customers from './../lib/customers.json'
 import {Button} from "primereact/button";
 import { useEffect } from "react";
 import {Checkbox} from "primereact/checkbox";
+import {Calendar} from "primereact/calendar";
 
 
 export const ManyColumns = () => {
@@ -31,6 +32,12 @@ export const ManyColumns = () => {
         <SimpleDataTable data={customers.data.slice(0,10)} contextMenu={menuModel} setSelected={setSelected}
                          columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
+                         columnTemplate={{
+                             name: ({name}) => name
+                         }}
+                         specialFilters={{
+                             'date' : (options : any) => <Calendar value={options.value} onChange={options.filterApplyCallback} />
+                         }}
                          selectionMode={'checkbox'} doubleClick={dbClickCb} selectionKey={"id"}
          />
     </>

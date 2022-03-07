@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {useIntl} from "react-intl";
-import axios from 'axios'
 import {FormEvent, useEffect, useRef, useState} from "react";
 import {Column, ColumnFilterParams} from "primereact/column";
 import {
@@ -15,13 +14,9 @@ import {Button} from "primereact/button";
 import "./DataTable.css";
 import {ContextMenu} from 'primereact/contextmenu';
 import {Tooltip} from 'primereact/tooltip';
-import moment from 'moment'
-import {saveAs} from 'file-saver'
-import {HeaderButton} from "../lib/types";
+import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
-import PrimeReact from 'primereact/api'
 import {Skeleton} from "primereact/skeleton";
-import { useCallback } from 'react';
 
 interface Props {
     data: any[];
@@ -321,7 +316,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
                                        onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                       filter={props.specialFilters && props.specialFilters[cName]}
+                                       filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
+                                       // filter={props.specialFilters && props.specialFilters[cName]}
                                        key={cName} field={cName} header={columnHeader}/>
                     }
                     //@ts-ignore

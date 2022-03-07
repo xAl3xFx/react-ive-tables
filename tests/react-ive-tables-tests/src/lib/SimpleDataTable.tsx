@@ -321,7 +321,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
                                        onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                       filter={props.specialFilters && props.specialFilters[cName]}
+                                       filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
+                                       // filter={props.specialFilters && props.specialFilters[cName]}
                                        key={cName} field={cName} header={columnHeader}/>
                     }
                     //@ts-ignore
