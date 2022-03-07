@@ -38,6 +38,8 @@ export const ManyColumns = () => {
                          specialFilters={{
                              status : (options : any) => <Dropdown showClear options={statuses} value={options.value} onChange={(e) => options.filterApplyCallback(e.value)} />
                          }}
+                         cellEditHandler={() => 0}
+                         editableColumns={['name']}
                          selectionMode={'checkbox'} doubleClick={dbClickCb} selectionKey={"id"}
          />
     </>

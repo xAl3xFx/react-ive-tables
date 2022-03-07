@@ -1,27 +1,21 @@
 import * as React from 'react';
 import {useIntl} from "react-intl";
-import axios from 'axios'
 import {FormEvent, useEffect, useRef, useState} from "react";
-import {Column, ColumnFilterParams} from "primereact/column";
+import {Column} from "primereact/column";
 import {
     DataTable,
     DataTableFilterParams,
     DataTableProps,
     DataTableSelectionModeType,
-    DataTableSortOrderType
 } from "primereact/datatable";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import "./DataTable.css";
 import {ContextMenu} from 'primereact/contextmenu';
 import {Tooltip} from 'primereact/tooltip';
-import moment from 'moment'
-import {saveAs} from 'file-saver'
 import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
-import PrimeReact, {FilterOperator} from 'primereact/api'
 import {Skeleton} from "primereact/skeleton";
-import {useCallback} from 'react';
 
 interface Props {
     data: any[];
@@ -64,8 +58,9 @@ interface Props {
     showSkeleton?: boolean;                                     // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                 // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
     disableArrowKeys?: boolean;                                 // When true arrow keys will not select rows above or below
-    tableHeight?: string;                                      // Specify custom height for the table.
-    forOverlay?: boolean;                                       // Specifies if the datatable will be shown in an overlay panel
+    tableHeight?: string;                                       // Specify custom height for the table.
+    forOverlay?: boolean;                                       // Specifies if the datatable will be shown in an overlay pane
+    editableColumns? : string[]                                 // Specifies which columns are editable
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -318,7 +313,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
                     if (props.columnTemplate && props.columnTemplate[cName] !== undefined) {
                         return <Column body={(rowData: any) => props.columnTemplate![cName](rowData)}
-                                       editor={props.specialEditors![cName] || (editMode ? textEditor : undefined)}
+                                       editor={props.specialEditors![cName] || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
                                        filterFunction={handleFilter}
                                        sortable={props.sortableColumns?.includes(cName)}
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
@@ -330,7 +325,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                     }
                     //@ts-ignore
                     return <Column style={{textAlign: "center"}} key={cName} field={cName}
-                                   editor={props.specialEditors![cName] || (editMode ? textEditor : undefined)}
+                                   editor={props.specialEditors![cName] || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
                                    header={columnHeader} showFilterMenu={false}
                                    filterFunction={handleFilter}
                                    sortable={props.sortableColumns?.includes(cName)}
@@ -672,7 +667,8 @@ SimpleDataTable.defaultProps = {
     scrollHeight: undefined,
     showSkeleton: true,
     disableArrowKeys: false,
-    forOverlay: false
+    forOverlay: false,
+    editableColumns: []
 }
 
 
