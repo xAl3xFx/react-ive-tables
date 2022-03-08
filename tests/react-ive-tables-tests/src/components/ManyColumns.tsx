@@ -4,6 +4,7 @@ import * as customers from './../lib/customers.json'
 import {Button} from "primereact/button";
 import {Dropdown} from "primereact/dropdown";
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import {Calendar} from "primereact/calendar";
 
 export const ManyColumns = () => {
     const [selected, setSelected] = useState();
@@ -36,7 +37,8 @@ export const ManyColumns = () => {
                              name: ({name}) => name
                          }}
                          specialFilters={{
-                             status : (options : any) => <Dropdown showClear options={statuses} value={options.value} onChange={(e) => options.filterApplyCallback(e.value)} />
+                             status : (options : any) => <Dropdown showClear options={statuses} value={options.value} onChange={(e) => options.filterApplyCallback(e.value)} />,
+                             date: (options : any) => <Calendar showButtonBar value={options.value} onChange={(e) => options.filterApplyCallback(e.value, options.index)} dateFormat="yy-mm-dd" placeholder={'Choose'} />
                          }}
                          cellEditHandler={() => 0}
                          editableColumns={['name']}

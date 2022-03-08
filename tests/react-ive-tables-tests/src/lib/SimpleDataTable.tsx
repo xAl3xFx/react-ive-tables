@@ -16,6 +16,7 @@ import {Tooltip} from 'primereact/tooltip';
 import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
 import {Skeleton} from "primereact/skeleton";
+import moment from 'moment';
 
 interface Props {
     data: any[];
@@ -291,8 +292,15 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             result = originalItems.filter((el: any) => {
                 // @ts-ignore
                 return Object.keys(actualFilters).reduce((acc, filterKey) => {
-                    //@ts-ignore
-                    return acc && String(el[filterKey]).indexOf(actualFilters[filterKey].value) !== -1;
+                    if(actualFilters[filterKey].value instanceof Date){
+                        const moment1 = moment(el[filterKey]);
+                        const moment2 = moment(actualFilters[filterKey].value);
+                        return acc && moment1.isSame(moment2, 'day');
+                    }else{
+                        //@ts-ignore
+                        return acc && String(el[filterKey]).indexOf(actualFilters[filterKey].value) !== -1;
+                    }
+
                 }, true)
             });
             setItems(result);
