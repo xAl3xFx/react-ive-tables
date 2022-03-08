@@ -1,6 +1,6 @@
 {
   "name": "react-ive-tables",
-  "version": "1.2.59",
+  "version": "1.2.60",
   "description": "A set of handy DataTable components based on PrimeReact.",
   "repository": "https://github.com/xAl3xFx/react-ive-tables",
   "scripts": {
