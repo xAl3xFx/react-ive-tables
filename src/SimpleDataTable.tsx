@@ -45,7 +45,7 @@ interface Props {
                 atStart: boolean
             }
     };
-    columnTemplate?: { [key: string]: (rowData: any) => any };  // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
+    columnTemplate: { [key: string]: (rowData: any) => any };  // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
     xlsx?: string;                                              // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
     formatDateToLocal?: boolean;                                // Specifies whether dates should be formatted to local or not.
     toggleSelect?: { toggle: boolean, handler: () => void };    // Toggles checkbox column used for excel. Not very template prop.
@@ -319,29 +319,15 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
                     //TO BE TESTED
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
-                    if (props.columnTemplate && props.columnTemplate[cName] !== undefined) {
-                        return <Column body={(rowData: any) => props.columnTemplate![cName](rowData)}
-                                       editor={props.specialEditors![cName] || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
-                                       filterFunction={handleFilter}
-                                       sortable={props.sortableColumns?.includes(cName)}
-                                       filterElement={props.specialFilters![cName]} showClearButton={false}
-                                       style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
-                                       onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                                       filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
-                            // filter={props.specialFilters && props.specialFilters[cName]}
-                                       key={cName} field={cName} header={columnHeader}/>
-                    }
-                    //@ts-ignore
-                    return <Column style={{textAlign: "center"}} key={cName} field={cName}
+                    return <Column body={props.columnTemplate[cName] ? (rowData: any) => props.columnTemplate![cName](rowData) : undefined}
                                    editor={props.specialEditors![cName] || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
-                                   header={columnHeader} showFilterMenu={false}
                                    filterFunction={handleFilter}
                                    sortable={props.sortableColumns?.includes(cName)}
                                    filterElement={props.specialFilters![cName]} showClearButton={false}
+                                   style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
                                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                                    filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
-                                   filterField={cName}/>
-                    //return <Column key={cName} field={cName} editor={props.editable ? (props) => editorForRowEditing(props, 'color') : null} filter={props.showFilters ? (!props.ignoreFilters.includes(cName)) : false} filterElement={props.showFilters ? (props.ignoreFilters.includes(cName) ? null : createInputForFilter(cName)) : null} header={columnHeader}/>
+                                   key={cName} field={cName} header={columnHeader}/>
                 });
                 if (props.rowEditHandler !== undefined)
                     tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
@@ -661,7 +647,7 @@ SimpleDataTable.defaultProps = {
     selectionHandler: () => 0,
     onRowUnselect: undefined,
     selectedIds: [],
-    columnTemplate: undefined,
+    columnTemplate: {},
     columnOrder: undefined,
     selectionKey: "id",
     formatDateToLocal: true,
