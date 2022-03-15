@@ -473,7 +473,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         }
 
         //Remove elems
-        const currPageElements = newSelectedRowsPerPage[page];
+        const currPageElements = newSelectedRowsPerPage[page] || [];
         const newElementsForPage = [];
         for (let row of currPageElements) {
             if (e.value.find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) !== undefined)

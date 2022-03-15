@@ -33,6 +33,7 @@ export const ManyColumns = () => {
         <SimpleDataTable data={customers.data.slice(0,10)} contextMenu={menuModel} setSelected={setSelected}
                              columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
+                         ignoreFilters={['name']}
                          columnTemplate={{
                              name: ({name}) => name
                          }}
