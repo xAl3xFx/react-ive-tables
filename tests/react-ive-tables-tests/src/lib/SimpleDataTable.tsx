@@ -62,6 +62,7 @@ interface Props {
     tableHeight?: string;                                       // Specify custom height for the table.
     forOverlay?: boolean;                                       // Specifies if the datatable will be shown in an overlay pane
     editableColumns? : string[]                                 // Specifies which columns are editable
+    externalFilters? : {[key:string]: string | number}          // Object with key - name of a column and value - filter value which is used to filter the datatable externally
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -131,6 +132,13 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             generateColumns();
         }
     }, [showTable]);
+
+    useEffect(() => {
+        if(props.externalFilters)
+            Object.keys(props.externalFilters).forEach(key => {
+                setTimeout(() => {dt.current.filter(props.externalFilters![key], key, 'contains')}, 0)
+            })
+    },[props.externalFilters])
 
     const listener = (event: any) => {
         if (event.code === "ArrowUp") {

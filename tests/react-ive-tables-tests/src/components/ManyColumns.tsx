@@ -30,7 +30,7 @@ export const ManyColumns = () => {
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())} />
         <Button label={"Add selectedIDs"} onClick={addSelectedIds} />
-        <SimpleDataTable data={customers.data.slice(0,10)} contextMenu={menuModel} setSelected={setSelected}
+        <SimpleDataTable data={customers.data.slice(0,10)} contextMenu={menuModel} setSelected={setSelected} externalFilters={{id: '100', company: 'C'}}
                              columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name']}
