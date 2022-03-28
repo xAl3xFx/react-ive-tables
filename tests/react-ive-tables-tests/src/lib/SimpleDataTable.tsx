@@ -85,6 +85,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const cm = useRef<any>();
     const dt = useRef<any>();
     const skeletonDtRef = useRef<any>();
+    const filterRef = useRef<any>();
 
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
@@ -116,6 +117,11 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             setShowTable(true);
         }
     }, [props.data])
+
+    useEffect(() => {
+        if(filterRef.current)
+            handleFilter(filterRef.current);
+    }, [originalItems])
 
     useEffect(() => {
         if (columns.length)
@@ -283,7 +289,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     const handleFilter = (e: DataTableFilterParams) => {
         let result;
-        console.log(e);
+        filterRef.current = {...filterRef.current, ...e ?? {}};
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
             //@ts-ignore
             if (e.filters[key].value === null || e.filters[key].value === '' || e.filters[key].value === undefined)

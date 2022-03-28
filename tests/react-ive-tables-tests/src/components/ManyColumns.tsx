@@ -10,6 +10,7 @@ export const ManyColumns = () => {
     const [selected, setSelected] = useState();
     const [resetter, setResetter] = useState(0);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [data, setData] = useState<any>(customers.data.slice(0,10))
 
     const menuModel = [
         {label: "Add", icon: 'pi pi-plus', command: () => 0},
@@ -25,12 +26,17 @@ export const ManyColumns = () => {
 
     }
 
+    const addToTable = () => {
+        setData(customers.data.slice(0,15));
+    }
+
     const statuses = ['unqualified' , 'proposal']
 
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())} />
         <Button label={"Add selectedIDs"} onClick={addSelectedIds} />
-        <SimpleDataTable data={customers.data.slice(0,10)} contextMenu={menuModel} setSelected={setSelected} externalFilters={{id: '100', company: 'C'}}
+        <Button label={"Filter"} onClick={addToTable} />
+        <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected} externalFilters={{activity: '80'}}
                              columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name']}
