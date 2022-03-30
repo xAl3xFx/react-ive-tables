@@ -31,6 +31,8 @@ export const ManyColumns = () => {
         setData(customers.data.slice(0,15));
     }
 
+    const onFilterCb = (data: any) => console.log(data);
+
     const statuses = ['unqualified' , 'proposal']
 
     return <>
@@ -38,7 +40,7 @@ export const ManyColumns = () => {
         <Button label={"Add selectedIDs"} onClick={addSelectedIds} />
         <Button label={"Add records"} onClick={addToTable} />
         <Button label={"Filter"} onClick={() => setFilters({})} />
-        <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected} externalFilters={filters}
+        <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected} externalFilters={filters} onFilterCb={onFilterCb}
                              columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name']}

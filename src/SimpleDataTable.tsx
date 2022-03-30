@@ -63,6 +63,7 @@ interface Props {
     forOverlay?: boolean;                                       // Specifies if the datatable will be shown in an overlay pane
     editableColumns? : string[]                                 // Specifies which columns are editable
     externalFilters? : {[key:string]: string | number}          // Object with key - name of a column and value - filter value which is used to filter the datatable externally
+    onFilterCb? : (filteredData: any) => void                   // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -327,6 +328,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             });
             setItems(result);
         }
+        if(props.onFilterCb) props.onFilterCb(result);
     }
 
     const textEditor = (options: any) => {
@@ -687,7 +689,3 @@ SimpleDataTable.defaultProps = {
     forOverlay: false,
     editableColumns: []
 }
-
-
-
-
