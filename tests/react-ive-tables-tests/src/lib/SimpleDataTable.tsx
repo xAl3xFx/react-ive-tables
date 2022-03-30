@@ -81,6 +81,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
     const [selectedElement, setSelectedElement] = useState(null);
+    const [tableReady, setTableReady] = useState(false);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
@@ -140,11 +141,18 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [showTable]);
 
     useEffect(() => {
-        if(props.externalFilters)
+        if(props.externalFilters && tableReady)
             Object.keys(props.externalFilters).forEach(key => {
-                setTimeout(() => {dt.current.filter(props.externalFilters![key], key, 'contains')}, 0)
+                // setTimeout(() => {dt.current.filter(props.externalFilters![key], key, 'contains')}, 0)
+                dt.current.filter(props.externalFilters![key], key, 'contains');
             })
-    },[props.externalFilters])
+    },[props.externalFilters, tableReady])
+
+    useEffect(() => {
+        if((props.forOverlay || (filters && props.data.length > 0) || !props.showSkeleton) && !tableReady) {
+            setTableReady(true);
+        }
+    }, [showTable, filters, props.data.length, props])
 
     const listener = (event: any) => {
         if (event.code === "ArrowUp") {
