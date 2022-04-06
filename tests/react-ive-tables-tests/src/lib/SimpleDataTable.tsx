@@ -64,6 +64,7 @@ interface Props {
     editableColumns? : string[]                                 // Specifies which columns are editable
     externalFilters? : {[key:string]: string | number}          // Object with key - name of a column and value - filter value which is used to filter the datatable externally
     onFilterCb? : (filteredData: any) => void                   // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
+    columnStyle? : {[key:string]: any}                          // Object to specify body style for the columns
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -348,7 +349,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                    filterFunction={handleFilter}
                                    sortable={props.sortableColumns?.includes(cName)}
                                    filterElement={props.specialFilters![cName]} showClearButton={false}
-                                   style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
+                                   style={{textAlign: "center"}} bodyStyle={props.columnStyle && props.columnStyle[cName] ? {...props.columnStyle[cName]} : {}} showFilterMenu={false} filterField={cName}
                                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                                    filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
                                    key={cName} field={cName} header={columnHeader}/>

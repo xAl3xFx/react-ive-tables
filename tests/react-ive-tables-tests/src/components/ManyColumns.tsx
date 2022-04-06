@@ -3,8 +3,8 @@ import React, {useCallback, useRef, useState} from "react";
 import * as customers from './../lib/customers.json'
 import {Button} from "primereact/button";
 import {Dropdown} from "primereact/dropdown";
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import {Calendar} from "primereact/calendar";
+import { InputText } from "primereact/inputtext";
 
 export const ManyColumns = () => {
     const [selected, setSelected] = useState();
@@ -35,18 +35,35 @@ export const ManyColumns = () => {
 
     const statuses = ['unqualified' , 'proposal']
 
+    const optionsTemplate = (rowData:any) => {
+        return <span>
+            <Button className={'p-mr-2'} icon={'pi pi-trash'}/>
+            <Button className={'p-mr-2'} icon={'pi pi-trash'}/>
+            <Button className={'p-mr-2'} icon={'pi pi-trash'}/>
+            <Button className={'p-mr-2'} icon={'pi pi-trash'}/>
+            <Button className={'p-mr-2'} icon={'pi pi-trash'}/>
+            <Button className={'p-mr-2'} icon={'pi pi-trash'}/>
+            <Button className={'p-mr-2'} icon={'pi pi-trash'}/>
+            <Button className={'p-mr-2'} icon={'pi pi-trash'}/>
+            <Button className={'p-mr-2'} icon={'pi pi-trash'}/>
+            
+            
+        </span>
+    }
+
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())} />
         <Button label={"Add selectedIDs"} onClick={addSelectedIds} />
         <Button label={"Add records"} onClick={addToTable} />
         <Button label={"Filter"} onClick={() => setFilters({})} />
-        <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected} externalFilters={filters} onFilterCb={onFilterCb}
-                             columnOrder={['id', 'name', 'company', 'date', 'status', 'verified', 'activity', 'balance']}
+        <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
+                             columnOrder={['id', 'name', 'company', 'company', 'company', 'status', 'date', 'date', 'status', 'verified', 'activity', 'balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name']}
                          columnTemplate={{
-                             name: ({name}) => name
+                            balance: optionsTemplate
                          }}
+                         columnStyle={{balance: {width: "20%"}}}
                          specialFilters={{
                              status : (options : any) => <Dropdown showClear options={statuses} value={options.value} onChange={(e) => options.filterApplyCallback(e.value)} />,
                              date: (options : any) => <Calendar showButtonBar value={options.value} onChange={(e) => options.filterApplyCallback(e.value, options.index)} dateFormat="yy-mm-dd" placeholder={'Choose'} />
