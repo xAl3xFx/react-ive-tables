@@ -51,6 +51,12 @@ export const ManyColumns = () => {
         </span>
     }
 
+    const footerTemplate = () => {
+        return <div className={"p-grid p-fluid p-justify-center"} style={{margin: "2rem"}}>
+            <a>{"SHOW MORE!!"}</a>
+        </div>
+    }
+
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())} />
         <Button label={"Add selectedIDs"} onClick={addSelectedIds} />
@@ -69,8 +75,10 @@ export const ManyColumns = () => {
                              date: (options : any) => <Calendar showButtonBar value={options.value} onChange={(e) => options.filterApplyCallback(e.value, options.index)} dateFormat="yy-mm-dd" placeholder={'Choose'} />
                          }}
                          cellEditHandler={() => 0}
+                         showPaginator={false}
                          editableColumns={['name']}
                          selectionMode={'checkbox'} doubleClick={dbClickCb} selectionKey={"id"}
+                         footerTemplate={footerTemplate}
          />
     </>
 }

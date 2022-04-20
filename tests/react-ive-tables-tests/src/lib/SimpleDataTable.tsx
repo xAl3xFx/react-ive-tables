@@ -64,7 +64,9 @@ interface Props {
     editableColumns? : string[]                                 // Specifies which columns are editable
     externalFilters? : {[key:string]: string | number}          // Object with key - name of a column and value - filter value which is used to filter the datatable externally
     onFilterCb? : (filteredData: any) => void                   // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
-    columnStyle? : {[key:string]: {header: any, body: any}}                          // Object to specify body style for the columns
+    columnStyle? : {[key:string]: {header: any, body: any}}     // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
+    showPaginator? : boolean                                    // Whether to show to paginator or no
+    footerTemplate? : () => JSX.Element                         // A function that returns a template for the footer of the table
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -591,7 +593,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         filters={filters}
                         first={first}
                         rows={rows}
-                        paginator={!props.virtualScroll}
+                        paginator={props.showPaginator && !props.virtualScroll}
+                        footer={props.footerTemplate || null}
                         onFilter={handleFilter}
                         responsiveLayout={'stack'}
                         dataKey={props.selectionKey}
@@ -690,5 +693,6 @@ SimpleDataTable.defaultProps = {
     showSkeleton: true,
     disableArrowKeys: false,
     forOverlay: false,
-    editableColumns: []
+    editableColumns: [],
+    showPaginator: true
 }
