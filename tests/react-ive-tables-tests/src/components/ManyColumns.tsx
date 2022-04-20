@@ -57,13 +57,13 @@ export const ManyColumns = () => {
         <Button label={"Add records"} onClick={addToTable} />
         <Button label={"Filter"} onClick={() => setFilters({})} />
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
-                             columnOrder={['id', 'name', 'company', 'company', 'company', 'status', 'date', 'date', 'status', 'verified', 'activity', 'balance']}
+                             columnOrder={['id', 'name', 'company', 'company', 'company', 'status', 'date','verified', 'activity', 'balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name']}
                          columnTemplate={{
                             balance: optionsTemplate
                          }}
-                         columnStyle={{balance: {width: "20%"}}}
+                         columnStyle={{balance: {header: {display: 'flex', justifyContent: "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={{
                              status : (options : any) => <Dropdown showClear options={statuses} value={options.value} onChange={(e) => options.filterApplyCallback(e.value)} />,
                              date: (options : any) => <Calendar showButtonBar value={options.value} onChange={(e) => options.filterApplyCallback(e.value, options.index)} dateFormat="yy-mm-dd" placeholder={'Choose'} />
