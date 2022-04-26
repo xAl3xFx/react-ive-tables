@@ -115,7 +115,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [showTable, filters, props.data.length, props.doubleClick])
 
     useEffect(() => {
-        // initFilters();
+        if(filters === null)
+            initFilters();
         if ((props.data && props.data.length > 0) || !props.showSkeleton) {
             setItems(props.data);
             setOriginalItems(props.data);
@@ -344,7 +345,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                 const tempColumns = (props.columnOrder ? props.columnOrder : Object.keys(items[0])).map((cName: string) => {
                     let columnHeader = getColumnHeaderTranslated(cName);
                     const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName] )? props.columnStyle[cName].header : {}};
-                    const columnBodyStyle = (props.columnStyle && props.columnStyle[cName] )? props.columnStyle[cName].body : {}; 
+                    const columnBodyStyle = (props.columnStyle && props.columnStyle[cName] )? props.columnStyle[cName].body : {textAlign: "center"};
 
                     //TO BE TESTED
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
