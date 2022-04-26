@@ -344,7 +344,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle)) {
                 const tempColumns = (props.columnOrder ? props.columnOrder : Object.keys(items[0])).map((cName: string) => {
                     let columnHeader = getColumnHeaderTranslated(cName);
-                    const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName] )? props.columnStyle[cName].header : {}};
+                    const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName] )? props.columnStyle[cName].header : {textAlign: 'center'}};
                     const columnBodyStyle = (props.columnStyle && props.columnStyle[cName] )? props.columnStyle[cName].body : {textAlign: "center"};
 
                     //TO BE TESTED
