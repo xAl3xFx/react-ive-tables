@@ -62,6 +62,11 @@ interface Props {
     tableHeight?: string;                                       // Specify custom height for the table.
     forOverlay?: boolean;                                       // Specifies if the datatable will be shown in an overlay pane
     editableColumns? : string[]                                 // Specifies which columns are editable
+    externalFilters? : {[key:string]: string | number}          // Object with key - name of a column and value - filter value which is used to filter the datatable externally
+    onFilterCb? : (filteredData: any) => void                   // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
+    columnStyle? : {[key:string]: {header: any, body: any}}     // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
+    showPaginator? : boolean                                    // Whether to show to paginator or no
+    footerTemplate? : () => JSX.Element                         // A function that returns a template for the footer of the table
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -80,10 +85,12 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
     const [selectedElement, setSelectedElement] = useState(null);
+    const [tableReady, setTableReady] = useState(false);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
     const skeletonDtRef = useRef<any>();
+    const filterRef = useRef<any>();
 
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
@@ -117,6 +124,11 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     }, [props.data])
 
     useEffect(() => {
+        if(filterRef.current)
+            handleFilter(filterRef.current);
+    }, [originalItems])
+
+    useEffect(() => {
         if (columns.length)
             initFilters();
     }, [columns])
@@ -131,6 +143,20 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             generateColumns();
         }
     }, [showTable]);
+
+    useEffect(() => {
+        if(props.externalFilters && tableReady)
+            Object.keys(props.externalFilters).forEach(key => {
+                // setTimeout(() => {dt.current.filter(props.externalFilters![key], key, 'contains')}, 0)
+                dt.current.filter(props.externalFilters![key], key, 'contains');
+            })
+    },[props.externalFilters, tableReady])
+
+    useEffect(() => {
+        if((props.forOverlay || (filters && props.data.length > 0) || !props.showSkeleton) && !tableReady) {
+            setTableReady(true);
+        }
+    }, [showTable, filters, props.data.length, props])
 
     const listener = (event: any) => {
         if (event.code === "ArrowUp") {
@@ -275,7 +301,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
     const handleFilter = (e: DataTableFilterParams) => {
         let result;
-        console.log(e);
+        filterRef.current = {...filterRef.current, ...e ?? {}};
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
             //@ts-ignore
             if (e.filters[key].value === null || e.filters[key].value === '' || e.filters[key].value === undefined)
@@ -305,6 +331,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             });
             setItems(result);
         }
+        if(props.onFilterCb) props.onFilterCb(result);
     }
 
     const textEditor = (options: any) => {
@@ -316,6 +343,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle)) {
                 const tempColumns = (props.columnOrder ? props.columnOrder : Object.keys(items[0])).map((cName: string) => {
                     let columnHeader = getColumnHeaderTranslated(cName);
+                    const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName] )? props.columnStyle[cName].header : {}};
+                    const columnBodyStyle = (props.columnStyle && props.columnStyle[cName] )? props.columnStyle[cName].body : {}; 
 
                     //TO BE TESTED
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
@@ -324,10 +353,10 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                    filterFunction={handleFilter}
                                    sortable={props.sortableColumns?.includes(cName)}
                                    filterElement={props.specialFilters![cName]} showClearButton={false}
-                                   style={{textAlign: "center"}} showFilterMenu={false} filterField={cName}
+                                   bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
                                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                                    filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
-                                   key={cName} field={cName} header={columnHeader}/>
+                                   key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle}/>
                 });
                 if (props.rowEditHandler !== undefined)
                     tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
@@ -564,7 +593,8 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         filters={filters}
                         first={first}
                         rows={rows}
-                        paginator={!props.virtualScroll}
+                        paginator={props.showPaginator && !props.virtualScroll}
+                        footer={props.footerTemplate || null}
                         onFilter={handleFilter}
                         responsiveLayout={'stack'}
                         dataKey={props.selectionKey}
@@ -663,9 +693,6 @@ SimpleDataTable.defaultProps = {
     showSkeleton: true,
     disableArrowKeys: false,
     forOverlay: false,
-    editableColumns: []
+    editableColumns: [],
+    showPaginator: true
 }
-
-
-
-
