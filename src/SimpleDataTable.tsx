@@ -357,6 +357,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                                    bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
                                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                                    filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
+                                   filterHeaderStyle={{textAlign: 'center'}}
                                    key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle}/>
                 });
                 if (props.rowEditHandler !== undefined)

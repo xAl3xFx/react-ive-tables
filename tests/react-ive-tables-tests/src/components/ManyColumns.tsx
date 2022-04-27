@@ -69,7 +69,7 @@ export const ManyColumns = () => {
                          columnTemplate={{
                             balance: optionsTemplate
                          }}
-                         columnStyle={{balance: {header: {display: 'flex', justifyContent: "flex-start"}, body: {width: "20%"}}}}
+                         // columnStyle={{balance: {header: {display: 'flex', justifyContent: "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={{
                              status : (options : any) => <Dropdown showClear options={statuses} value={options.value} onChange={(e) => options.filterApplyCallback(e.value)} />,
                              date: (options : any) => <Calendar showButtonBar value={options.value} onChange={(e) => options.filterApplyCallback(e.value, options.index)} dateFormat="yy-mm-dd" placeholder={'Choose'} />
