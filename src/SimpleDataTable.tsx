@@ -331,8 +331,13 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         const moment2 = moment(actualFilters[filterKey].value);
                         return acc && moment1.isSame(moment2, 'day');
                     } else {
-                        //@ts-ignore
-                        return acc && String(el[filterKey]).toLowerCase().indexOf(actualFilters[filterKey].value.toLowerCase()) !== -1;
+                        if(typeof el[filterKey] === 'string' && typeof actualFilters[filterKey].value === 'string'){
+                            //@ts-ignore
+                            return acc && String(el[filterKey]).toLowerCase().indexOf(actualFilters[filterKey].value.toLowerCase()) !== -1;
+                        }else{
+                            return acc && el[filterKey] === actualFilters[filterKey].value
+                        }
+
                     }
                 }, true)
             });

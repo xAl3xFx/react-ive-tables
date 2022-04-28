@@ -36,7 +36,7 @@ export const ManyColumns = () => {
 
     const onFilterCb = (data: any) => console.log(data);
 
-    const statuses = ['unqualified', 'proposal']
+    const statuses = [{value:1, label: 'unqualified'}, {value: 2, label: 'proposal'}]
 
     const optionsTemplate = (rowData: any) => {
         return <span>
