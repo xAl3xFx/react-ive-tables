@@ -17,6 +17,7 @@ import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
 import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
+import {flushSync} from "react-dom";
 
 interface Props {
     data: any[];
@@ -70,6 +71,7 @@ interface Props {
     columnStyle?: { [key: string]: { header: any, body: any } }         // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean                                             // Whether to show to paginator or no
     footerTemplate?: () => JSX.Element                                  // A function that returns a template for the footer of the table
+    initialFilters?: {[key: string] : string | number | Date}
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -116,6 +118,30 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             }
         }
     }, [showTable, filters, props.data.length, props.doubleClick])
+
+    useEffect(() => {
+        if(filters && Object.keys(filters).length > 0 && props.initialFilters && showTable){
+            // Object.keys(props.initialFilters).forEach(key => {
+            //     dt.current.filter(props.initialFilters![key], key, 'contains');
+            // })
+            // dt.current.filter('un', 'test', 'contains');
+            // dt.current.filter(1, 'id', 'contains');
+            // setFilters(props.initialFilters);
+
+            const tempFilters = Object.keys(props.initialFilters).reduce((acc, key) => {
+                return {...acc, [key] : {
+                        value: props.initialFilters![key],
+                        matchMode: 'contains'
+                    }
+                }
+            }, {});
+
+
+            //@ts-ignore
+            handleFilter({filters: tempFilters});
+        }
+    }, [filters]);
+
 
     useEffect(() => {
         if (filters === null)
@@ -209,7 +235,11 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
     const initFilters = () => {
         if (props.data.length === 0) return;
         const initialFilters = props.columnOrder.reduce((acc: any, el: string) => {
-            return {...acc, [el]: {value: null, matchMode: "contains"}}
+            // if(props.initialFilters && props.initialFilters[el] !== undefined){
+            //     return {...acc, [el]: {value: props.initialFilters[el], matchMode: "contains"}}
+            // }else{
+                return {...acc, [el]: {value: null, matchMode: "contains"}}
+            // }
         }, {});
 
         setFilters(initialFilters);
@@ -304,7 +334,19 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
         });
     }
 
+    const parseNestedObject = (object : any, key : string | number | symbol) => {
+        let res = object;
+        for (let currentKey of key.toString().split('.')){
+            if(res[currentKey])
+                res = res[currentKey]
+            else
+                return undefined
+        }
+        return res;
+    }
+
     const handleFilter = (e: DataTableFilterParams) => {
+        console.log('handleFilter', e)
         let result;
         filterRef.current = {...filterRef.current, ...e ?? {}};
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
@@ -323,16 +365,18 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             result = originalItems.filter((el: any) => {
                 // @ts-ignore
                 return Object.keys(actualFilters).reduce((acc, filterKey) => {
-                    console.log(filterKey)
+                    console.log(filterKey);
+                    console.log(actualFilters)
+                    console.log(el)
                     if (props.externalFilters && props.externalFilters[filterKey] !== undefined) {
                         return acc && props.externalFilters[filterKey](el, actualFilters[filterKey].value);
                     } else if (actualFilters[filterKey].value instanceof Date) {
-                        const moment1 = moment(el[filterKey]);
+                        const moment1 = moment(parseNestedObject(el, filterKey));
                         const moment2 = moment(actualFilters[filterKey].value);
                         return acc && moment1.isSame(moment2, 'day');
                     } else {
                             //@ts-ignore
-                            return acc && String(el[filterKey]).toLowerCase().indexOf(String(actualFilters[filterKey].value).toLowerCase()) !== -1;
+                            return acc && String(parseNestedObject(el, filterKey)).toLowerCase().indexOf(String(actualFilters[filterKey].value).toLowerCase()) !== -1;
                     }
                 }, true)
             });
@@ -703,5 +747,6 @@ SimpleDataTable.defaultProps = {
     disableArrowKeys: false,
     forOverlay: false,
     editableColumns: [],
-    showPaginator: true
+    showPaginator: true,
+    initialFilters: {}
 }

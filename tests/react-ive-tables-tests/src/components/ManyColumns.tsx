@@ -6,6 +6,8 @@ import {Dropdown} from "primereact/dropdown";
 import {Calendar} from "primereact/calendar";
 import {InputText} from "primereact/inputtext";
 import {InputNumber} from "primereact/inputnumber";
+import {DataTable} from "primereact/datatable";
+import {Column} from "primereact/column";
 
 export const ManyColumns = () => {
     const [selected, setSelected] = useState();
@@ -15,6 +17,7 @@ export const ManyColumns = () => {
     const [data, setData] = useState<any>(customers.data.slice(0, 10))
     const [companyFilter, setCompanyFilter] = useState('');
     // const [externalFilters, setExternalFilters] = useState({});
+    const dtRef = useRef(null);
 
     const menuModel = [
         {label: "Add", icon: 'pi pi-plus', command: () => 0},
@@ -69,13 +72,23 @@ export const ManyColumns = () => {
         </div>
     }
 
+    useEffect(() => {
+        if(dtRef.current){
+            //@ts-ignore
+            dtRef.current.filter(1000, 'id', 'contains')
+            //@ts-ignore
+            dtRef.current.filter('James', 'name', 'contains')
+        }
+    }, []);
+
+
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())}/>
         <Button label={"Add selectedIDs"} onClick={addSelectedIds}/>
         <Button label={"Add records"} onClick={addToTable}/>
         <Button label={"Filter"} onClick={() => setFilters({})}/>
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
-                         columnOrder={['id', 'name', 'test', 'status', 'date', 'verified', 'activity', 'balance']}
+                         columnOrder={['id', 'representative.name', 'test', 'status', 'date', 'verified', 'activity', 'balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name']}
                          externalFilters={getExternalFilters()}
@@ -85,11 +98,24 @@ export const ManyColumns = () => {
                          }}
             // columnStyle={{balance: {header: {display: 'flex', justifyContent: "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={getSpecialFilters()}
+                         // initialFilters={{id: 5, test: 'qu'}}
                          cellEditHandler={() => 0}
                          showPaginator={false}
                          editableColumns={['name']}
                          selectionMode={'checkbox'} doubleClick={dbClickCb} selectionKey={"id"}
                          footerTemplate={footerTemplate}
         />
+
+        {/*<DataTable ref={dtRef} value={data} filterDisplay="menu">*/}
+        {/*    <Column field={'id'} header={'ID'}  filterField={'id'} filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />*/}
+        {/*    <Column*/}
+        {/*        field="name"*/}
+        {/*        header="Name"*/}
+        {/*        sortable*/}
+        {/*        filter*/}
+        {/*        filterPlaceholder="Search by name"*/}
+        {/*        style={{ minWidth: "14rem" }}*/}
+        {/*    />*/}
+        {/*</DataTable>*/}
     </>
 }
