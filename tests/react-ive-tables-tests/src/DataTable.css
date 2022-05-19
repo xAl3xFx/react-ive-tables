@@ -102,3 +102,8 @@ input.p-column-filter {
         border-bottom: 1px solid var(--surface-d);
     }
 }
+
+.p-datatable-scrollable .p-datatable-thead>tr>th, .p-datatable-scrollable .p-datatable-tbody>tr>td, .p-datatable-scrollable .p-datatable-tfoot>tr>td{
+    justify-content: center !important;
+}
+

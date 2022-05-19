@@ -120,3 +120,8 @@ input.p-column-filter {
 .p-datatable .p-column-header-content{
     justify-content: center !important;
 }
+
+
+.p-datatable-scrollable .p-datatable-thead>tr>th, .p-datatable-scrollable .p-datatable-tbody>tr>td, .p-datatable-scrollable .p-datatable-tfoot>tr>td{
+    justify-content: center !important;
+}

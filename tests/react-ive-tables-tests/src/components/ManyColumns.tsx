@@ -88,7 +88,8 @@ export const ManyColumns = () => {
         <Button label={"Add records"} onClick={addToTable}/>
         <Button label={"Filter"} onClick={() => setFilters({})}/>
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
-                         columnOrder={['id', 'representative.name', 'test', 'status', 'date', 'verified', 'activity', 'balance']}
+                         columnOrder={['id', 'representative.name', 'test', 'status', 'date', 'date', 'date', 'date', 'date', 'date', 'verified', 'activity', 'balance']}
+                         frozenColumns={['balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name']}
                          externalFilters={getExternalFilters()}
@@ -96,7 +97,7 @@ export const ManyColumns = () => {
                              balance: optionsTemplate,
                              test: (rowData) => rowData.company
                          }}
-            // columnStyle={{balance: {header: {display: 'flex', justifyContent: "flex-start"}, body: {width: "20%"}}}}
+            // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={getSpecialFilters()}
                          // initialFilters={{id: 5, test: 'qu'}}
                          cellEditHandler={() => 0}

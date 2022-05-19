@@ -71,7 +71,8 @@ interface Props {
     columnStyle?: { [key: string]: { header: any, body: any } }         // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean                                             // Whether to show to paginator or no
     footerTemplate?: () => JSX.Element                                  // A function that returns a template for the footer of the table
-    initialFilters?: {[key: string] : string | number | Date}
+    initialFilters?: {[key: string] : string | number | Date},
+    frozenColumns?: string[]                                            // Specify which columns should be frozen (default right aligned)
 }
 
 export const SimpleDataTable: React.FC<Props> = (props) => {
@@ -399,10 +400,13 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
 
                     //TO BE TESTED
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
+                    console.log(cName, props.frozenColumns?.includes(cName))
                     return <Column
                         body={props.columnTemplate![cName] ? (rowData: any) => props.columnTemplate![cName](rowData) : undefined}
                         editor={props.specialEditors![cName] || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
                         filterFunction={handleFilter}
+                        frozen={props.frozenColumns?.includes(cName)}
+                        alignFrozen={"right"}
                         sortable={props.sortableColumns?.includes(cName)}
                         filterElement={props.specialFilters![cName]} showClearButton={false}
                         bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
@@ -665,7 +669,7 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
                         rowsPerPageOptions={[20, 30, 50]}
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
-                        scrollable={props.virtualScroll}
+                        scrollable={props.virtualScroll || props.frozenColumns !== undefined}
                         scrollHeight={props.scrollHeight ? props.scrollHeight : undefined}
                         virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
                         onPage={onPage}
