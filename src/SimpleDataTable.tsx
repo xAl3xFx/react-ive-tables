@@ -307,21 +307,21 @@ export const SimpleDataTable: React.FC<Props> = (props) => {
             dt.current.table.querySelectorAll('tr')[2].focus();
     }, [first]);
 
+    //DEPRECATED
     const exportExcel = () => {
-        import('xlsx').then(xlsx => {
-            const itemsToExport = items.map((row: any) => {
-                return Object.keys(row).reduce((acc, el) => {
-                    if (props.columnOrder.includes(el)) {
-                        return {...acc, [el]: row[el]}
-                    }
-                    return acc;
-                }, {});
-            })
-            const worksheet = xlsx.utils.json_to_sheet(itemsToExport);
-            const workbook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
-            const excelBuffer = xlsx.write(workbook, {bookType: 'xlsx', type: 'array'});
-            saveAsExcelFile(excelBuffer, f({id: props.xlsx}));
-        });
+        console.log('Excel export is deprecated');
+        // const itemsToExport = items.map((row: any) => {
+        //     return Object.keys(row).reduce((acc, el) => {
+        //         if (props.columnOrder.includes(el)) {
+        //             return {...acc, [el]: row[el]}
+        //         }
+        //         return acc;
+        //     }, {});
+        // })
+        // const worksheet = xlsx.utils.json_to_sheet(itemsToExport);
+        // const workbook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
+        // const excelBuffer = xlsx.write(workbook, {bookType: 'xlsx', type: 'array'});
+        // saveAsExcelFile(excelBuffer, f({id: props.xlsx}));
     }
 
     const saveAsExcelFile = (buffer: any, fileName: any) => {
