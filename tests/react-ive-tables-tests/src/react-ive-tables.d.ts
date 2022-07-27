@@ -1,3 +1,3 @@
-import {LazyDataTable} from './lib/LazyDataTable'
+import {LazyDataTableOld} from './lib/LazyDataTableOld'
 import {SimpleDataTable} from '../../../src/SimpleDataTable'
-export {LazyDataTable, SimpleDataTable}
+export {LazyDataTableOld, SimpleDataTable}

@@ -15,7 +15,7 @@ yarn add react-ive-tables	 //Using yarn
 ## Import
 
 ```js
-import {LazyDataTable} from 'react-ive-tables';
+import {LazyDataTableOld} from 'react-ive-tables';
 ```
 
 ## Dependencies

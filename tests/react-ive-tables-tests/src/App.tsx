@@ -13,12 +13,13 @@ import {Dropdown} from "primereact/dropdown";
 import {Button} from "primereact/button";
 import {ManyColumns} from "./components/ManyColumns";
 import {BasicTreeTableExample} from "./components/BasicTreeTableExample";
+import {LazyDataTableExample} from "./components/LazyDataTableExample";
 
 function App() {
 
     const [selectedRow, setSelectedRow] = useState(null);
     const [data, setData] = useState<any>([]);
-    const [selectedTable, setSelectedTable] = useState(<ManyColumns />);
+    const [selectedTable, setSelectedTable] = useState(<LazyDataTableExample />);
 
     useEffect(() => {
         setData(customers.data);
@@ -98,13 +99,14 @@ function App() {
     }
     return (
         <div className="App">
-            <IntlProvider locale={"bg-BG"} messages={{"id" : "ID", "name" : "Name", 'type' : 'Type', 'size' : "Size"}}>
+            <IntlProvider locale={"bg-BG"} messages={{"id" : "ID", "name" : "Name", 'type' : 'Type', 'size' : "Size", title: "Title", body: "Body"}}>
                 <Card>
 
                     <h1>Select Table</h1>
                     <div className={'p-mb-3'}>
-                        <Button onClick={() => setSelectedTable(<ManyColumns />)}>Many Columns</Button>
-                        <Button onClick={() => setSelectedTable(<BasicTreeTableExample />)}>Tree Table</Button>
+                        <Button className={"p-mr-2"} onClick={() => setSelectedTable(<ManyColumns />)}>Many Columns</Button>
+                        <Button className={"p-mr-2"} onClick={() => setSelectedTable(<BasicTreeTableExample />)}>Tree Table</Button>
+                        <Button className={"p-mr-2"} onClick={() => setSelectedTable(<LazyDataTableExample />)}>Lazy Table</Button>
 
                     </div>
                     {selectedTable}
@@ -118,7 +120,7 @@ function App() {
                     {/*                 // cellEditHandler={(e: any) => console.log('cellEditHandler', e)} specialEditors={getSpecialEditors()}*/}
                     {/*                  xlsx={'asd'}/>*/}
                 </Card>
-                {/* <LazyDataTable dataUrl={"asd"} columnOrder={[]}/> */}
+                {/* <LazyDataTableOld dataUrl={"asd"} columnOrder={[]}/> */}
             </IntlProvider>
         </div>
     );

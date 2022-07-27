@@ -19,7 +19,7 @@ import {InputText} from "primereact/inputtext";
 
 interface Props {
     fetchData: (offset: number, limit: number, filters: any)            // Function which is responsible for fetching data
-        => Promise<{rows: any[], totalRecords: number}>
+        => Promise<{ rows: any[], totalRecords: number }>
     columnOrder: string[];                                              // Defines order for the columns. NB! Only the specified columns here will be rendered.
     ignoreFilters?: string[];                                           // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
     specialFilters?: { [key: string]: any };                            // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
@@ -61,50 +61,56 @@ interface Props {
     disableArrowKeys?: boolean;                                         // When true arrow keys will not select rows above or below
     tableHeight?: string;                                               // Specify custom height for the table.
     forOverlay?: boolean;                                               // Specifies if the datatable will be shown in an overlay pane
-    editableColumns?: string[]                                          // Specifies which columns are editable
+    editableColumns?: string[];                                         // Specifies which columns are editable
     externalFilters?: {                                                 // Object with key - name of a column and value - filter function which decides whether the row should be included or not.
         [key: string]:
             (rowData: any, filterValue: string) => boolean
-    }
-    onFilterCb?: (filteredData: any) => void                            // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
-    columnStyle?: { [key: string]: { header: any, body: any } }         // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
-    showPaginator?: boolean                                             // Whether to show to paginator or no
-    footerTemplate?: () => JSX.Element                                  // A function that returns a template for the footer of the table
-    initialFilters?: { [key: string]: string | number | Date },
-    frozenColumns?: string[]                                            // Specify which columns should be frozen (default right aligned)
+    };
+    onFilterCb?: (filteredData: any) => void;                           // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
+    columnStyle?: { [key: string]: { header: any, body: any } };        // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
+    showPaginator?: boolean;                                            // Whether to show to paginator or no
+    footerTemplate?: () => JSX.Element;                                 // A function that returns a template for the footer of the table
+    additionalFilters?: { [key: string]:
+            { matchMode: 'contains' | string, value: any } };           // Additional filters for the table
+    frozenColumns?: string[];                                           // Specify which columns should be frozen (default right aligned)
+    refreshButton?: boolean;                                            // Should the table have refresh button in the header
+    refreshButtonCallback?: () => void;                                 // Callback when refreshButton is clicked
+    refresher?: number;                                                 // Used to manually refresh the table from parent component
 }
 
-export const LazyDataTableNew: React.FC<Props> = props => {
+export const LazyDataTable: React.FC<Props> = props => {
     const {formatMessage: f} = useIntl();
 
     const [items, setItems] = useState<any>([]);
-    const [originalItems, setOriginalItems] = useState<any>([]);
     const [filters, setFilters] = useState<any>({});
     const [columns, setColumns] = useState<any>([]);
     const [rows, setRows] = useState(20);
     const [totalRecords, setTotalRecords] = useState(0);
     const [first, setFirst] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [showTable, setShowTable] = useState(false);
-    const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0); //Used for handling arrowUp and arrowDown. This is the index of the current selected row.
     const [selectedRow, setSelectedRow] = useState<any>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
-    const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
-    const [selectedElement, setSelectedElement] = useState(null);
-    const [tableReady, setTableReady] = useState(false);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
-    const skeletonDtRef = useRef<any>();
-    const filterRef = useRef<any>();
+    const [refresher, setRefresher] = useState<number>();
+    const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0);
+    const [selectedElement, setSelectedElement] = useState(null);
+
+    const refreshTable = () => {
+        props.fetchData(first, rows, filters).then((response) => {
+            setItems(response.rows);
+            setTotalRecords(response.totalRecords);
+            setLoading(false);
+        });
+    }
 
     useEffect(() => {
-        if(props.columnOrder.length > 0 && Object.keys(filters).length === 0){
-            console.log('columnOrder', props.columnOrder)
-            const initialFilters : any = {};
+        if (props.columnOrder.length > 0 && Object.keys(filters).length === 0) {
+            const initialFilters: any = {};
             props.columnOrder.forEach(key => {
-                if(!props.ignoreFilters?.includes(key) && props.columnOrder.includes(key)){
-                    initialFilters[key] = { value: '', matchMode: 'contains' };
+                if (!props.ignoreFilters?.includes(key) && props.columnOrder.includes(key)) {
+                    initialFilters[key] = {value: '', matchMode: 'contains'};
                 }
             })
             setFilters(initialFilters);
@@ -112,19 +118,29 @@ export const LazyDataTableNew: React.FC<Props> = props => {
     }, [props.columnOrder]);
 
     useEffect(() => {
-        if(items && items.length > 0 && columns.length === 0){
+        if (props.additionalFilters !== undefined && Object.keys(props.additionalFilters).length > 0) {
+            const newFilters = {...filters, ...props.additionalFilters}
+            setFilters(newFilters);
+        }
+    }, [props.additionalFilters]);
+
+    useEffect(() => {
+        if (props.refresher !== refresher) {
+            setRefresher(props.refresher);
+            refreshTable();
+        }
+    }, [props.refresher]);
+
+    useEffect(() => {
+        if (items && items.length > 0 && columns.length === 0) {
             generateColumns();
         }
     }, [items]);
 
     useEffect(() => {
-        if(Object.keys(filters).length > 0){
+        if (Object.keys(filters).length > 0) {
             setLoading(true);
-            props.fetchData(first, rows, filters).then((response) => {
-                setItems(response.rows);
-                setTotalRecords(response.totalRecords);
-                setLoading(false);
-            });
+            refreshTable();
         }
     }, [filters]);
 
@@ -132,7 +148,6 @@ export const LazyDataTableNew: React.FC<Props> = props => {
         setLoading(true);
         setFirst(e.first);
         setRows(e.rows);
-        console.log(e);
         props.fetchData(e.first, e.rows, filters).then((response) => {
             setItems(response.rows);
             setTotalRecords(response.totalRecords);
@@ -141,18 +156,18 @@ export const LazyDataTableNew: React.FC<Props> = props => {
     };
 
     const handleSelection = (e: any) => {
-        if(!Array.isArray(e.value)){
-            if(props.setSelected) props.setSelected(e.value, true)
-            if(props.selectionHandler) props.selectionHandler(e);
+        if (!Array.isArray(e.value)) {
+            if (props.setSelected) props.setSelected(e.value, true)
+            if (props.selectionHandler) props.selectionHandler(e);
             return;
         }
         const page = Math.floor(first / rows) + 1;
         const newSelectedRowsPerPage = clone(selectedRowsPerPage);
         //Add elems
-        for(let row of e.value){
+        for (let row of e.value) {
             //@ts-ignore
-            if(Object.values(newSelectedRowsPerPage).flat().find((el : any) => el[props.selectionKey!] === row[props.selectionKey!]) === undefined){
-                if(newSelectedRowsPerPage[page] === undefined)
+            if (Object.values(newSelectedRowsPerPage).flat().find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) === undefined) {
+                if (newSelectedRowsPerPage[page] === undefined)
                     newSelectedRowsPerPage[page] = [];
                 newSelectedRowsPerPage[page].push(row);
             }
@@ -161,8 +176,8 @@ export const LazyDataTableNew: React.FC<Props> = props => {
         //Remove elems
         const currPageElements = newSelectedRowsPerPage[page];
         const newElementsForPage = [];
-        for(let row of currPageElements){
-            if(e.value.find((el : any) => el[props.selectionKey!] === row[props.selectionKey!]) !== undefined)
+        for (let row of currPageElements) {
+            if (e.value.find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) !== undefined)
                 newElementsForPage.push(row)
         }
         newSelectedRowsPerPage[page] = newElementsForPage;
@@ -174,9 +189,9 @@ export const LazyDataTableNew: React.FC<Props> = props => {
         setSelectedRowPerPage(newSelectedRowsPerPage)
         setSelectedRow(newElementsForPage);
 
-        if(props.selectionHandler) props.selectionHandler({value : newSelectedRow});
+        if (props.selectionHandler) props.selectionHandler({value: newSelectedRow});
         //@ts-ignore
-        if(props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
+        if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
 
     };
 
@@ -215,7 +230,6 @@ export const LazyDataTableNew: React.FC<Props> = props => {
 
                     //TO BE TESTED
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
-                    console.log(cName, props.frozenColumns?.includes(cName))
                     return <Column
                         body={props.columnTemplate![cName] ? (rowData: any) => props.columnTemplate![cName](rowData) : undefined}
                         editor={props.specialEditors![cName] || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
@@ -290,6 +304,13 @@ export const LazyDataTableNew: React.FC<Props> = props => {
                                                                 tooltipOptions={{position: 'top'}}
                                                                 className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
+                {props.refreshButton ?
+                    <Button type="button" icon="pi pi-refresh" onClick={() => {
+                        refreshTable();
+                        if (props.refreshButtonCallback) props.refreshButtonCallback()
+                    }}/>
+                    : null
+                }
             </div>
         </div>
     };
@@ -304,16 +325,15 @@ export const LazyDataTableNew: React.FC<Props> = props => {
         props.rowEditHandler!(e);
     }
 
-    const onFilter = (event : DataTablePFSEvent) => {
+    const onFilter = (event: DataTablePFSEvent) => {
         event['first'] = 0;
-        console.log(event)
         setFirst(0);
         setFilters(event.filters);
     }
 
 
     return <>
-        <div  className="datatable-responsive-demo">
+        <div className="datatable-responsive-demo">
             {props.contextMenu ?
                 <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
                              appendTo={document.body}/> : null}
@@ -396,7 +416,7 @@ export const LazyDataTableNew: React.FC<Props> = props => {
     </>
 };
 
-LazyDataTableNew.defaultProps = {
+LazyDataTable.defaultProps = {
     showFilters: true,
     ignoreFilters: [],
     showHeader: true,
@@ -422,5 +442,4 @@ LazyDataTableNew.defaultProps = {
     forOverlay: false,
     editableColumns: [],
     showPaginator: true,
-    initialFilters: {}
 }

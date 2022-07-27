@@ -48,7 +48,7 @@ interface Props {
     fetchData: (offset: number, limit: number, filters: any) =>  Promise<AxiosResponse<any, any>>
 }
 
-export const LazyDataTable :  React.FC<Props> = (props) => {
+export const LazyDataTableOld :  React.FC<Props> = (props) => {
     const {formatMessage : f} = useIntl();
 
     const [items, setItems] = useState<any>([]);
@@ -526,7 +526,7 @@ export const LazyDataTable :  React.FC<Props> = (props) => {
     </>
 };
 
-LazyDataTable.defaultProps = {
+LazyDataTableOld.defaultProps = {
     showFilters: true,
     ignoreFilters: [],
     showHeader: true,
