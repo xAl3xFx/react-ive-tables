@@ -442,4 +442,5 @@ LazyDataTable.defaultProps = {
     forOverlay: false,
     editableColumns: [],
     showPaginator: true,
+    refreshButton: true
 }
