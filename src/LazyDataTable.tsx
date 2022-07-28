@@ -125,6 +125,11 @@ export const LazyDataTable: React.FC<Props> = props => {
     }, [props.additionalFilters]);
 
     useEffect(() => {
+        refreshTable();
+    }, [props.fetchData]);
+
+
+    useEffect(() => {
         if (props.refresher !== refresher) {
             setRefresher(props.refresher);
             refreshTable();
