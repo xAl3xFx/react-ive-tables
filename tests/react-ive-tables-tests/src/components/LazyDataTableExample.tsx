@@ -22,24 +22,27 @@ export const LazyDataTableExample : React.FC<Props> = props => {
         }
     }, []);
 
-    const fetchData = useCallback(async (offset: number, limit: number, filters: any) => {
+    const fetchData = useCallback(async (offset: number, limit: number, filters: any, columns?: {[key: string] : string}, excelName?: string) => {
             const formattedFilters = Object.keys(filters).reduce((acc: any, el) => {
                 if(filters[el].value)
                     return {...acc, [el] : filters[el].value}
                 return acc;
             }, {});
-            formattedFilters.companyId = +companyId;
-            const response : any = await axios.post(`http://localhost:31051/api/company/getAllCompanies/${offset}/${limit}`, {filters: formattedFilters});
-            console.log(response)
-            if(response.data.rows instanceof Array)
+            const response : any = await axios.post(`http://localhost:31051/api/company/getAllCompanies/${offset}/${limit}`, {filters: formattedFilters, columns, excelName});
+            if(response.data.rows){
+                if(response.data.rows instanceof Array)
+                    return {
+                        rows: response.data.rows,
+                        totalRecords: response.data.count
+                    }
                 return {
-                    rows: response.data.rows,
-                    totalRecords: response.data.count
+                    rows: [],
+                    totalRecords: 0
                 }
-            return {
-                rows: [],
-                totalRecords: 0
+            }else{
+                return response;
             }
+
         },
         [companyId],
     );
@@ -55,6 +58,6 @@ export const LazyDataTableExample : React.FC<Props> = props => {
 
     return <>
         <InputText value={companyId} onChange={e => setCompanyId(e.target.value)} />
-        <LazyDataTable refreshButton additionalFilters={{CompanyName: {value: 'e', matchMode: 'contains'}}} fetchData={fetchData} editableColumns={['CompanyName']} rowEditHandler={e => console.log(e)} columnOrder={['CompanyID', 'CompanyName', 'CompanyDetails', 'createdAt']} specialFilters={getSpecialFilters()} />
+        <LazyDataTable xlsx={'ad'} refreshButton fetchData={fetchData} editableColumns={['CompanyName']} rowEditHandler={e => console.log(e)} columnOrder={['CompanyID', 'CompanyName', 'CompanyDetails', 'createdAt']} specialFilters={getSpecialFilters()} />
     </>
 };

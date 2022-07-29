@@ -16,10 +16,13 @@ import clone from "lodash.clone";
 import {Button} from "primereact/button";
 import {Column, ColumnEventParams} from "primereact/column";
 import {InputText} from "primereact/inputtext";
+import {saveAs} from "file-saver";
 
 interface Props {
-    fetchData: (offset: number, limit: number, filters: any)            // Function which is responsible for fetching data
+    fetchData: (offset: number, limit: number, filters: any,            // Function which is responsible for fetching data
+                columns?: {[key: string]: string}, excelName?: string)
         => Promise<{ rows: any[], totalRecords: number }>
+            | Promise<ArrayBuffer>
     columnOrder: string[];                                              // Defines order for the columns. NB! Only the specified columns here will be rendered.
     ignoreFilters?: string[];                                           // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
     specialFilters?: { [key: string]: any };                            // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
@@ -99,9 +102,27 @@ export const LazyDataTable: React.FC<Props> = props => {
 
     const refreshTable = () => {
         props.fetchData(first, rows, filters).then((response) => {
+            //@ts-ignore
             setItems(response.rows);
+            //@ts-ignore
             setTotalRecords(response.totalRecords);
             setLoading(false);
+        });
+    }
+
+    const generateExcel = () => {
+        const cols = props.columnOrder.reduce((acc, column) => {
+            let columnName;
+            if(props.specialLabels)
+                columnName = props.specialLabels[column] ? f({id: props.specialLabels[column]}) : f({id: column});
+            else
+                columnName = f({id: column});
+            return {...acc, [column] : columnName}
+        }, {});
+        props.fetchData(first, rows, filters, cols, props.xlsx).then((response) => {
+            //@ts-ignore
+            const blob = new Blob([response.data], {type:  response.headers["content-type"]});
+            saveAs(blob, props.xlsx + ".xlsx");
         });
     }
 
@@ -149,7 +170,9 @@ export const LazyDataTable: React.FC<Props> = props => {
         setFirst(e.first);
         setRows(e.rows);
         props.fetchData(e.first, e.rows, filters).then((response) => {
+            //@ts-ignore
             setItems(response.rows);
+            //@ts-ignore
             setTotalRecords(response.totalRecords);
             setLoading(false);
         });
@@ -279,11 +302,11 @@ export const LazyDataTable: React.FC<Props> = props => {
     const getHeader = () => {
         return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
             <div>
-                {/*{props.xlsx ?*/}
-                {/*    <Button type="button" icon="pi pi-file-excel" onClick={exportExcel}*/}
-                {/*            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>*/}
-                {/*    : null*/}
-                {/*}*/}
+                {props.xlsx ?
+                    <Button type="button" icon="pi pi-file-excel" onClick={generateExcel}
+                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
+                    : null
+                }
                 {props.toggleSelect ?
                     <Button type="button" icon="fas fa-check-square" onClick={props.toggleSelect.handler}
                             className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
