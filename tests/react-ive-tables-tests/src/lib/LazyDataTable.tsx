@@ -14,7 +14,7 @@ import {ContextMenu} from "primereact/contextmenu";
 import {Tooltip} from "primereact/tooltip";
 import clone from "lodash.clone";
 import {Button} from "primereact/button";
-import {Column} from "primereact/column";
+import {Column, ColumnEventParams} from "primereact/column";
 import {InputText} from "primereact/inputtext";
 
 interface Props {
@@ -210,8 +210,7 @@ export const LazyDataTable: React.FC<Props> = props => {
 
     //TODO
     const textEditor = (options: any) => {
-        // return <InputText type="text" value={options.value} onChange={(e) => console.log(e.target.value)}/>;
-        return null;
+        return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)}/>;
     }
 
     const onCellEditComplete = (e: any) => {
@@ -316,12 +315,6 @@ export const LazyDataTable: React.FC<Props> = props => {
     };
 
     const onRowEditComplete = (e: any) => {
-        let newItems = [...items];
-        let {newData, index} = e;
-
-        newItems[index] = newData;
-
-        setItems(newItems);
         props.rowEditHandler!(e);
     }
 

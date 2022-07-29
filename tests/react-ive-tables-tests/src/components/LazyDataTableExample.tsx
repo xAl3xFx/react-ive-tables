@@ -55,6 +55,6 @@ export const LazyDataTableExample : React.FC<Props> = props => {
 
     return <>
         <InputText value={companyId} onChange={e => setCompanyId(e.target.value)} />
-        <LazyDataTable refreshButton fetchData={fetchData} columnOrder={['CompanyID', 'CompanyName', 'CompanyDetails', 'createdAt']} specialFilters={getSpecialFilters()} />
+        <LazyDataTable refreshButton additionalFilters={{CompanyName: {value: 'e', matchMode: 'contains'}}} fetchData={fetchData} editableColumns={['CompanyName']} rowEditHandler={e => console.log(e)} columnOrder={['CompanyID', 'CompanyName', 'CompanyDetails', 'createdAt']} specialFilters={getSpecialFilters()} />
     </>
 };
