@@ -22,7 +22,7 @@ interface Props {
     fetchData: (offset: number, limit: number, filters: any,            // Function which is responsible for fetching data
                 columns?: {[key: string]: string}, excelName?: string)
         => Promise<{ rows: any[], totalRecords: number }>
-            | Promise<ArrayBuffer>
+            | Promise<AxiosResponse>
     columnOrder: string[];                                              // Defines order for the columns. NB! Only the specified columns here will be rendered.
     ignoreFilters?: string[];                                           // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
     specialFilters?: { [key: string]: any };                            // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
