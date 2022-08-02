@@ -1,5 +1,5 @@
-import {useIntl} from 'react-intl';
-import React, {useEffect, useState, useRef} from 'react';
+import { useIntl } from 'react-intl';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     DataTable,
     DataTableFilterParams,
@@ -7,20 +7,20 @@ import {
     DataTableProps,
     DataTableSelectionModeType
 } from "primereact/datatable";
-import {HeaderButton} from "../types";
-import axios, {AxiosResponse} from "axios";
-import {SimpleDataTable} from "./SimpleDataTable";
-import {ContextMenu} from "primereact/contextmenu";
-import {Tooltip} from "primereact/tooltip";
+import { HeaderButton } from "../types";
+import axios, { AxiosResponse } from "axios";
+import { SimpleDataTable } from "./SimpleDataTable";
+import { ContextMenu } from "primereact/contextmenu";
+import { Tooltip } from "primereact/tooltip";
 import clone from "lodash.clone";
-import {Button} from "primereact/button";
-import {Column, ColumnEventParams} from "primereact/column";
-import {InputText} from "primereact/inputtext";
-import {saveAs} from "file-saver";
+import { Button } from "primereact/button";
+import { Column, ColumnEventParams } from "primereact/column";
+import { InputText } from "primereact/inputtext";
+import { saveAs } from "file-saver";
 
 interface Props {
     fetchData: (offset: number, limit: number, filters: any,            // Function which is responsible for fetching data
-                columns?: {[key: string]: string}, excelName?: string)
+        columns?: { [key: string]: string }, excelName?: string)
         => Promise<{ rows: any[], totalRecords: number } | AxiosResponse>
     columnOrder: string[];                                              // Defines order for the columns. NB! Only the specified columns here will be rendered.
     ignoreFilters?: string[];                                           // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
@@ -29,7 +29,7 @@ interface Props {
     showFilters?: boolean;                                              // Should filters be rendered.
     showHeader?: boolean;                                               // Should header be rendered.
     setSelected?: (value: any,                                          // Callback for selection. Provides the selected row/rows.
-                   contextMenuClick: boolean) => void,
+        contextMenuClick: boolean) => void,
     contextMenu?: Object[],                                             // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
     rowEditHandler?: (element: Object) => void,                         // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
     specialEditors?: { [key: string]: any },                            // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
@@ -41,11 +41,11 @@ interface Props {
     selectedIds?: string[] | number[],                                  // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
     specialColumns?: {                                                  // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
         [key: string]:                                                  // if the column should be put at the beginning or at the end.
-            {
-                element: JSX.Element,
-                handler: (rowData: any) => void,
-                atStart: boolean
-            }
+        {
+            element: JSX.Element,
+            handler: (rowData: any) => void,
+            atStart: boolean
+        }
     };
     columnTemplate?: { [key: string]: (rowData: any) => any };          // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
     xlsx?: string;                                                      // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
@@ -66,14 +66,16 @@ interface Props {
     editableColumns?: string[];                                         // Specifies which columns are editable
     externalFilters?: {                                                 // Object with key - name of a column and value - filter function which decides whether the row should be included or not.
         [key: string]:
-            (rowData: any, filterValue: string) => boolean
+        (rowData: any, filterValue: string) => boolean
     };
     onFilterCb?: (filteredData: any) => void;                           // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
     columnStyle?: { [key: string]: { header: any, body: any } };        // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean;                                            // Whether to show to paginator or no
     footerTemplate?: () => JSX.Element;                                 // A function that returns a template for the footer of the table
-    additionalFilters?: { [key: string]:
-            { matchMode: 'contains' | string, value: any } };           // Additional filters for the table
+    additionalFilters?: {
+        [key: string]:
+        { matchMode: 'contains' | string, value: any }
+    };           // Additional filters for the table
     frozenColumns?: string[];                                           // Specify which columns should be frozen (default right aligned)
     refreshButton?: boolean;                                            // Should the table have refresh button in the header
     refreshButtonCallback?: () => void;                                 // Callback when refreshButton is clicked
@@ -81,7 +83,7 @@ interface Props {
 }
 
 export const LazyDataTable: React.FC<Props> = props => {
-    const {formatMessage: f} = useIntl();
+    const { formatMessage: f } = useIntl();
 
     const [items, setItems] = useState<any>([]);
     const [filters, setFilters] = useState<any>({});
@@ -112,15 +114,15 @@ export const LazyDataTable: React.FC<Props> = props => {
     const generateExcel = () => {
         const cols = props.columnOrder.reduce((acc, column) => {
             let columnName;
-            if(props.specialLabels)
-                columnName = props.specialLabels[column] ? f({id: props.specialLabels[column]}) : f({id: column});
+            if (props.specialLabels)
+                columnName = props.specialLabels[column] ? f({ id: props.specialLabels[column] }) : f({ id: column });
             else
-                columnName = f({id: column});
-            return {...acc, [column] : columnName}
+                columnName = f({ id: column });
+            return { ...acc, [column]: columnName }
         }, {});
         props.fetchData(first, rows, filters, cols, props.xlsx).then((response) => {
             //@ts-ignore
-            const blob = new Blob([response.data], {type:  response.headers["content-type"]});
+            const blob = new Blob([response.data], { type: response.headers["content-type"] });
             saveAs(blob, props.xlsx + ".xlsx");
         });
     }
@@ -130,7 +132,7 @@ export const LazyDataTable: React.FC<Props> = props => {
             const initialFilters: any = {};
             props.columnOrder.forEach(key => {
                 if (!props.ignoreFilters?.includes(key) && props.columnOrder.includes(key)) {
-                    initialFilters[key] = {value: '', matchMode: 'contains'};
+                    initialFilters[key] = { value: '', matchMode: 'contains' };
                 }
             })
             setFilters(initialFilters);
@@ -139,8 +141,7 @@ export const LazyDataTable: React.FC<Props> = props => {
 
     useEffect(() => {
         if (props.additionalFilters !== undefined && Object.keys(props.additionalFilters).length > 0) {
-            const newFilters = {...filters, ...props.additionalFilters}
-            setFilters(newFilters);
+            setFilters((prevFilters: any) => { return { ...prevFilters, ...props.additionalFilters } });
         }
     }, [props.additionalFilters]);
 
@@ -211,7 +212,7 @@ export const LazyDataTable: React.FC<Props> = props => {
         setSelectedRowPerPage(newSelectedRowsPerPage)
         setSelectedRow(newElementsForPage);
 
-        if (props.selectionHandler) props.selectionHandler({value: newSelectedRow});
+        if (props.selectionHandler) props.selectionHandler({ value: newSelectedRow });
         //@ts-ignore
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
 
@@ -226,17 +227,17 @@ export const LazyDataTable: React.FC<Props> = props => {
 
     const getColumnHeaderTranslated = (cName: string) => {
         if (props.specialLabels && props.specialLabels[cName])
-            return f({id: props.specialLabels[cName]})
-        return f({id: cName});
+            return f({ id: props.specialLabels[cName] })
+        return f({ id: cName });
     }
 
     //TODO
     const textEditor = (options: any) => {
-        return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)}/>;
+        return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
     }
 
     const onCellEditComplete = (e: any) => {
-        let {rowData, newValue, field, originalEvent: event} = e;
+        let { rowData, newValue, field, originalEvent: event } = e;
         rowData[field] = newValue;
         props.cellEditHandler!(e);
     }
@@ -246,8 +247,8 @@ export const LazyDataTable: React.FC<Props> = props => {
             if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle)) {
                 const tempColumns = (props.columnOrder ? props.columnOrder : Object.keys(items[0])).map((cName: string) => {
                     let columnHeader = getColumnHeaderTranslated(cName);
-                    const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : {textAlign: 'center'}};
-                    const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : {textAlign: "center"};
+                    const columnHeaderStyle = { textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : { textAlign: 'center' } };
+                    const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : { textAlign: "center" };
 
                     //TO BE TESTED
                     // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
@@ -262,18 +263,18 @@ export const LazyDataTable: React.FC<Props> = props => {
                         bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
                         onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                         filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
-                        filterHeaderStyle={{textAlign: 'center'}}
-                        key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle}/>
+                        filterHeaderStyle={{ textAlign: 'center' }}
+                        key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle} />
                 });
                 if (props.rowEditHandler !== undefined)
-                    tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
-                                             bodyStyle={{textAlign: 'center'}}/>);
+                    tempColumns.push(<Column rowEditor headerStyle={{ width: '7rem' }}
+                        bodyStyle={{ textAlign: 'center' }} />);
                 if (props.selectionMode === "checkbox")
-                    tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
+                    tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{ width: '3em' }} />);
                 //Put specialColumns in columns
                 Object.keys(props.specialColumns || []).forEach(cName => {
-                    const col = <Column field={cName} header={f({id: cName})}
-                                        body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
+                    const col = <Column field={cName} header={f({ id: cName })}
+                        body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)} />
                     if (props.specialColumns![cName].atStart) {
                         tempColumns.unshift(col);
                     } else {
@@ -299,37 +300,37 @@ export const LazyDataTable: React.FC<Props> = props => {
     }
 
     const getHeader = () => {
-        return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
+        return <div className="export-buttons" style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
                 {props.xlsx ?
                     <Button type="button" icon="pi pi-file-excel" onClick={generateExcel}
-                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
+                        className="p-button-success p-mr-2" data-pr-tooltip="XLS" />
                     : null
                 }
                 {props.toggleSelect ?
                     <Button type="button" icon="fas fa-check-square" onClick={props.toggleSelect.handler}
-                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
+                        className="p-button-success p-mr-2" data-pr-tooltip="XLS" />
                     : null
                 }
                 {
                     props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
-                                                           tooltip={el.tooltipLabel} label={el.label}
-                                                           tooltipOptions={{position: 'top'}}
-                                                           className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
+                        tooltip={el.tooltipLabel} label={el.label}
+                        tooltipOptions={{ position: 'top' }}
+                        className={`${el.className} table-header-left-align-buttons p-mr-2`} />)
                 }
             </div>
             <div>
                 {
                     props.rightHeaderButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
-                                                                tooltip={el.tooltipLabel} label={el.label}
-                                                                tooltipOptions={{position: 'top'}}
-                                                                className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
+                        tooltip={el.tooltipLabel} label={el.label}
+                        tooltipOptions={{ position: 'top' }}
+                        className={`${el.className} table-header-left-align-buttons p-mr-2`} />)
                 }
                 {props.refreshButton ?
                     <Button type="button" icon="pi pi-refresh" onClick={() => {
                         refreshTable();
                         if (props.refreshButtonCallback) props.refreshButtonCallback()
-                    }}/>
+                    }} />
                     : null
                 }
             </div>
@@ -351,8 +352,8 @@ export const LazyDataTable: React.FC<Props> = props => {
         <div className="datatable-responsive-demo">
             {props.contextMenu ?
                 <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
-                             appendTo={document.body}/> : null}
-            <Tooltip target=".export-buttons>button" position="bottom"/>
+                    appendTo={document.body} /> : null}
+            <Tooltip target=".export-buttons>button" position="bottom" />
 
             <DataTable
                 rowHover
@@ -381,14 +382,14 @@ export const LazyDataTable: React.FC<Props> = props => {
                 selection={selectedRow}
                 onSelectionChange={handleSelection}
                 emptyMessage="No records found"
-                tableStyle={{tableLayout: "auto"}}
+                tableStyle={{ tableLayout: "auto" }}
                 header={props.showHeader ? getHeader() : null}
                 rowsPerPageOptions={[20, 30, 50]}
                 editMode={editMode}
                 onRowEditComplete={onRowEditComplete}
                 scrollable={props.virtualScroll || props.frozenColumns !== undefined}
                 scrollHeight={props.scrollHeight ? props.scrollHeight : undefined}
-                virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
+                virtualScrollerOptions={props.scrollHeight ? { itemSize: 32 } : undefined}
                 loading={loading}
                 onRowUnselect={props.onRowUnselect}
                 onContextMenuSelectionChange={(e: any) => {
@@ -398,7 +399,7 @@ export const LazyDataTable: React.FC<Props> = props => {
                             props.setSelected([e.value], true);
                             setSelectedRow([e.value]);
                             const page = Math.floor(first / rows) + 1;
-                            setSelectedRowPerPage({[page]: [e.value]});
+                            setSelectedRowPerPage({ [page]: [e.value] });
                             for (let i = 0; i < items.length; i++) {
                                 if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
                                     setSelectedRowIndex(i);
