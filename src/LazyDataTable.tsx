@@ -75,11 +75,15 @@ interface Props {
     additionalFilters?: {
         [key: string]:
         { matchMode: 'contains' | string, value: any }
-    };           // Additional filters for the table
+    };                                                                  // Additional filters for the table
     frozenColumns?: string[];                                           // Specify which columns should be frozen (default right aligned)
     refreshButton?: boolean;                                            // Should the table have refresh button in the header
     refreshButtonCallback?: () => void;                                 // Callback when refreshButton is clicked
     refresher?: number;                                                 // Used to manually refresh the table from parent component
+    xlsxAdditionalFilters?: {
+        [key: string]:
+            { matchMode: 'contains' | string, value: any }
+    };                                                                  // Additional filters for excel
 }
 
 export const LazyDataTable: React.FC<Props> = props => {
@@ -120,7 +124,13 @@ export const LazyDataTable: React.FC<Props> = props => {
                 columnName = f({ id: column });
             return { ...acc, [column]: columnName }
         }, {});
-        props.fetchData(first, rows, filters, cols, props.xlsx).then((response) => {
+
+        let xlsxAdditionalFilters = {};
+        if(props.additionalFilters){
+            xlsxAdditionalFilters = props.additionalFilters;
+        }
+
+        props.fetchData(first, rows, {...filters, ...xlsxAdditionalFilters}, cols, props.xlsx).then((response) => {
             //@ts-ignore
             const blob = new Blob([response.data], { type: response.headers["content-type"] });
             saveAs(blob, props.xlsx + ".xlsx");
