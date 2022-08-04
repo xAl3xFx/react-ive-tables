@@ -165,6 +165,10 @@ export const LazyDataTable: React.FC<Props> = props => {
         }
     }, [filters]);
 
+    useEffect(() => {
+        generateColumns();
+    }, [props.toggleSelect])
+
     const onPage = (e: DataTablePFSEvent) => {
         setLoading(true);
         setFirst(e.first);
