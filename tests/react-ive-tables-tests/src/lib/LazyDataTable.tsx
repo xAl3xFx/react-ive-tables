@@ -126,8 +126,8 @@ export const LazyDataTable: React.FC<Props> = props => {
         }, {});
 
         let xlsxAdditionalFilters = {};
-        if(props.additionalFilters){
-            xlsxAdditionalFilters = props.additionalFilters;
+        if(props.xlsxAdditionalFilters){
+            xlsxAdditionalFilters = props.xlsxAdditionalFilters;
         }
 
         props.fetchData(first, rows, {...filters, ...xlsxAdditionalFilters}, cols, props.xlsx).then((response) => {
