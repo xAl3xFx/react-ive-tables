@@ -1,20 +1,19 @@
 import { useIntl } from 'react-intl';
-import React, { useEffect, useState, useRef } from 'react';
+import * as React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
     DataTable,
-    DataTableFilterParams,
     DataTablePFSEvent,
     DataTableProps,
     DataTableSelectionModeType
-} from "primereact/datatable";
+} from "primereact/datatable/datatable";
 import { HeaderButton } from "../types";
-import axios, { AxiosResponse } from "axios";
-import { SimpleDataTable } from "./SimpleDataTable";
+import { AxiosResponse } from "axios";
 import { ContextMenu } from "primereact/contextmenu";
 import { Tooltip } from "primereact/tooltip";
 import clone from "lodash.clone";
 import { Button } from "primereact/button";
-import { Column, ColumnEventParams } from "primereact/column";
+import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { saveAs } from "file-saver";
 

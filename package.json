@@ -1,44 +1,77 @@
 {
-  "name": "react-ive-tables",
   "version": "1.2.96",
-  "description": "A set of handy DataTable components based on PrimeReact.",
-  "repository": "https://github.com/xAl3xFx/react-ive-tables",
-  "scripts": {
-    "prepublish": "tsc && cp-cli ./src/DataTable.css ./lib/DataTable.css && cp-cli ./src/TreeTable.css ./lib/TreeTable.css",
-    "pub": "npm run prepublish && npm version patch --force && npm publish"
-  },
-  "typings": "index.d.ts",
-  "types": "index.d.ts",
-  "main": "index.js",
-  "readme": "",
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "files": [
-    "/lib",
-    "index.d.ts"
+    "dist"
   ],
-  "devDependencies": {
-    "@types/file-saver": "^2.0.5",
-    "@types/lodash.clone": "^4.5.7",
-    "@types/react": "^17.0.30",
-    "@types/react-dom": "^17.0.9",
-    "@types/react-intl": "^3.0.0",
-    "axios": "^0.23.0",
-    "cp-cli": "^2.0.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "typescript": "^4.4.4"
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
   },
   "peerDependencies": {
-    "axios": "^0.23.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-intl": "^5.20.13"
+    "react": ">=16",
+    "primereact": ">7.2",
+    "axios": ">=0.23.0",
+    "react-intl": ">=5.20"
   },
   "dependencies": {
-    "file-saver": "^2.0.5",
     "lodash.clone": "^4.5.0",
-    "moment": "^2.29.1",
-    "primereact": "^7.0.0"
+    "file-saver": "^2.0.5",
+    "moment": "^2.29.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "react-ive-tables",
+  "author": "Alex Petrov & Alexander Bakalov",
+  "module": "dist/react-ive-tables-new.esm.js",
+  "description": "A set of handy DataTable components based on PrimeReact.",
+  "repository": "https://github.com/xAl3xFx/react-ive-tables",
+  "size-limit": [
+    {
+      "path": "dist/react-ive-tables-new.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/react-ive-tables-new.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^8.0.1",
+    "postcss": "^8.4.16",
+    "rollup-plugin-postcss": "^4.0.2",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/file-saver": "^2.0.5",
+    "@types/lodash.clone": "^4.5.7",
+    "husky": "^8.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "size-limit": "^8.0.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4",
+    "react-intl": "^6.0.8",
+    "primereact": "^8.4.0",
+    "axios": "^0.27.2"
   }
 }

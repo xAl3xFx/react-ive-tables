@@ -7,8 +7,8 @@ data grid components which are flexible and easy to use.
 
 Just enter this command in the CLI of your project.
 
-```
-npm install react-ive-tables //Using npm
+```bash
+npm install react-ive-tables     //Using npm
 yarn add react-ive-tables	 //Using yarn
 ```
 
@@ -16,17 +16,21 @@ yarn add react-ive-tables	 //Using yarn
 
 ```js
 import {LazyDataTableOld} from 'react-ive-tables';
+import {SimpleDataTable} from 'react-ive-tables';
 ```
 
 ## Dependencies
 
-```
-dependencies: {
+```json
+{
+  "dependencies" : {
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl": "^5.20.13",
     "axios": "^0.23.0"
+  }  
 }
+
 ```
 
 ## Documentation

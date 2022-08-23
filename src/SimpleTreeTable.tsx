@@ -3,11 +3,6 @@ import { useIntl } from "react-intl";
 import {TreeTable} from "primereact/treetable";
 import {Column} from "primereact/column";
 import "./DataTable.css";
-import axios from 'axios';
-import moment from 'moment';
-import { DTFilterElement } from './DTFilterElement';
-import { InputText } from 'primereact/inputtext';
-import { Button } from 'primereact/button';
 import { ContextMenu } from 'primereact/contextmenu';
 import React from 'react';
 
@@ -17,7 +12,7 @@ interface Props {
     specialLabels? : {[key: string]: string;},
     extraButton? : {[key: number] : JSX.Element},
     ignoreFilters? : string[],
-    specialFilters? :  {[key: string]: {element: JSX.Element, type: string}},
+    specialFilters?: { [key: string]: any };
     setSelected? : (key : string, contextMenuClick: boolean) => void,
     showFilters? : boolean,
     additionalFilters? : {[key: string]: any;},
@@ -49,7 +44,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
 
             columns = (props.columnOrder.map((cName:any, index) => {
                 let label = f({id: cName});
-                if(props.specialLabels) 
+                if(props.specialLabels)
                     if(props.specialLabels[cName])
                         label = f({id: props.specialLabels[cName]});
 
@@ -61,6 +56,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                                        filter={props.showFilters && !props.ignoreFilters?.includes(cName)}
                                        key={cName} field={cName} header={label}/>
                     }
+                    return null;
             }));
         }
 
@@ -113,9 +109,9 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
             {props.contextMenu ? <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)} appendTo={document.body} /> : null}
             <TreeTable
                 onToggle={e => setExpandedKeys(e.value)}
-                tableStyle={{tableLayout: "auto"}} 
+                tableStyle={{tableLayout: "auto"}}
                 // @ts-ignore
-                value={items} 
+                value={items}
                 paginator={!props.scrollable}
                 loading={loading}
                 first={first}

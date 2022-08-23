@@ -1,13 +1,10 @@
-import { SimpleDataTable } from "../lib/SimpleDataTable";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import * as customers from './../lib/customers.json'
+import { SimpleDataTable } from "../src";
+import * as React from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
+import * as customers from './lib/customers.json'
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
-import { InputText } from "primereact/inputtext";
-import { InputNumber } from "primereact/inputnumber";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 
 export const ManyColumns = () => {
     const [selected, setSelected] = useState();
@@ -88,7 +85,7 @@ export const ManyColumns = () => {
         <Button label={"Add records"} onClick={addToTable} />
         <Button label={"Filter"} onClick={() => setFilters({})} />
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
-            columnOrder={['id', 'representative.name', 'test', 'status', 'date', 'date', 'date', 'date', 'date', 'date', 'verified', 'activity', 'balance']}
+            columnOrder={['id', 'balance']}
             frozenColumns={['balance']}
             selectedIds={selectedIds} selectionHandler={handleSelection}
             ignoreFilters={['name']}
@@ -106,17 +103,5 @@ export const ManyColumns = () => {
             selectionMode={'checkbox'} doubleClick={dbClickCb} selectionKey={"id"}
             footerTemplate={footerTemplate}
         />
-
-        {/*<DataTable ref={dtRef} value={data} filterDisplay="menu">*/}
-        {/*    <Column field={'id'} header={'ID'}  filterField={'id'} filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />*/}
-        {/*    <Column*/}
-        {/*        field="name"*/}
-        {/*        header="Name"*/}
-        {/*        sortable*/}
-        {/*        filter*/}
-        {/*        filterPlaceholder="Search by name"*/}
-        {/*        style={{ minWidth: "14rem" }}*/}
-        {/*    />*/}
-        {/*</DataTable>*/}
     </>
 }

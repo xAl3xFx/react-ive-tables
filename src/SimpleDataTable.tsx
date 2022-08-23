@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useIntl} from "react-intl";
-import {FormEvent, useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState} from "react";
 import {Column} from "primereact/column";
 import {
     DataTable,
@@ -17,7 +17,6 @@ import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
 import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
-import {flushSync} from "react-dom";
 
 interface Props {
     data: any[];
