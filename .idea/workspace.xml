@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-    </list>
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -51,7 +48,7 @@
       <option name="presentableId" value="Default" />
       <updated>1661267938786</updated>
       <workItem from="1661267940185" duration="1004000" />
-      <workItem from="1661280027832" duration="4812000" />
+      <workItem from="1661280027832" duration="5117000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -88,7 +85,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661284794602</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Exported HeaderButton from index.">
+      <created>1661284918695</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1661284918695</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -111,6 +115,7 @@
     <MESSAGE value="Unversioned files" />
     <MESSAGE value="Moved moment to peerDependency." />
     <MESSAGE value="Fixed typescript for SimpleDataTable.tsx" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed typescript for SimpleDataTable.tsx" />
+    <MESSAGE value="Exported HeaderButton from index." />
+    <option name="LAST_COMMIT_MESSAGE" value="Exported HeaderButton from index." />
   </component>
 </project>

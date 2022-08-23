@@ -351,7 +351,6 @@ export const SimpleDataTable = <T, >(
     }
 
     const handleFilter = (e: DataTableFilterParams) => {
-        console.log('handleFilter', e)
         let result;
         filterRef.current = {...filterRef.current, ...e ?? {}};
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
@@ -370,9 +369,6 @@ export const SimpleDataTable = <T, >(
             result = originalItems.filter((el: any) => {
                 // @ts-ignore
                 return Object.keys(actualFilters).reduce((acc, filterKey) => {
-                    console.log(filterKey);
-                    console.log(actualFilters)
-                    console.log(el)
                     if (props.externalFilters && props.externalFilters[filterKey] !== undefined) {
                         return acc && props.externalFilters[filterKey](el, actualFilters[filterKey].value);
                     } else if (actualFilters[filterKey].value instanceof Date) {
@@ -403,7 +399,6 @@ export const SimpleDataTable = <T, >(
 
                 //TO BE TESTED
                 // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
-                console.log(cName, props.frozenColumns?.includes(cName))
                 return <Column
                     body={props.columnTemplate![cName] ? (rowData: any) => props.columnTemplate![cName](rowData) : undefined}
                     editor={props.specialEditors![cName] || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
