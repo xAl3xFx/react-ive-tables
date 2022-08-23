@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +42,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1661267938786</updated>
-      <workItem from="1661267940185" duration="954000" />
+      <workItem from="1661267940185" duration="1004000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -66,7 +65,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661268437434</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Moved moment to peerDependency.">
+      <created>1661268914885</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1661268914885</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -77,6 +83,7 @@
     <MESSAGE value="Refactored project to use tsdx." />
     <MESSAGE value="Fixed index.ts" />
     <MESSAGE value="Unversioned files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Unversioned files" />
+    <MESSAGE value="Moved moment to peerDependency." />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved moment to peerDependency." />
   </component>
 </project>
