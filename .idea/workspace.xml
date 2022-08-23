@@ -2,70 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/.npmignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/globals.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/yarn.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tsdx.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DTFilterElement.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LazyDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/LazyDataTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SimpleTreeTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleTreeTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/public/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/public/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/public/logo192.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/public/logo512.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/public/manifest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/public/robots.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/App.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/App.test.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/App.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/DataTable.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/components/BasicTreeTableExample.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/components/LazyDataTableExample.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/components/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/index.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/DTFilterElement.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/DataTable.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/DataTableDemo.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/LazyDataTable.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/LazyDataTableOld.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/SimpleDataTable.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/SimpleTreeTable.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/TreeTable.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/customers.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/customers.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/test.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/lib/treeTableData.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/react-app-env.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/react-ive-tables.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/react-ive-tables.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/reportWebVitals.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/setupTests.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/src/types.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/index.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/types.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/react-ive-tables-tests/yarn.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,6 +25,7 @@
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "C:/Users/alexp/WebstormProjects/react-ive-tables",
     "nodejs_package_manager_path": "yarn",
+    "ts.external.directory.path": "C:\\Users\\alexp\\WebstormProjects\\react-ive-tables\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -104,11 +42,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1661267938786</updated>
-      <workItem from="1661267940185" duration="145000" />
+      <workItem from="1661267940185" duration="377000" />
     </task>
+    <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
+      <created>1661268262844</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1661268262844</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <MESSAGE value="Refactored project to use tsdx." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactored project to use tsdx." />
   </component>
 </project>
