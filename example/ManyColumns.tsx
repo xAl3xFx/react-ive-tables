@@ -47,13 +47,14 @@ export const ManyColumns = () => {
         </span>
     }
 
-    const getSpecialFilters = (): SpecialFilter<Customer> => {
+    const getSpecialFilters = () => {
         return {
-            status: (options: any) => <Dropdown showClear options={statuses} value={options.value}
+            roro: (options: any) => <Dropdown showClear options={statuses} value={options.value}
                                                 onChange={(e) => options.filterApplyCallback(e.value)}/>,
-            date: (options: any) => <Calendar showButtonBar value={options.value}
+            balance: (options: any) => <Calendar showButtonBar value={options.value}
                                               onChange={(e) => options.filterApplyCallback(e.value, options.index)}
                                               dateFormat="yy-mm-dd" placeholder={'Choose'}/>
+
         }
     }
 
@@ -80,22 +81,23 @@ export const ManyColumns = () => {
         }
     }, []);
 
-
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())}/>
         <Button label={"Add selectedIDs"} onClick={addSelectedIds}/>
         <Button label={"Add records"} onClick={addToTable}/>
         <Button label={"Filter"} onClick={() => setFilters({})}/>
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
-                         columnOrder={['status', 'date']}
+                         columnOrder={['balance', 'name', 'ssss', 'roro']}
                          frozenColumns={['balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
-                         ignoreFilters={['name']}
-                         externalFilters={getExternalFilters()}
+                         ignoreFilters={['name', '']}
+                         // externalFilters={getExternalFilters()}
                          columnTemplate={{
-                             balance: optionsTemplate,
-                             test: (rowData) => rowData.company
+                             balance: rowData => 5,
+                             name: rowData => <div></div>,
+                             roro: rowData => <div></div>,
                          }}
+                         specialLabels={{balance: 'asd'}}
             // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={getSpecialFilters()}
             // initialFilters={{id: 5, test: 'qu'}}
