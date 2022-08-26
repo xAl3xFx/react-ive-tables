@@ -711,7 +711,7 @@ export const SimpleDataTable = <T, K extends string>(
                 </div>
             </>
             :
-            <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={rows} paginator={true}
+            <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={5} paginator={true}
                        className="p-datatable-striped">
                 {
                     props.columnOrder.map(column => <Column field={column} header={getColumnHeaderTranslated(column)}
