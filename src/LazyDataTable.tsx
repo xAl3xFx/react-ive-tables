@@ -6,7 +6,6 @@ import {
     DataTableProps,
     DataTableSelectionModeType
 } from "primereact/datatable";
-import { HeaderButton } from "../types";
 import { AxiosResponse } from "axios";
 import { ContextMenu } from "primereact/contextmenu";
 import { Tooltip } from "primereact/tooltip";
@@ -15,6 +14,7 @@ import { Button } from "primereact/button";
 import { Column, ColumnEventParams } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { saveAs } from "file-saver";
+import {HeaderButton} from "./types";
 
 interface Props {
     fetchData: (offset: number, limit: number, filters: any,            // Function which is responsible for fetching data

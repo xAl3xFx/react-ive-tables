@@ -12,10 +12,11 @@ import {Button} from "primereact/button";
 import "./DataTable.css";
 import {ContextMenu} from 'primereact/contextmenu';
 import {Tooltip} from 'primereact/tooltip';
-import {HeaderButton} from "../types";
 import clone from 'lodash.clone';
 import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
+import {HeaderButton} from "./types";
+import axios from "axios";
 
 export type StringKeys<T> = Extract<keyof T, string>;
 export type SpecialFilter<K extends string> = { [key in K]?: (options: any) => JSX.Element }
@@ -49,6 +50,7 @@ interface Props<T, K extends string> {
     };
     columnTemplate?: { [key in K]?: (rowData: T) => any };        // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
     xlsx?: string;                                                // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
+    excelUrl?: string;                                            // The url of the endpoint for excel
     formatDateToLocal?: boolean;                                  // Specifies whether dates should be formatted to local or not.
     toggleSelect?: { toggle: boolean, handler: () => void };      // Toggles checkbox column used for excel. Not very template prop.
     headerButtons?: HeaderButton[];                               // Array with buttons to be shown in the header.
@@ -311,31 +313,29 @@ export const SimpleDataTable = <T, K extends string>(
             dt.current.table.querySelectorAll('tr')[2].focus();
     }, [first]);
 
-    //DEPRECATED
     const exportExcel = () => {
-        console.log('Excel export is deprecated');
-        // const itemsToExport = items.map((row: any) => {
-        //     return Object.keys(row).reduce((acc, el) => {
-        //         if (props.columnOrder.includes(el)) {
-        //             return {...acc, [el]: row[el]}
-        //         }
-        //         return acc;
-        //     }, {});
-        // })
-        // const worksheet = xlsx.utils.json_to_sheet(itemsToExport);
-        // const workbook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
-        // const excelBuffer = xlsx.write(workbook, {bookType: 'xlsx', type: 'array'});
-        // saveAsExcelFile(excelBuffer, f({id: props.xlsx}));
-    }
+        if(props.excelUrl === undefined){
+            console.warn("excelUrl is undefined.");
+            return;
+        }
+        const labelsMap = props.columnOrder.reduce((acc, el) => {
+            //@ts-ignore
+            acc[el] = getColumnHeaderTranslated(el);
+            return acc;
+        }, {})
 
-    const saveAsExcelFile = (buffer: any, fileName: any) => {
-        import('file-saver').then(FileSaver => {
-            let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-            let EXCEL_EXTENSION = '.xlsx';
-            const data = new Blob([buffer], {
-                type: EXCEL_TYPE
+        const formattedFilters = Object.keys(filters).reduce((acc, el) => {
+            if(filters[el].value !== null && filters[el].value !== undefined)
+                acc[el] = String(filters[el].value || '');
+            return acc;
+        }, {})
+
+        axios.post(props.excelUrl, {filters: formattedFilters, columns: props.columnOrder, sheetName: props.xlsx, labelsMap}, {withCredentials: true, responseType: "arraybuffer"}).then(response  => {
+            import('file-saver').then(FileSaver => {
+                //@ts-ignore
+                const blob = new Blob([response.data], { type: response.headers["content-type"] });
+                FileSaver.saveAs(blob, props.xlsx + ".xlsx");
             });
-            FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
         });
     }
 

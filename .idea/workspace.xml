@@ -2,7 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/example/Tasks.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/LazyDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/LazyDataTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,6 +23,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -25,20 +36,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/alexp/WebstormProjects/react-ive-tables",
-    "nodejs_package_manager_path": "yarn",
-    "ts.external.directory.path": "C:\\Users\\alexp\\WebstormProjects\\react-ive-tables\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/alexp/WebstormProjects/react-ive-tables&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\alexp\\WebstormProjects\\react-ive-tables\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables\src" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -51,6 +65,11 @@
       <updated>1661267938786</updated>
       <workItem from="1661267940185" duration="1004000" />
       <workItem from="1661280027832" duration="10784000" />
+      <workItem from="1661513022021" duration="816000" />
+      <workItem from="1661603568387" duration="499000" />
+      <workItem from="1661635563280" duration="13000" />
+      <workItem from="1664361089067" duration="1886000" />
+      <workItem from="1664375616670" duration="2745000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -108,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661334414569</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="SimpleDataTable.tsx -&gt; Skeleton -&gt; Show 5 rows only.">
+      <created>1661513172834</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1661513172834</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -134,6 +160,7 @@
     <MESSAGE value="Exported HeaderButton from index." />
     <MESSAGE value="Removed console.logs" />
     <MESSAGE value="Fixed typescript in SimpleDataTable.tsx." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed typescript in SimpleDataTable.tsx." />
+    <MESSAGE value="SimpleDataTable.tsx -&gt; Skeleton -&gt; Show 5 rows only." />
+    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable.tsx -&gt; Skeleton -&gt; Show 5 rows only." />
   </component>
 </project>
