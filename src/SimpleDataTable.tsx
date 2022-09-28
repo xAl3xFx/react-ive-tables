@@ -96,6 +96,7 @@ export const SimpleDataTable = <T, K extends string>(
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
     const [selectedElement, setSelectedElement] = useState(null);
+    const [excelFilters, setExcelFilters] = useState({});
     const [tableReady, setTableReady] = useState(false);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
@@ -324,12 +325,11 @@ export const SimpleDataTable = <T, K extends string>(
             return acc;
         }, {})
 
-        const formattedFilters = Object.keys(filters).reduce((acc, el) => {
-            if(filters[el].value !== null && filters[el].value !== undefined)
-                acc[el] = String(filters[el].value || '');
+        const formattedFilters = Object.keys(excelFilters).reduce((acc, el) => {
+            if(excelFilters[el].value !== null && excelFilters[el].value !== undefined)
+                acc[el] = String(excelFilters[el].value || '');
             return acc;
         }, {})
-
         axios.post(props.excelUrl, {filters: formattedFilters, columns: props.columnOrder, sheetName: props.xlsx, labelsMap}, {withCredentials: true, responseType: "arraybuffer"}).then(response  => {
             import('file-saver').then(FileSaver => {
                 //@ts-ignore
@@ -383,6 +383,7 @@ export const SimpleDataTable = <T, K extends string>(
             });
             setItems(result);
         }
+        setExcelFilters(actualFilters);
         if (props.onFilterCb) props.onFilterCb(result);
     }
 
