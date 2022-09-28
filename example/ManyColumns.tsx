@@ -87,7 +87,8 @@ export const ManyColumns = () => {
         <Button label={"Add records"} onClick={addToTable}/>
         <Button label={"Filter"} onClick={() => setFilters({})}/>
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
-                         columnOrder={['balance', 'name', 'ssss', 'roro']}
+                         columnOrder={['balance', 'name']}
+                         xlsx={"doo"}
                          frozenColumns={['balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name', '']}
@@ -95,16 +96,14 @@ export const ManyColumns = () => {
                          columnTemplate={{
                              balance: rowData => 5,
                              name: rowData => <div></div>,
-                             roro: rowData => <div></div>,
                          }}
                          specialLabels={{balance: 'asd'}}
             // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={getSpecialFilters()}
             // initialFilters={{id: 5, test: 'qu'}}
-                         cellEditHandler={() => 0}
                          showPaginator={false}
                          editableColumns={['name']}
-                         selectionMode={'checkbox'} doubleClick={dbClickCb} selectionKey={"id"}
+                         doubleClick={dbClickCb} selectionKey={"id"}
                          footerTemplate={footerTemplate}
         />
     </>

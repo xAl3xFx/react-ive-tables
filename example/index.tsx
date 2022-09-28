@@ -21,7 +21,6 @@ const App = () => {
                   <h1>Select Table</h1>
                   <div className={'p-mb-3'}>
                       <Button className={"p-mr-2"} onClick={() => setSelectedTable(<ManyColumns />)}>Many Columns</Button>
-
                   </div>
                   {selectedTable}
               </Card>
