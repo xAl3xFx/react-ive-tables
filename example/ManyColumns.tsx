@@ -7,6 +7,7 @@ import {Dropdown} from "primereact/dropdown";
 import {Calendar} from "primereact/calendar";
 import {Customer} from "./types";
 import {SpecialFilter, StringKeys} from "../src/SimpleDataTable";
+import {InputText} from "primereact/inputtext";
 
 
 export const ManyColumns = () => {
@@ -16,7 +17,7 @@ export const ManyColumns = () => {
     const [filters, setFilters] = useState<any>({activity: '80'});
     const [data, setData] = useState<Customer[]>(customers.data.slice(0, 10))
     const [companyFilter, setCompanyFilter] = useState('');
-    // const [externalFilters, setExternalFilters] = useState({});
+    const [nameFilter, setNameFilter] = useState('');
     const dtRef = useRef(null);
 
     const menuModel = [
@@ -72,31 +73,22 @@ export const ManyColumns = () => {
         </div>
     }
 
-    useEffect(() => {
-        if (dtRef.current) {
-            //@ts-ignore
-            dtRef.current.filter(1000, 'id', 'contains')
-            //@ts-ignore
-            dtRef.current.filter('James', 'name', 'contains')
-        }
-    }, []);
 
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())}/>
         <Button label={"Add selectedIDs"} onClick={addSelectedIds}/>
         <Button label={"Add records"} onClick={addToTable}/>
         <Button label={"Filter"} onClick={() => setFilters({})}/>
+        <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)} />
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
                          columnOrder={['balance', 'name']}
                          xlsx={"doo"}
                          frozenColumns={['balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name', '']}
+                         initialFilters={{name: nameFilter}}
                          // externalFilters={getExternalFilters()}
-                         columnTemplate={{
-                             balance: rowData => 5,
-                             name: rowData => <div></div>,
-                         }}
+
                          specialLabels={{balance: 'asd'}}
             // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={getSpecialFilters()}

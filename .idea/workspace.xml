@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="" />
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="workspace..">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,7 +61,8 @@
       <workItem from="1661603568387" duration="499000" />
       <workItem from="1661635563280" duration="13000" />
       <workItem from="1664361089067" duration="1886000" />
-      <workItem from="1664375616670" duration="4144000" />
+      <workItem from="1664375616670" duration="4991000" />
+      <workItem from="1664440910243" duration="590000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -143,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664379593131</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="workspace..">
+      <created>1664379880882</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1664379880882</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -173,6 +185,7 @@
     <MESSAGE value="SimpleDataTable.tsx -&gt; Added xlsx support." />
     <MESSAGE value="example" />
     <MESSAGE value="SimpleDataTable -&gt; Fixed excel filters." />
-    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable -&gt; Fixed excel filters." />
+    <MESSAGE value="workspace.." />
+    <option name="LAST_COMMIT_MESSAGE" value="workspace.." />
   </component>
 </project>

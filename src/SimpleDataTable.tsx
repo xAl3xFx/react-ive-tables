@@ -148,7 +148,7 @@ export const SimpleDataTable = <T, K extends string>(
             //@ts-ignore
             handleFilter({filters: tempFilters});
         }
-    }, [filters]);
+    }, [filters, props.initialFilters]);
 
 
     useEffect(() => {
