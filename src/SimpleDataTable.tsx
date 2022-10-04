@@ -4,7 +4,7 @@ import {Column} from "primereact/column";
 import {
     DataTable,
     DataTableFilterParams,
-    DataTableProps,
+    DataTableProps, DataTableRowEditCompleteParams,
     DataTableSelectionModeType,
 } from "primereact/datatable";
 import {InputText} from "primereact/inputtext";
@@ -32,7 +32,8 @@ interface Props<T, K extends string> {
     setSelected?: (value: any,                                    // Callback for selection. Provides the selected row/rows.
                    contextMenuClick: boolean) => void,
     contextMenu?: Object[],                                       // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
-    rowEditHandler?: (element: T) => void,                        // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
+    rowEditHandler?: (event: DataTableRowEditCompleteParams)
+        => void,                                                  // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
     specialEditors?: { [key in K]?: any },                        // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
     cellEditHandler?: (element: Object) => void,                  // Same as rowEditHandler.
     selectionHandler?: (e: any) => void,                          // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
@@ -565,7 +566,7 @@ export const SimpleDataTable = <T, K extends string>(
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
     };
 
-    const onRowEditComplete = (e: any) => {
+    const onRowEditComplete = (e:  DataTableRowEditCompleteParams) => {
         let newItems = [...items];
         let {newData, index} = e;
 
