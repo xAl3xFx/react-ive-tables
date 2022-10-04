@@ -63,7 +63,7 @@
       <workItem from="1664361089067" duration="1886000" />
       <workItem from="1664375616670" duration="4991000" />
       <workItem from="1664440910243" duration="769000" />
-      <workItem from="1664888320498" duration="672000" />
+      <workItem from="1664888320498" duration="2331000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -163,7 +163,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664441526160</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="SimpleDataTable.tsx -&gt; expandable property.">
+      <created>1664889020680</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1664889020680</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,6 +202,7 @@
     <MESSAGE value="SimpleDataTable -&gt; Fixed excel filters." />
     <MESSAGE value="workspace.." />
     <MESSAGE value="initialFilters can be used as external/additional filters." />
-    <option name="LAST_COMMIT_MESSAGE" value="initialFilters can be used as external/additional filters." />
+    <MESSAGE value="SimpleDataTable.tsx -&gt; expandable property." />
+    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable.tsx -&gt; expandable property." />
   </component>
 </project>

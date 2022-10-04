@@ -22,7 +22,7 @@ export type StringKeys<T> = Extract<keyof T, string>;
 export type SpecialFilter<K extends string> = { [key in K]?: (options: any) => JSX.Element }
 
 interface Props<T, K extends string> {
-    data: T[];
+    data: T[] | undefined;
     columnOrder: (K | StringKeys<T>)[];                           // Defines order for the columns. NB! Only the specified columns here will be rendered.
     ignoreFilters?: K[];                                          // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
     specialFilters?: SpecialFilter<K>;                            // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
@@ -98,7 +98,6 @@ export const SimpleDataTable = <T, K extends string>(
     const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
     const [selectedElement, setSelectedElement] = useState(null);
     const [excelFilters, setExcelFilters] = useState({});
-    const [tableReady, setTableReady] = useState(false);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
@@ -125,7 +124,7 @@ export const SimpleDataTable = <T, K extends string>(
                     body[0].removeEventListener('dblclick', props.doubleClick);
             }
         }
-    }, [showTable, filters, props.data.length, props.doubleClick])
+    }, [showTable, filters, props.data, props.doubleClick])
 
     useEffect(() => {
         if (filters && Object.keys(filters).length > 0 && props.initialFilters && showTable) {
@@ -155,7 +154,7 @@ export const SimpleDataTable = <T, K extends string>(
     useEffect(() => {
         if (filters === null)
             initFilters();
-        if ((props.data && props.data.length > 0) || !props.showSkeleton) {
+        if ((props.data) || !props.showSkeleton) {
             setItems(props.data);
             setOriginalItems(props.data);
             setShowTable(true);
@@ -183,20 +182,6 @@ export const SimpleDataTable = <T, K extends string>(
         }
     }, [showTable]);
 
-    // useEffect(() => {
-    //     if (props.externalFilters && tableReady)
-    //         // Object.keys(props.externalFilters).forEach(key => {
-    //         //     // setTimeout(() => {dt.current.filter(props.externalFilters![key], key, 'contains')}, 0)
-    //         //     dt.current.filter(props.externalFilters![key], key, 'contains');
-    //         // })
-    //         handleFilter(filterRef.current);
-    // }, [props.externalFilters, tableReady])
-
-    useEffect(() => {
-        if ((props.forOverlay || (filters && props.data.length > 0) || !props.showSkeleton) && !tableReady) {
-            setTableReady(true);
-        }
-    }, [showTable, filters, props.data.length, props])
 
     const listener = (event: any) => {
         if (event.code === "ArrowUp") {
@@ -242,7 +227,7 @@ export const SimpleDataTable = <T, K extends string>(
     }, [props.selectionResetter]);
 
     const initFilters = () => {
-        if (props.data.length === 0) return;
+        if (!props.data) return;
         const initialFilters = props.columnOrder.reduce((acc: any, el) => {
             // if(props.initialFilters && props.initialFilters[el] !== undefined){
             //     return {...acc, [el]: {value: props.initialFilters[el], matchMode: "contains"}}
@@ -633,7 +618,7 @@ export const SimpleDataTable = <T, K extends string>(
     }
 
     return <>
-        {props.forOverlay || (showTable && ((filters && props.data.length > 0) || !props.showSkeleton)) ?
+        {props.forOverlay || (showTable && ((filters && props.data) || !props.showSkeleton)) ?
             <>
                 <div onKeyDown={props.disableArrowKeys ? () => 0 : listener} className="datatable-responsive-demo">
                     {props.contextMenu ?

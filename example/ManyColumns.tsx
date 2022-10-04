@@ -15,7 +15,7 @@ export const ManyColumns = () => {
     const [resetter, setResetter] = useState(0);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [filters, setFilters] = useState<any>({activity: '80'});
-    const [data, setData] = useState<Customer[]>(customers.data.slice(0, 10))
+    const [data, setData] = useState<Customer[]>()
     const [companyFilter, setCompanyFilter] = useState('');
     const [nameFilter, setNameFilter] = useState('');
     const dtRef = useRef(null);
@@ -31,8 +31,12 @@ export const ManyColumns = () => {
     const addSelectedIds = () => setSelectedIds([1000, 1001])
 
     const handleSelection = (e: any) => {
-
     }
+
+    useEffect(() => {
+        getData().then(setData);
+    }, []);
+
 
     const addToTable = () => {
         setData(customers.data.slice(0, 15));
@@ -71,6 +75,14 @@ export const ManyColumns = () => {
         return <div className={"p-grid p-fluid p-justify-center"} style={{margin: "2rem"}}>
             <a>{"SHOW MORE!!"}</a>
         </div>
+    }
+
+    const getData = () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(customers.data.slice(0,10));
+        }, 1000);
+        })
     }
 
 
