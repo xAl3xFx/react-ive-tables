@@ -76,6 +76,7 @@ interface Props<T, K extends string> {
     footerTemplate?: () => JSX.Element                            // A function that returns a template for the footer of the table
     initialFilters?: { [key in K]?: string | number | Date },
     frozenColumns?: K[]                                           // Specify which columns should be frozen (default right aligned)
+    expandable?: boolean                                          // When true expander column is added at the beginning
 }
 
 export const SimpleDataTable = <T, K extends string>(
@@ -417,6 +418,8 @@ export const SimpleDataTable = <T, K extends string>(
             if (props.rowEditHandler !== undefined)
                 tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
                                          bodyStyle={{textAlign: 'center'}}/>);
+            if(props.expandable)
+                tempColumns.unshift(<Column expander headerStyle={{width: '3em'}} />)
             if (props.selectionMode === "checkbox")
                 tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
             //Put specialColumns in columns

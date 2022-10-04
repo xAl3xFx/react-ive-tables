@@ -81,9 +81,9 @@ export const ManyColumns = () => {
         <Button label={"Filter"} onClick={() => setFilters({})}/>
         <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)} />
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
+                         expandable
                          columnOrder={['balance', 'name']}
                          xlsx={"doo"}
-                         frozenColumns={['balance']}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name', '']}
                          initialFilters={{name: nameFilter}}
