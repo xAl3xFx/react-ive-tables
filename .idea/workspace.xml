@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +64,8 @@
       <workItem from="1664375616670" duration="4991000" />
       <workItem from="1664440910243" duration="769000" />
       <workItem from="1664888320498" duration="2754000" />
+      <workItem from="1664899885346" duration="274000" />
+      <workItem from="1664964790506" duration="1867000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -175,7 +179,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664891256025</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="SimpleDataTable.tsx -&gt; onRowEdit fixed type.">
+      <created>1664899985695</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1664899985695</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -209,6 +220,7 @@
     <MESSAGE value="initialFilters can be used as external/additional filters." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; expandable property." />
     <MESSAGE value="Important! -&gt; SimpleDataTable -&gt; Handle skeleton better: When the props.data is undefined -&gt; show skeleton; If it is empty -&gt; show no data; Show data otherwise." />
-    <option name="LAST_COMMIT_MESSAGE" value="Important! -&gt; SimpleDataTable -&gt; Handle skeleton better: When the props.data is undefined -&gt; show skeleton; If it is empty -&gt; show no data; Show data otherwise." />
+    <MESSAGE value="SimpleDataTable.tsx -&gt; onRowEdit fixed type." />
+    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable.tsx -&gt; onRowEdit fixed type." />
   </component>
 </project>

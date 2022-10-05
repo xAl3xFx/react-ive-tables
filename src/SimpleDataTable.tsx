@@ -1,6 +1,6 @@
 import {useIntl} from "react-intl";
 import React, {useEffect, useRef, useState} from "react";
-import {Column} from "primereact/column";
+import {Column, ColumnBodyOptions} from "primereact/column";
 import {
     DataTable,
     DataTableFilterParams,
@@ -49,7 +49,8 @@ interface Props<T, K extends string> {
             atStart: boolean
         }
     };
-    columnTemplate?: { [key in K]?: (rowData: T) => any };        // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
+    columnTemplate?: { [key in K]?:
+        (rowData: T, options: ColumnBodyOptions) => any };        // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
     xlsx?: string;                                                // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
     excelUrl?: string;                                            // The url of the endpoint for excel
     formatDateToLocal?: boolean;                                  // Specifies whether dates should be formatted to local or not.
@@ -384,15 +385,15 @@ export const SimpleDataTable = <T, K extends string>(
                 let columnHeader = getColumnHeaderTranslated(cName);
                 const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : {textAlign: 'center'}};
                 const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : {textAlign: "center"};
-
                 //TO BE TESTED
                 // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
                 return <Column
-                    body={props.columnTemplate![cName] ? (rowData: any) => props.columnTemplate![cName](rowData) : undefined}
+                    body={props.columnTemplate![cName] ? (rowData: T, columnOptions) => props.columnTemplate![cName](rowData, columnOptions) : undefined}
                     editor={props.specialEditors![cName] || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
                     filterFunction={handleFilter}
                     frozen={props.frozenColumns?.includes(cName)}
                     alignFrozen={"right"}
+                    rowEditor={cName === 'operations' && props.rowEditHandler !== undefined}
                     sortable={props.sortableColumns?.includes(cName)}
                     filterElement={props.specialFilters![cName]} showClearButton={false}
                     bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
@@ -401,7 +402,8 @@ export const SimpleDataTable = <T, K extends string>(
                     filterHeaderStyle={{textAlign: 'center'}}
                     key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle}/>
             });
-            if (props.rowEditHandler !== undefined)
+            //@ts-ignore
+            if (props.rowEditHandler !== undefined && !props.columnOrder.includes('operations'))
                 tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
                                          bodyStyle={{textAlign: 'center'}}/>);
             if(props.expandable)

@@ -8,6 +8,7 @@ import {Calendar} from "primereact/calendar";
 import {Customer} from "./types";
 import {SpecialFilter, StringKeys} from "../src/SimpleDataTable";
 import {InputText} from "primereact/inputtext";
+import {ColumnBodyOptions} from "primereact/column";
 
 
 export const ManyColumns = () => {
@@ -55,10 +56,10 @@ export const ManyColumns = () => {
     const getSpecialFilters = () => {
         return {
             roro: (options: any) => <Dropdown showClear options={statuses} value={options.value}
-                                                onChange={(e) => options.filterApplyCallback(e.value)}/>,
+                                              onChange={(e) => options.filterApplyCallback(e.value)}/>,
             balance: (options: any) => <Calendar showButtonBar value={options.value}
-                                              onChange={(e) => options.filterApplyCallback(e.value, options.index)}
-                                              dateFormat="yy-mm-dd" placeholder={'Choose'}/>
+                                                 onChange={(e) => options.filterApplyCallback(e.value, options.index)}
+                                                 dateFormat="yy-mm-dd" placeholder={'Choose'}/>
 
         }
     }
@@ -80,27 +81,46 @@ export const ManyColumns = () => {
     const getData = () => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                resolve(customers.data.slice(0,10));
-        }, 1000);
+                resolve(customers.data.slice(0, 10));
+            }, 1000);
         })
     }
 
+    const getColumnTemplate = () => {
+        return {
+            operations: (rowData: any, columnOptions: ColumnBodyOptions) => {
+                if(columnOptions.field === 'operations')
+                    console.log(columnOptions)
+
+                const editButton = columnOptions.rowEditor && !columnOptions.rowEditor.editing ? <Button icon={'pi pi-pencil'} onClick={columnOptions.rowEditor?.onInitClick}/> : null;
+                const saveButton = columnOptions.rowEditor && columnOptions.rowEditor.editing ? <Button icon={'pi pi-check'} onClick={columnOptions.rowEditor?.onSaveClick}/> : null;
+                const cancelButton = columnOptions.rowEditor && columnOptions.rowEditor.editing ? <Button icon={'pi pi-times'} onClick={columnOptions.rowEditor?.onCancelClick}/> : null;
+
+                return <>
+                    {editButton}
+                    {saveButton}
+                    {cancelButton}
+                </>
+            }
+        }
+    }
 
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())}/>
         <Button label={"Add selectedIDs"} onClick={addSelectedIds}/>
         <Button label={"Add records"} onClick={addToTable}/>
         <Button label={"Filter"} onClick={() => setFilters({})}/>
-        <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)} />
+        <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)}/>
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
                          expandable
-                         columnOrder={['balance', 'name']}
+                         columnOrder={['balance', 'name', 'operations']}
                          xlsx={"doo"}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
                          ignoreFilters={['name', '']}
                          initialFilters={{name: nameFilter}}
-                         // externalFilters={getExternalFilters()}
-
+                         rowEditHandler={() => 0}
+            // externalFilters={getExternalFilters()}
+                         columnTemplate={getColumnTemplate()}
                          specialLabels={{balance: 'asd'}}
             // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={getSpecialFilters()}
