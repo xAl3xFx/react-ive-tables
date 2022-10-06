@@ -72,7 +72,7 @@ interface Props<T, K extends string> {
         [key in K]?:
         (rowData: T, filterValue: string) => boolean
     }
-    onFilterCb?: (filteredData: any) => void                      // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
+    onFilterCb?: (filteredData: T[]) => void                      // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
     columnStyle?: { [key in K]?: { header: any, body: any } }     // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean                                       // Whether to show to paginator or no
     footerTemplate?: () => JSX.Element                            // A function that returns a template for the footer of the table
@@ -86,7 +86,7 @@ export const SimpleDataTable = <T, K extends string>(
 ) => {
     const {formatMessage: f} = useIntl();
 
-    const [items, setItems] = useState<any>([]);
+    const [items, setItems] = useState<T[]>([]);
     const [originalItems, setOriginalItems] = useState<any>([]);
     const [filters, setFilters] = useState<any>(null);
     const [columns, setColumns] = useState<any>([]);
