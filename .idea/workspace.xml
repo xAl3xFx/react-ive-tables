@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +67,8 @@
       <workItem from="1664964790506" duration="2155000" />
       <workItem from="1664971256847" duration="873000" />
       <workItem from="1665048375330" duration="622000" />
+      <workItem from="1665067112729" duration="413000" />
+      <workItem from="1665153276453" duration="51000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -193,7 +196,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664970223923</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="SimpleDataTable.tsx -&gt; Improved types.">
+      <created>1665067186710</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1665067186710</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,6 +239,7 @@
     <MESSAGE value="Important! -&gt; SimpleDataTable -&gt; Handle skeleton better: When the props.data is undefined -&gt; show skeleton; If it is empty -&gt; show no data; Show data otherwise." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; onRowEdit fixed type." />
     <MESSAGE value="SimpleDataTable -&gt; columnTemplate pass ColumnBodyOptions and set rowEditor to operations column." />
-    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable -&gt; columnTemplate pass ColumnBodyOptions and set rowEditor to operations column." />
+    <MESSAGE value="SimpleDataTable.tsx -&gt; Improved types." />
+    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable.tsx -&gt; Improved types." />
   </component>
 </project>

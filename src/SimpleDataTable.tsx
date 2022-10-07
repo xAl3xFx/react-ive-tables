@@ -631,7 +631,6 @@ export const SimpleDataTable = <T, K extends string>(
 
                     <DataTable
                         rowHover
-                        {...props.dtProps}
                         //editMode={"row"} rowEditorValidator={props.onRowEditorValidator} onRowEditInit={props.onRowEditInit} onRowEditSave={props.onRowEditSave} onRowEditCancel={props.onRowEditCancel}
                         //footerColumnGroup={props.subTotals ? buildSubTotals() : null}
                         ref={setRef}
@@ -695,6 +694,7 @@ export const SimpleDataTable = <T, K extends string>(
                             if (props.contextMenu)
                                 cm.current!.show(e.originalEvent)
                         }}
+                        {...props.dtProps}
                     >
                         {columns}
 
