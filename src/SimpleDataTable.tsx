@@ -130,13 +130,6 @@ export const SimpleDataTable = <T, K extends string>(
 
     useEffect(() => {
         if (filters && Object.keys(filters).length > 0 && props.initialFilters && showTable) {
-            // Object.keys(props.initialFilters).forEach(key => {
-            //     dt.current.filter(props.initialFilters![key], key, 'contains');
-            // })
-            // dt.current.filter('un', 'test', 'contains');
-            // dt.current.filter(1, 'id', 'contains');
-            // setFilters(props.initialFilters);
-
             const tempFilters = Object.keys(props.initialFilters).reduce((acc, key) => {
                 return {
                     ...acc, [key]: {
@@ -146,6 +139,13 @@ export const SimpleDataTable = <T, K extends string>(
                 }
             }, {});
 
+            Object.keys(props.initialFilters).forEach(key => {
+                const filter = document.querySelector("#filter-" + key);
+                if(filter){
+                    //@ts-ignore
+                    filter.value = props.initialFilters[key];
+                }
+            })
 
             //@ts-ignore
             handleFilter({filters: tempFilters});
@@ -375,8 +375,12 @@ export const SimpleDataTable = <T, K extends string>(
         if (props.onFilterCb) props.onFilterCb(result);
     }
 
-    const textEditor = (options: any) => {
+    const textEditor = (options: any, cName: string) => {
         return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)}/>;
+    }
+
+    const defaultFilter = (options: any, cName: string) => {
+        return <InputText id={'filter-' + cName} type="text" value={options.value} onChange={(e) => options.filterApplyCallback(e.target.value)}/>;
     }
 
     const generateColumns = () => {
@@ -395,7 +399,7 @@ export const SimpleDataTable = <T, K extends string>(
                     alignFrozen={"right"}
                     rowEditor={cName === 'operations' && props.rowEditHandler !== undefined}
                     sortable={props.sortableColumns?.includes(cName)}
-                    filterElement={props.specialFilters![cName]} showClearButton={false}
+                    filterElement={options => props.specialFilters[cName] ? props.specialFilters[cName](cName) : defaultFilter(options, cName)} showClearButton={false}
                     bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
                     onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                     filter={props.showFilters && !props.ignoreFilters!.includes(cName)}

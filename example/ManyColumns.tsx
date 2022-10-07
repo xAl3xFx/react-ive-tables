@@ -19,6 +19,7 @@ export const ManyColumns = () => {
     const [data, setData] = useState<Customer[]>()
     const [companyFilter, setCompanyFilter] = useState('');
     const [nameFilter, setNameFilter] = useState('');
+    const [balanceFilter, setBalanceFilter] = useState('');
     const dtRef = useRef(null);
 
     const menuModel = [
@@ -89,9 +90,6 @@ export const ManyColumns = () => {
     const getColumnTemplate = () => {
         return {
             operations: (rowData: any, columnOptions: ColumnBodyOptions) => {
-                if(columnOptions.field === 'operations')
-                    console.log(columnOptions)
-
                 const editButton = columnOptions.rowEditor && !columnOptions.rowEditor.editing ? <Button icon={'pi pi-pencil'} onClick={columnOptions.rowEditor?.onInitClick}/> : null;
                 const saveButton = columnOptions.rowEditor && columnOptions.rowEditor.editing ? <Button icon={'pi pi-check'} onClick={columnOptions.rowEditor?.onSaveClick}/> : null;
                 const cancelButton = columnOptions.rowEditor && columnOptions.rowEditor.editing ? <Button icon={'pi pi-times'} onClick={columnOptions.rowEditor?.onCancelClick}/> : null;
@@ -110,18 +108,17 @@ export const ManyColumns = () => {
         <Button label={"Add selectedIDs"} onClick={addSelectedIds}/>
         <Button label={"Add records"} onClick={addToTable}/>
         <Button label={"Filter"} onClick={() => setFilters({})}/>
-        <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)}/>
+        <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)} placeholder={'name'}/>
+        <InputText value={balanceFilter} onChange={e => setBalanceFilter(e.target.value)} placeholder={'balance'}/>
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
                          expandable
                          columnOrder={['balance', 'name', 'operations']}
                          xlsx={"doo"}
                          selectedIds={selectedIds} selectionHandler={handleSelection}
-                         ignoreFilters={['name', '']}
-                         initialFilters={{name: nameFilter}}
+                         initialFilters={{name: nameFilter, balance: balanceFilter}}
                          rowEditHandler={() => 0}
             // externalFilters={getExternalFilters()}
                          columnTemplate={getColumnTemplate()}
-                         specialLabels={{balance: 'asd'}}
             // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={getSpecialFilters()}
             // initialFilters={{id: 5, test: 'qu'}}
