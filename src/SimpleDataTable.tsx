@@ -411,7 +411,7 @@ export const SimpleDataTable = <T, K extends string>(
                     alignFrozen={"right"}
                     rowEditor={cName === 'operations' && props.rowEditHandler !== undefined}
                     sortable={props.sortableColumns?.includes(cName)}
-                    filterElement={options => props.specialFilters[cName] ? props.specialFilters[cName](cName) : defaultFilter(options, cName)} showClearButton={false}
+                    filterElement={options => props.specialFilters[cName] ? props.specialFilters[cName](options, cName) : defaultFilter(options, cName)} showClearButton={false}
                     bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
                     onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                     filter={props.showFilters && !props.ignoreFilters!.includes(cName)}

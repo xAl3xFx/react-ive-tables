@@ -4,6 +4,7 @@
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -71,7 +72,8 @@
       <workItem from="1665067112729" duration="413000" />
       <workItem from="1665153276453" duration="4143000" />
       <workItem from="1665392507902" duration="1930000" />
-      <workItem from="1665394616099" duration="653000" />
+      <workItem from="1665394616099" duration="2684000" />
+      <workItem from="1665413387796" duration="520000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -227,7 +229,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665394109322</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Fix bug where the html value is not set from initial filters.">
+      <created>1665395311431</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1665395311431</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -267,6 +276,7 @@
     <MESSAGE value="SimpleDataTable.tsx -&gt; Improved spread props.dtProps at the end." />
     <MESSAGE value="SimpleDataTable -&gt; initialFilters write over actual inputs." />
     <MESSAGE value="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb." />
-    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb." />
+    <MESSAGE value="Fix bug where the html value is not set from initial filters." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix bug where the html value is not set from initial filters." />
   </component>
 </project>

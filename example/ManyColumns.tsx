@@ -59,7 +59,10 @@ export const ManyColumns = () => {
 
     const getSpecialFilters = () => {
         return {
-
+            verified: (options: any) => <Dropdown filter={true} showClear value={options.value}
+                                                  options={[{value: true, label: "Yes"}]}
+                                                  onChange={(e) => options.filterApplyCallback(e.value)}
+                                                  style={{ textAlign: "left" }} />,
 
         }
     }
@@ -89,6 +92,7 @@ export const ManyColumns = () => {
     const getColumnTemplate = () => {
         console.log('getColumnTemplate')
         return {
+            verified : (rowData: any) => rowData.verified ? "Yes" : "No",
             operations: (rowData: any, columnOptions: ColumnBodyOptions) => {
                 const editButton = columnOptions.rowEditor && !columnOptions.rowEditor.editing ? <Button icon={'pi pi-pencil'} onClick={columnOptions.rowEditor?.onInitClick}/> : null;
                 const saveButton = columnOptions.rowEditor && columnOptions.rowEditor.editing ? <Button icon={'pi pi-check'} onClick={columnOptions.rowEditor?.onSaveClick}/> : null;
@@ -126,7 +130,7 @@ export const ManyColumns = () => {
         <InputText value={balanceFilter} onChange={e => setBalanceFilter(e.target.value)} placeholder={'balance'}/>
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
                          expandable
-                         columnOrder={['balance', 'name', 'operations']}
+                         columnOrder={['balance', 'name', 'verified', 'operations']}
                          xlsx={"doo"}
                          onFilterCb={handleOnFilterCallback}
                          // selectedIds={selectedIds} selectionHandler={handleSelection}
