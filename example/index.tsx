@@ -15,7 +15,7 @@ const App = () => {
     const [selectedTable, setSelectedTable] = useState(<ManyColumns />);
   return (
       <div className="App">
-          <IntlProvider locale={"bg-BG"} messages={{"id" : "ID", "name" : "Name", 'type' : 'Type', 'size' : "Size", title: "Title", body: "Body", balance: 'balance'}}>
+          <IntlProvider locale={"bg-BG"} messages={{"id" : "ID", "name" : "Name", 'type' : 'Type', 'size' : "Size", title: "Title", body: "Body", balance: 'balance', operations: 'operations'}}>
               <Card>
 
                   <h1>Select Table</h1>

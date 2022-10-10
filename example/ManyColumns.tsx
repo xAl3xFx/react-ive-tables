@@ -8,7 +8,9 @@ import {Calendar} from "primereact/calendar";
 import {Customer} from "./types";
 import {SpecialFilter, StringKeys} from "../src/SimpleDataTable";
 import {InputText} from "primereact/inputtext";
-import {ColumnBodyOptions} from "primereact/column";
+import {Column, ColumnBodyOptions} from "primereact/column";
+import {ColumnGroup} from "primereact/columngroup";
+import {Row} from "primereact/row";
 
 
 export const ManyColumns = () => {
@@ -21,6 +23,7 @@ export const ManyColumns = () => {
     const [nameFilter, setNameFilter] = useState('');
     const [balanceFilter, setBalanceFilter] = useState('');
     const dtRef = useRef(null);
+    const [filtered, setFiltered] = useState<any>();
 
     const menuModel = [
         {label: "Add", icon: 'pi pi-plus', command: () => 0},
@@ -56,11 +59,7 @@ export const ManyColumns = () => {
 
     const getSpecialFilters = () => {
         return {
-            roro: (options: any) => <Dropdown showClear options={statuses} value={options.value}
-                                              onChange={(e) => options.filterApplyCallback(e.value)}/>,
-            balance: (options: any) => <Calendar showButtonBar value={options.value}
-                                                 onChange={(e) => options.filterApplyCallback(e.value, options.index)}
-                                                 dateFormat="yy-mm-dd" placeholder={'Choose'}/>
+
 
         }
     }
@@ -88,6 +87,7 @@ export const ManyColumns = () => {
     }
 
     const getColumnTemplate = () => {
+        console.log('getColumnTemplate')
         return {
             operations: (rowData: any, columnOptions: ColumnBodyOptions) => {
                 const editButton = columnOptions.rowEditor && !columnOptions.rowEditor.editing ? <Button icon={'pi pi-pencil'} onClick={columnOptions.rowEditor?.onInitClick}/> : null;
@@ -103,6 +103,20 @@ export const ManyColumns = () => {
         }
     }
 
+    const handleOnFilterCallback = (rowData : any) => {
+        console.log(rowData);
+        setFiltered(rowData)
+    }
+
+    const footerGroup = <ColumnGroup>
+        <Row>
+            <Column
+                footer={filtered?.reduce((a, b) => a + b.balance, 0).toFixed(2) + '.'}
+                footerStyle={{textAlign: 'center', fontWeight: 'bold'}}/>
+            <Column colSpan={3}/>
+        </Row>
+    </ColumnGroup>;
+
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())}/>
         <Button label={"Add selectedIDs"} onClick={addSelectedIds}/>
@@ -114,8 +128,9 @@ export const ManyColumns = () => {
                          expandable
                          columnOrder={['balance', 'name', 'operations']}
                          xlsx={"doo"}
-                         selectedIds={selectedIds} selectionHandler={handleSelection}
-                         initialFilters={{name: nameFilter, balance: balanceFilter}}
+                         onFilterCb={handleOnFilterCallback}
+                         // selectedIds={selectedIds} selectionHandler={handleSelection}
+                         // initialFilters={{name: nameFilter, balance: balanceFilter}}
                          rowEditHandler={() => 0}
             // externalFilters={getExternalFilters()}
                          columnTemplate={getColumnTemplate()}
@@ -126,6 +141,7 @@ export const ManyColumns = () => {
                          editableColumns={['name']}
                          doubleClick={dbClickCb} selectionKey={"id"}
                          footerTemplate={footerTemplate}
+                         dtProps={{footerColumnGroup: footerGroup}}
         />
     </>
 }

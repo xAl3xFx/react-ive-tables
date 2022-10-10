@@ -13,6 +13,7 @@ import "./DataTable.css";
 import {ContextMenu} from 'primereact/contextmenu';
 import {Tooltip} from 'primereact/tooltip';
 import clone from 'lodash.clone';
+import isEqual from 'lodash.isequal';
 import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
 import {HeaderButton} from "./types";
@@ -99,6 +100,7 @@ export const SimpleDataTable = <T, K extends string>(
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
     const [selectedElement, setSelectedElement] = useState(null);
+    const [prevInitialFilters, setPrevInitialFilters] = useState<any>(); //Used for comparison with props.initialFilters to escape inifinite loop
     const [excelFilters, setExcelFilters] = useState({});
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
@@ -129,6 +131,8 @@ export const SimpleDataTable = <T, K extends string>(
     }, [showTable, filters, props.data, props.doubleClick])
 
     useEffect(() => {
+        const equal = isEqual(props.initialFilters, prevInitialFilters);
+        if(equal && props.initialFilters !== undefined) return;
         if (filters && Object.keys(filters).length > 0 && props.initialFilters && showTable) {
             const tempFilters = Object.keys(props.initialFilters).reduce((acc, key) => {
                 return {
@@ -149,6 +153,7 @@ export const SimpleDataTable = <T, K extends string>(
 
             //@ts-ignore
             handleFilter({filters: tempFilters});
+            setPrevInitialFilters(props.initialFilters);
         }
     }, [filters, props.initialFilters]);
 
@@ -339,6 +344,7 @@ export const SimpleDataTable = <T, K extends string>(
     }
 
     const handleFilter = (e: DataTableFilterParams) => {
+        console.log('handleFilter')
         let result;
         filterRef.current = {...filterRef.current, ...e ?? {}};
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
