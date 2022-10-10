@@ -4,10 +4,7 @@
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,17 +28,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/alexp/WebstormProjects/react-ive-tables",
-    "nodejs_package_manager_path": "yarn",
-    "ts.external.directory.path": "C:\\Users\\alexp\\WebstormProjects\\react-ive-tables\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/alexp/WebstormProjects/react-ive-tables&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\alexp\\WebstormProjects\\react-ive-tables\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables" />
@@ -73,7 +70,8 @@
       <workItem from="1665048375330" duration="622000" />
       <workItem from="1665067112729" duration="413000" />
       <workItem from="1665153276453" duration="4143000" />
-      <workItem from="1665392507902" duration="1528000" />
+      <workItem from="1665392507902" duration="1930000" />
+      <workItem from="1665394616099" duration="653000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -222,7 +220,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665158157705</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb.">
+      <created>1665394109322</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1665394109322</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -261,6 +266,7 @@
     <MESSAGE value="SimpleDataTable.tsx -&gt; Improved types." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Improved spread props.dtProps at the end." />
     <MESSAGE value="SimpleDataTable -&gt; initialFilters write over actual inputs." />
-    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable -&gt; initialFilters write over actual inputs." />
+    <MESSAGE value="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb." />
+    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb." />
   </component>
 </project>

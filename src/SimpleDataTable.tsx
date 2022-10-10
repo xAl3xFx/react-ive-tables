@@ -131,8 +131,20 @@ export const SimpleDataTable = <T, K extends string>(
     }, [showTable, filters, props.data, props.doubleClick])
 
     useEffect(() => {
+        if(props.initialFilters){
+            Object.keys(props.initialFilters).forEach(key => {
+                const filter = document.querySelector("#filter-" + key);
+                if(filter){
+                    //@ts-ignore
+                    filter.value = props.initialFilters[key];
+                }
+            })
+        }
+
+        //Check if props.initialFilters and prevInitialFilters are equal in order to avoid infinite loop.
         const equal = isEqual(props.initialFilters, prevInitialFilters);
         if(equal && props.initialFilters !== undefined) return;
+
         if (filters && Object.keys(filters).length > 0 && props.initialFilters && showTable) {
             const tempFilters = Object.keys(props.initialFilters).reduce((acc, key) => {
                 return {
@@ -143,13 +155,7 @@ export const SimpleDataTable = <T, K extends string>(
                 }
             }, {});
 
-            Object.keys(props.initialFilters).forEach(key => {
-                const filter = document.querySelector("#filter-" + key);
-                if(filter){
-                    //@ts-ignore
-                    filter.value = props.initialFilters[key];
-                }
-            })
+
 
             //@ts-ignore
             handleFilter({filters: tempFilters});

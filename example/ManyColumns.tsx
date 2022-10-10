@@ -20,7 +20,7 @@ export const ManyColumns = () => {
     const [filters, setFilters] = useState<any>({activity: '80'});
     const [data, setData] = useState<Customer[]>()
     const [companyFilter, setCompanyFilter] = useState('');
-    const [nameFilter, setNameFilter] = useState('');
+    const [nameFilter, setNameFilter] = useState('J');
     const [balanceFilter, setBalanceFilter] = useState('');
     const dtRef = useRef(null);
     const [filtered, setFiltered] = useState<any>();
@@ -130,7 +130,7 @@ export const ManyColumns = () => {
                          xlsx={"doo"}
                          onFilterCb={handleOnFilterCallback}
                          // selectedIds={selectedIds} selectionHandler={handleSelection}
-                         // initialFilters={{name: nameFilter, balance: balanceFilter}}
+                         // initialFilters={{name: nameFilter}}
                          rowEditHandler={() => 0}
             // externalFilters={getExternalFilters()}
                          columnTemplate={getColumnTemplate()}
