@@ -134,19 +134,16 @@ export const SimpleDataTable = <T, K extends string>(
     }, [showTable, filters, props.data, props.doubleClick])
 
     useEffect(() => {
-        console.log("UseEffect: props.initialFilters is: ", props.initialFilters);
-        if (props.initialFilters) {
+        if (props.initialFilters, showTable) {
             Object.keys(props.initialFilters).forEach(key => {
-                console.log("Current key is: ", key);
                 const filter = document.querySelector("#filter-" + key);
                 if (filter) {
-                    console.log("found element: ", filter);
                     //@ts-ignore
                     filter.value = props.initialFilters[key];
                 }
             })
         }
-    }, [props.initialFilters]);
+    }, [props.initialFilters, showTable]);
 
 
     useEffect(() => {
@@ -252,11 +249,7 @@ export const SimpleDataTable = <T, K extends string>(
     const initFilters = () => {
         if (!props.data) return;
         const initialFilters = props.columnOrder.reduce((acc: any, el) => {
-            // if(props.initialFilters && props.initialFilters[el] !== undefined){
-            //     return {...acc, [el]: {value: props.initialFilters[el], matchMode: "contains"}}
-            // }else{
             return { ...acc, [el]: { value: null, matchMode: "contains" } }
-            // }
         }, {});
 
         setFilters(initialFilters);
@@ -277,7 +270,6 @@ export const SimpleDataTable = <T, K extends string>(
                     elements.push({ ...items[i] });
                 }
             }
-            // const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
             if (selectedRow)
                 setSelectedRow([...selectedRow, ...elements]);
             else
@@ -296,21 +288,6 @@ export const SimpleDataTable = <T, K extends string>(
             }
             setSelectedRow(element);
         }
-        // } else {
-        //     if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
-        //         //@ts-ignore
-        //         const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
-        //         const copy = clone(elements);
-        //         setSelectedRow(copy);
-        //     } else {
-        //         //TODO implement logic for external management of selectedRow when single selection mode is being used
-        //         //@ts-ignore
-        //         const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
-        //         console.log("SELECTED ELEMENTS ARE: ", elements);
-        //         const copy = clone(elements[0]);
-        //         setSelectedRow(copy);
-        //     }
-        // }
     };
 
     useEffect(() => {
@@ -360,8 +337,6 @@ export const SimpleDataTable = <T, K extends string>(
     }
 
     const handleFilter = (e: DataTableFilterParams) => {
-        console.log('handleFilter from DT.');
-        console.log("The event from the table is: ", e);
         let result;
         filterRef.current = { ...filterRef.current, ...e ?? {} };
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
