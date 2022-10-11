@@ -134,10 +134,13 @@ export const SimpleDataTable = <T, K extends string>(
     }, [showTable, filters, props.data, props.doubleClick])
 
     useEffect(() => {
+        console.log("UseEffect: props.initialFilters is: ", props.initialFilters);
         if (props.initialFilters) {
             Object.keys(props.initialFilters).forEach(key => {
+                console.log("Current key is: ", key);
                 const filter = document.querySelector("#filter-" + key);
                 if (filter) {
+                    console.log("found element: ", filter);
                     //@ts-ignore
                     filter.value = props.initialFilters[key];
                 }
@@ -357,7 +360,8 @@ export const SimpleDataTable = <T, K extends string>(
     }
 
     const handleFilter = (e: DataTableFilterParams) => {
-        console.log('handleFilter')
+        console.log('handleFilter from DT.');
+        console.log("The event from the table is: ", e);
         let result;
         filterRef.current = { ...filterRef.current, ...e ?? {} };
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
