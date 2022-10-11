@@ -138,7 +138,7 @@ export const SimpleDataTable = <T, K extends string>(
         if (props.initialFilters && areFiltersInited) {
             Object.keys(props.initialFilters).forEach(key => {
                 const filter = document.querySelector("#filter-" + key);
-                if (filter) {
+                if (filter && props.ignoreFilters[key] !== undefined && props.ignoreFilters[key] !== null) {
                     //@ts-ignore
                     filter.value = props.initialFilters[key];
                 }
