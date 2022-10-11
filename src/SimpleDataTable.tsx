@@ -105,6 +105,7 @@ export const SimpleDataTable = <T, K extends string>(
     const [selectedElement, setSelectedElement] = useState(null);
     const [prevInitialFilters, setPrevInitialFilters] = useState<any>(); //Used for comparison with props.initialFilters to escape inifinite loop
     const [excelFilters, setExcelFilters] = useState({});
+    const [areFiltersInited, setAreFiltersInited] = useState(false);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
@@ -134,7 +135,7 @@ export const SimpleDataTable = <T, K extends string>(
     }, [showTable, filters, props.data, props.doubleClick])
 
     useEffect(() => {
-        if (props.initialFilters, showTable) {
+        if (props.initialFilters && areFiltersInited) {
             Object.keys(props.initialFilters).forEach(key => {
                 const filter = document.querySelector("#filter-" + key);
                 if (filter) {
@@ -143,7 +144,7 @@ export const SimpleDataTable = <T, K extends string>(
                 }
             })
         }
-    }, [props.initialFilters, showTable]);
+    }, [props.initialFilters, areFiltersInited]);
 
 
     useEffect(() => {
@@ -201,6 +202,10 @@ export const SimpleDataTable = <T, K extends string>(
             generateColumns();
         }
     }, [showTable]);
+
+    useEffect(() => {
+        if (filters && Object.keys(filters).length > 0) setAreFiltersInited(true);
+    }, [filters])
 
 
     const listener = (event: any) => {
