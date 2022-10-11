@@ -140,6 +140,10 @@ export const SimpleDataTable = <T, K extends string>(
                 }
             })
         }
+    }, [props.initialFilters]);
+
+
+    useEffect(() => {
 
         //Check if props.initialFilters and prevInitialFilters are equal in order to avoid infinite loop.
         const equal = isEqual(props.initialFilters, prevInitialFilters);
