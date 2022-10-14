@@ -262,7 +262,6 @@ export const SimpleDataTable = <T, K extends string>(
             let matchMode = "contains";
             //@ts-ignore
             if(props.filtersMatchMode) matchMode = props.filtersMatchMode[el];
-            console.log(`The MatchMode of ${el} is ${matchMode}`)
             return { ...acc, [el]: { value: null, matchMode : matchMode || "contains" } }
         }, {});
 
@@ -376,15 +375,9 @@ export const SimpleDataTable = <T, K extends string>(
                         const moment2 = moment(actualFilters[filterKey].value);
                         return acc && moment1.isSame(moment2, 'day');
                     } else if(props.filtersMatchMode && props.filtersMatchMode[filterKey] !== undefined) {
-                        // console.log("FilterMatchMode filtering: ", props.filtersMatchMode[filterKey]);
-                        // console.log("The current value is: ", parseNestedObject(el, filterKey));
-                        // console.log("The value of the filter is: ", actualFilters[filterKey]);
                         const matchMode = props.filtersMatchMode[filterKey];
                         if(matchMode === FilterMatchMode.IN && actualFilters[filterKey].value.length > 0) return acc && actualFilters[filterKey].value.includes(parseNestedObject(el, filterKey));
                         if(matchMode === FilterMatchMode.EQUALS) {
-                            console.log("EQUALS");
-                            console.log(parseNestedObject(el, filterKey));
-                            console.log(actualFilters[filterKey]);
                             return acc && String(actualFilters[filterKey].value) === String(parseNestedObject(el, filterKey));
                         }
                         return acc;
