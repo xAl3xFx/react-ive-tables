@@ -6,7 +6,7 @@ import {
     DataTableFilterParams,
     DataTableFilterMetaData,
     DataTableProps, DataTableRowEditCompleteParams,
-    DataTableSelectionModeType,
+    DataTableSelectionModeType, DataTableFilterMatchModeType,
 } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -19,15 +19,18 @@ import { Skeleton } from "primereact/skeleton";
 import moment from 'moment';
 import { HeaderButton } from "./types";
 import axios from "axios";
+import {FilterMatchMode} from "primereact/api";
 
 export type StringKeys<T> = Extract<keyof T, string>;
 export type SpecialFilter<K extends string> = { [key in K]?: (options: any) => JSX.Element }
+export type FiltersMatchMode<K extends string> = { [key in K]?: FilterMatchMode.IN | FilterMatchMode.EQUALS }
 
 interface Props<T, K extends string> {
     data: T[] | undefined;
     columnOrder: (K | StringKeys<T>)[];                           // Defines order for the columns. NB! Only the specified columns here will be rendered.
     ignoreFilters?: K[];                                          // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
     specialFilters?: SpecialFilter<K>;                            // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
+    filtersMatchMode?: FiltersMatchMode<K>
     specialLabels?: { [key in K]?: string; };                     // Used for special labels. By default the table is trying to use intl for translation of each label. If specialLabels is used it overrides the column name for translation. The key is the cName and the value is the translation string used in text properties for intl.
     showFilters?: boolean;                                        // Should filters be rendered.
     showHeader?: boolean;                                         // Should header be rendered.
@@ -80,7 +83,7 @@ interface Props<T, K extends string> {
     columnStyle?: { [key in K]?: { header: any, body: any } }     // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean                                       // Whether to show to paginator or no
     footerTemplate?: () => JSX.Element                            // A function that returns a template for the footer of the table
-    initialFilters?: { [key in K]?: string | number | Date },
+    initialFilters?: { [key in K]?: string | number | Date | boolean | string[] | number[] | Date[] | boolean[] },
     frozenColumns?: K[]                                           // Specify which columns should be frozen (default right aligned)
     expandable?: boolean                                          // When true expander column is added at the beginning
 }
@@ -155,10 +158,12 @@ export const SimpleDataTable = <T, K extends string>(
 
         if (filters && Object.keys(filters).length > 0 && props.initialFilters && showTable) {
             const tempFilters = Object.keys(props.initialFilters).reduce((acc, key) => {
+                let matchMode = "contains";
+                if(props.filtersMatchMode && props.filtersMatchMode[key]) matchMode = props.filtersMatchMode[key];
                 return {
                     ...acc, [key]: {
                         value: props.initialFilters![key],
-                        matchMode: 'contains'
+                        matchMode
                     }
                 }
             }, {});
@@ -254,7 +259,10 @@ export const SimpleDataTable = <T, K extends string>(
     const initFilters = () => {
         if (!props.data) return;
         const initialFilters = props.columnOrder.reduce((acc: any, el) => {
-            return { ...acc, [el]: { value: null, matchMode: "contains" } }
+            let matchMode = "contains";
+            if(props.filtersMatchMode) matchMode = props.filtersMatchMode[el];
+            console.log(`The MatchMode of ${el} is ${matchMode}`)
+            return { ...acc, [el]: { value: null, matchMode : matchMode || "contains" } }
         }, {});
 
         setFilters(initialFilters);
@@ -333,7 +341,7 @@ export const SimpleDataTable = <T, K extends string>(
     const parseNestedObject = (object: any, key: string | number | symbol) => {
         let res = object;
         for (let currentKey of key.toString().split('.')) {
-            if (res[currentKey])
+            if (res[currentKey] !== undefined && res[currentKey] !== null)
                 res = res[currentKey]
             else
                 return undefined
@@ -366,7 +374,21 @@ export const SimpleDataTable = <T, K extends string>(
                         const moment1 = moment(parseNestedObject(el, filterKey));
                         const moment2 = moment(actualFilters[filterKey].value);
                         return acc && moment1.isSame(moment2, 'day');
-                    } else {
+                    } else if(props.filtersMatchMode && props.filtersMatchMode[filterKey] !== undefined) {
+                        // console.log("FilterMatchMode filtering: ", props.filtersMatchMode[filterKey]);
+                        // console.log("The current value is: ", parseNestedObject(el, filterKey));
+                        // console.log("The value of the filter is: ", actualFilters[filterKey]);
+                        const matchMode = props.filtersMatchMode[filterKey];
+                        if(matchMode === FilterMatchMode.IN && actualFilters[filterKey].value.length > 0) return acc && actualFilters[filterKey].value.includes(parseNestedObject(el, filterKey));
+                        if(matchMode === FilterMatchMode.EQUALS) {
+                            console.log("EQUALS");
+                            console.log(parseNestedObject(el, filterKey));
+                            console.log(actualFilters[filterKey]);
+                            return acc && String(actualFilters[filterKey].value) === String(parseNestedObject(el, filterKey));
+                        }
+                        return acc;
+                    }
+                    else {
                         //@ts-ignore
                         return acc && String(parseNestedObject(el, filterKey)).toLowerCase().indexOf(String(actualFilters[filterKey].value).toLowerCase()) !== -1;
                     }

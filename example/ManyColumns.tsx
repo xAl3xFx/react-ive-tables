@@ -15,6 +15,8 @@ import {
     DataTableFilterMetaData,
     DataTableFilterParams,
 } from "primereact/datatable";
+import {MultiSelect} from "primereact/multiselect";
+import {FilterMatchMode} from "primereact/api";
 
 
 export const ManyColumns = () => {
@@ -63,11 +65,13 @@ export const ManyColumns = () => {
 
     const getSpecialFilters = () => {
         return {
-            verified: (options: any) => <Dropdown filter={true} showClear value={options.value}
-                options={[{ value: true, label: "Yes" }]}
-                onChange={(e) => options.filterApplyCallback(e.value)}
+            verified: (options: any) => <MultiSelect filter={true} showClear value={options.value}
+                options={[{ value: true, label: "Yes" }, {value: false, label: "No"}]}
+                onChange={(e) => {
+                    console.log(e);
+                    options.filterApplyCallback(e.value);
+                }}
                 style={{ textAlign: "left" }} />,
-
         }
     }
 
@@ -139,13 +143,14 @@ export const ManyColumns = () => {
             xlsx={"doo"}
             onFilterCb={handleOnFilterCallback}
             // selectedIds={selectedIds} selectionHandler={handleSelection}
-            initialFilters={{ name: nameFilter }}
+            // initialFilters={{ name: nameFilter }}
             rowEditHandler={() => 0}
             // externalFilters={getExternalFilters()}
             columnTemplate={getColumnTemplate()}
             // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
             specialFilters={getSpecialFilters()}
-            // initialFilters={{id: 5, test: 'qu'}}
+            filtersMatchMode={{verified: FilterMatchMode.IN, balance: FilterMatchMode.EQUALS}}
+            initialFilters={{verified: [true]}}
             showPaginator={false}
             editableColumns={['name']}
             doubleClick={dbClickCb} selectionKey={"id"}
