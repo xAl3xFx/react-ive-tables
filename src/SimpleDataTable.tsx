@@ -260,6 +260,7 @@ export const SimpleDataTable = <T, K extends string>(
         if (!props.data) return;
         const initialFilters = props.columnOrder.reduce((acc: any, el) => {
             let matchMode = "contains";
+            //@ts-ignore
             if(props.filtersMatchMode) matchMode = props.filtersMatchMode[el];
             console.log(`The MatchMode of ${el} is ${matchMode}`)
             return { ...acc, [el]: { value: null, matchMode : matchMode || "contains" } }
