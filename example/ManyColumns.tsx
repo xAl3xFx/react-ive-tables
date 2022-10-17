@@ -11,7 +11,13 @@ import {InputText} from "primereact/inputtext";
 import {Column, ColumnBodyOptions} from "primereact/column";
 import {ColumnGroup} from "primereact/columngroup";
 import {Row} from "primereact/row";
+import {act} from "react-dom/test-utils";
 
+interface IDropdownOption {
+    key: number;
+    id: number;
+    description: string;
+}
 
 export const ManyColumns = () => {
     const [selected, setSelected] = useState();
@@ -24,6 +30,8 @@ export const ManyColumns = () => {
     const [balanceFilter, setBalanceFilter] = useState('');
     const dtRef = useRef(null);
     const [filtered, setFiltered] = useState<any>();
+    const [activityOptions, setActivityOptions] = useState<IDropdownOption[]>();
+    const [rebuildColumns, setRebuildColumns] = useState(0);
 
     const menuModel = [
         {label: "Add", icon: 'pi pi-plus', command: () => 0},
@@ -40,6 +48,25 @@ export const ManyColumns = () => {
 
     useEffect(() => {
         getData().then(setData);
+
+        setTimeout(() => {
+            const addedOptions : number[] = [];
+            const activityOptions = customers.data.slice(0,15).reduce((acc, el : Customer) => {
+                if(addedOptions.includes(el.activity)){
+                    return acc;
+                }else{
+                    addedOptions.push(el.activity);
+                    acc.push({
+                        id: el.activity,
+                        key: el.activity,
+                        description: 'Activity ' + el.activity
+                    })
+                    return acc;
+                }
+            }, []);
+            setActivityOptions(activityOptions)
+            setRebuildColumns(new Date().getTime());
+        }, 4000);
     }, []);
 
 
@@ -103,7 +130,8 @@ export const ManyColumns = () => {
                     {saveButton}
                     {cancelButton}
                 </>
-            }
+            },
+            activity: (rowData: any) => activityOptions ? ( activityOptions.find(el => el.id === rowData.activity)?.description || rowData.activity) : rowData.activity
         }
     }
 
@@ -130,7 +158,7 @@ export const ManyColumns = () => {
         <InputText value={balanceFilter} onChange={e => setBalanceFilter(e.target.value)} placeholder={'balance'}/>
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
                          expandable
-                         columnOrder={['balance', 'name', 'verified', 'operations']}
+                         columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
                          xlsx={"doo"}
                          onFilterCb={handleOnFilterCallback}
                          // selectedIds={selectedIds} selectionHandler={handleSelection}
@@ -145,6 +173,7 @@ export const ManyColumns = () => {
                          editableColumns={['name']}
                          doubleClick={dbClickCb} selectionKey={"id"}
                          footerTemplate={footerTemplate}
+                         rebuildColumns={rebuildColumns}
                          dtProps={{footerColumnGroup: footerGroup}}
         />
     </>

@@ -80,6 +80,7 @@ interface Props<T, K extends string> {
     initialFilters?: { [key in K]?: string | number | Date },
     frozenColumns?: K[]                                           // Specify which columns should be frozen (default right aligned)
     expandable?: boolean                                          // When true expander column is added at the beginning
+    rebuildColumns?: number;
 }
 
 export const SimpleDataTable = <T, K extends string>(
@@ -99,6 +100,7 @@ export const SimpleDataTable = <T, K extends string>(
     const [selectedRow, setSelectedRow] = useState<any>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
+    const [rebuildColumns, setRebuildColumns] = useState<number>(props.rebuildColumns || 0);
     const [selectedElement, setSelectedElement] = useState(null);
     const [prevInitialFilters, setPrevInitialFilters] = useState<any>(); //Used for comparison with props.initialFilters to escape inifinite loop
     const [excelFilters, setExcelFilters] = useState({});
@@ -242,6 +244,13 @@ export const SimpleDataTable = <T, K extends string>(
             setSelectionResetter(props.selectionResetter);
         }
     }, [props.selectionResetter]);
+
+    useEffect(() => {
+        if(props.rebuildColumns && props.rebuildColumns !== rebuildColumns){
+            generateColumns();
+        }
+    }, [props.rebuildColumns]);
+
 
     const initFilters = () => {
         if (!props.data) return;
@@ -400,7 +409,9 @@ export const SimpleDataTable = <T, K extends string>(
     }
 
     const generateColumns = () => {
-        if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle)) {
+        if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle) || (props.rebuildColumns && props.rebuildColumns !== rebuildColumns)) {
+            if(props.rebuildColumns)
+                setRebuildColumns(props.rebuildColumns);
             const tempColumns = props.columnOrder.map((cName: any) => {
                 let columnHeader = getColumnHeaderTranslated(cName);
                 const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : {textAlign: 'center'}};

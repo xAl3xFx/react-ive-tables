@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,6 +47,18 @@
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables\src" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration name="run example" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/example/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -72,7 +85,9 @@
       <workItem from="1665392507902" duration="1930000" />
       <workItem from="1665394616099" duration="2684000" />
       <workItem from="1665413387796" duration="1122000" />
-      <workItem from="1665484249463" duration="49000" />
+      <workItem from="1665484249463" duration="2110000" />
+      <workItem from="1665654364748" duration="596000" />
+      <workItem from="1666011076981" duration="2106000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -242,7 +257,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665413971402</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Initial filters come back fix attempt.">
+      <created>1665484330182</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1665484330182</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,6 +278,17 @@
         <option value="Default.Date" />
         <option value="Default.Subject" />
       </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
@@ -284,6 +317,7 @@
     <MESSAGE value="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb." />
     <MESSAGE value="Fix bug where the html value is not set from initial filters." />
     <MESSAGE value="Missing options parameter to props.specialFilters" />
-    <option name="LAST_COMMIT_MESSAGE" value="Missing options parameter to props.specialFilters" />
+    <MESSAGE value="Initial filters come back fix attempt." />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial filters come back fix attempt." />
   </component>
 </project>
