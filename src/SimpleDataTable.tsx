@@ -1,37 +1,41 @@
-import {useIntl} from "react-intl";
-import React, {useEffect, useRef, useState} from "react";
-import {Column, ColumnBodyOptions} from "primereact/column";
+import { useIntl } from "react-intl";
+import React, { useEffect, useRef, useState } from "react";
+import { Column, ColumnBodyOptions } from "primereact/column";
 import {
     DataTable,
     DataTableFilterParams,
+    DataTableFilterMetaData,
     DataTableProps, DataTableRowEditCompleteParams,
-    DataTableSelectionModeType,
+    DataTableSelectionModeType, DataTableFilterMatchModeType,
 } from "primereact/datatable";
-import {InputText} from "primereact/inputtext";
-import {Button} from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
 import "./DataTable.css";
-import {ContextMenu} from 'primereact/contextmenu';
-import {Tooltip} from 'primereact/tooltip';
+import { ContextMenu } from 'primereact/contextmenu';
+import { Tooltip } from 'primereact/tooltip';
 import clone from 'lodash.clone';
 import isEqual from 'lodash.isequal';
-import {Skeleton} from "primereact/skeleton";
+import { Skeleton } from "primereact/skeleton";
 import moment from 'moment';
-import {HeaderButton} from "./types";
+import { HeaderButton } from "./types";
 import axios from "axios";
+import {FilterMatchMode} from "primereact/api";
 
 export type StringKeys<T> = Extract<keyof T, string>;
 export type SpecialFilter<K extends string> = { [key in K]?: (options: any) => JSX.Element }
+export type FiltersMatchMode<K extends string> = { [key in K]?: FilterMatchMode.IN | FilterMatchMode.EQUALS }
 
 interface Props<T, K extends string> {
     data: T[] | undefined;
     columnOrder: (K | StringKeys<T>)[];                           // Defines order for the columns. NB! Only the specified columns here will be rendered.
     ignoreFilters?: K[];                                          // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
     specialFilters?: SpecialFilter<K>;                            // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
+    filtersMatchMode?: FiltersMatchMode<K>
     specialLabels?: { [key in K]?: string; };                     // Used for special labels. By default the table is trying to use intl for translation of each label. If specialLabels is used it overrides the column name for translation. The key is the cName and the value is the translation string used in text properties for intl.
     showFilters?: boolean;                                        // Should filters be rendered.
     showHeader?: boolean;                                         // Should header be rendered.
     setSelected?: (value: any,                                    // Callback for selection. Provides the selected row/rows.
-                   contextMenuClick: boolean) => void,
+        contextMenuClick: boolean) => void,
     contextMenu?: Object[],                                       // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
     rowEditHandler?: (event: DataTableRowEditCompleteParams)
         => void,                                                  // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
@@ -73,11 +77,13 @@ interface Props<T, K extends string> {
         [key in K]?:
         (rowData: T, filterValue: string) => boolean
     }
-    onFilterCb?: (filteredData: T[]) => void                      // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
+    onFilterCb?: (filteredData: T[],                              // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
+        filters: { [key in keyof T]: DataTableFilterMetaData })
+        => void
     columnStyle?: { [key in K]?: { header: any, body: any } }     // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean                                       // Whether to show to paginator or no
     footerTemplate?: () => JSX.Element                            // A function that returns a template for the footer of the table
-    initialFilters?: { [key in K]?: string | number | Date },
+    initialFilters?: { [key in K]?: string | number | Date | boolean | string[] | number[] | Date[] | boolean[] },
     frozenColumns?: K[]                                           // Specify which columns should be frozen (default right aligned)
     expandable?: boolean                                          // When true expander column is added at the beginning
     rebuildColumns?: number;
@@ -86,7 +92,7 @@ interface Props<T, K extends string> {
 export const SimpleDataTable = <T, K extends string>(
     props: Props<T, K>
 ) => {
-    const {formatMessage: f} = useIntl();
+    const { formatMessage: f } = useIntl();
 
     const [items, setItems] = useState<T[]>([]);
     const [originalItems, setOriginalItems] = useState<any>([]);
@@ -104,6 +110,7 @@ export const SimpleDataTable = <T, K extends string>(
     const [selectedElement, setSelectedElement] = useState(null);
     const [prevInitialFilters, setPrevInitialFilters] = useState<any>(); //Used for comparison with props.initialFilters to escape inifinite loop
     const [excelFilters, setExcelFilters] = useState({});
+    const [areFiltersInited, setAreFiltersInited] = useState(false);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const cm = useRef<any>();
     const dt = useRef<any>();
@@ -133,30 +140,32 @@ export const SimpleDataTable = <T, K extends string>(
     }, [showTable, filters, props.data, props.doubleClick])
 
     useEffect(() => {
-        if(props.initialFilters){
+        if (props.initialFilters && areFiltersInited) {
             Object.keys(props.initialFilters).forEach(key => {
                 const filter = document.querySelector("#filter-" + key);
-                if(filter){
+                if (filter && props.initialFilters[key] !== undefined && props.initialFilters[key] !== null) {
                     //@ts-ignore
                     filter.value = props.initialFilters[key];
                 }
             })
         }
-    }, [props.initialFilters]);
+    }, [props.initialFilters, areFiltersInited]);
 
 
     useEffect(() => {
 
         //Check if props.initialFilters and prevInitialFilters are equal in order to avoid infinite loop.
         const equal = isEqual(props.initialFilters, prevInitialFilters);
-        if(equal && props.initialFilters !== undefined) return;
+        if (equal && props.initialFilters !== undefined) return;
 
         if (filters && Object.keys(filters).length > 0 && props.initialFilters && showTable) {
             const tempFilters = Object.keys(props.initialFilters).reduce((acc, key) => {
+                let matchMode = "contains";
+                if(props.filtersMatchMode && props.filtersMatchMode[key]) matchMode = props.filtersMatchMode[key];
                 return {
                     ...acc, [key]: {
                         value: props.initialFilters![key],
-                        matchMode: 'contains'
+                        matchMode
                     }
                 }
             }, {});
@@ -164,7 +173,7 @@ export const SimpleDataTable = <T, K extends string>(
 
 
             //@ts-ignore
-            handleFilter({filters: tempFilters});
+            handleFilter({ filters: tempFilters });
             setPrevInitialFilters(props.initialFilters);
         }
     }, [filters, props.initialFilters]);
@@ -200,6 +209,10 @@ export const SimpleDataTable = <T, K extends string>(
             generateColumns();
         }
     }, [showTable]);
+
+    useEffect(() => {
+        if (filters && Object.keys(filters).length > 0) setAreFiltersInited(true);
+    }, [filters])
 
 
     const listener = (event: any) => {
@@ -255,11 +268,10 @@ export const SimpleDataTable = <T, K extends string>(
     const initFilters = () => {
         if (!props.data) return;
         const initialFilters = props.columnOrder.reduce((acc: any, el) => {
-            // if(props.initialFilters && props.initialFilters[el] !== undefined){
-            //     return {...acc, [el]: {value: props.initialFilters[el], matchMode: "contains"}}
-            // }else{
-            return {...acc, [el]: {value: null, matchMode: "contains"}}
-            // }
+            let matchMode = "contains";
+            //@ts-ignore
+            if(props.filtersMatchMode) matchMode = props.filtersMatchMode[el];
+            return { ...acc, [el]: { value: null, matchMode : matchMode || "contains" } }
         }, {});
 
         setFilters(initialFilters);
@@ -277,10 +289,9 @@ export const SimpleDataTable = <T, K extends string>(
                     if (!selectedRowIndex) {
                         selectedRowIndex = i;
                     }
-                    elements.push({...items[i]});
+                    elements.push({ ...items[i] });
                 }
             }
-            // const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
             if (selectedRow)
                 setSelectedRow([...selectedRow, ...elements]);
             else
@@ -292,28 +303,13 @@ export const SimpleDataTable = <T, K extends string>(
             for (let i = 0; i < items.length; i++) {
                 //@ts-ignore
                 if (props.selectedIds!.includes(items[i][props.selectionKey!])) {
-                    element = {...items[i]};
+                    element = { ...items[i] };
                     setSelectedRowIndex(i);
                     break;
                 }
             }
             setSelectedRow(element);
         }
-        // } else {
-        //     if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
-        //         //@ts-ignore
-        //         const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
-        //         const copy = clone(elements);
-        //         setSelectedRow(copy);
-        //     } else {
-        //         //TODO implement logic for external management of selectedRow when single selection mode is being used
-        //         //@ts-ignore
-        //         const elements = items.filter((s: any) => props.selectedIds!.includes(s[props.selectionKey]));
-        //         console.log("SELECTED ELEMENTS ARE: ", elements);
-        //         const copy = clone(elements[0]);
-        //         setSelectedRow(copy);
-        //     }
-        // }
     };
 
     useEffect(() => {
@@ -327,7 +323,7 @@ export const SimpleDataTable = <T, K extends string>(
     }, [first]);
 
     const exportExcel = () => {
-        if(props.excelUrl === undefined){
+        if (props.excelUrl === undefined) {
             console.warn("excelUrl is undefined.");
             return;
         }
@@ -338,11 +334,11 @@ export const SimpleDataTable = <T, K extends string>(
         }, {})
 
         const formattedFilters = Object.keys(excelFilters).reduce((acc, el) => {
-            if(excelFilters[el].value !== null && excelFilters[el].value !== undefined)
+            if (excelFilters[el].value !== null && excelFilters[el].value !== undefined)
                 acc[el] = String(excelFilters[el].value || '');
             return acc;
         }, {})
-        axios.post(props.excelUrl, {filters: formattedFilters, columns: props.columnOrder, sheetName: props.xlsx, labelsMap}, {withCredentials: true, responseType: "arraybuffer"}).then(response  => {
+        axios.post(props.excelUrl, { filters: formattedFilters, columns: props.columnOrder, sheetName: props.xlsx, labelsMap }, { withCredentials: true, responseType: "arraybuffer" }).then(response => {
             import('file-saver').then(FileSaver => {
                 //@ts-ignore
                 const blob = new Blob([response.data], { type: response.headers["content-type"] });
@@ -354,7 +350,7 @@ export const SimpleDataTable = <T, K extends string>(
     const parseNestedObject = (object: any, key: string | number | symbol) => {
         let res = object;
         for (let currentKey of key.toString().split('.')) {
-            if (res[currentKey])
+            if (res[currentKey] !== undefined && res[currentKey] !== null)
                 res = res[currentKey]
             else
                 return undefined
@@ -363,14 +359,13 @@ export const SimpleDataTable = <T, K extends string>(
     }
 
     const handleFilter = (e: DataTableFilterParams) => {
-        console.log('handleFilter')
         let result;
-        filterRef.current = {...filterRef.current, ...e ?? {}};
+        filterRef.current = { ...filterRef.current, ...e ?? {} };
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
             //@ts-ignore
             if (e.filters[key].value === null || e.filters[key].value === '' || e.filters[key].value === undefined)
                 return acc;
-            acc[key] = {...e.filters[key]};
+            acc[key] = { ...e.filters[key] };
             return acc;
         }, {});
 
@@ -388,7 +383,15 @@ export const SimpleDataTable = <T, K extends string>(
                         const moment1 = moment(parseNestedObject(el, filterKey));
                         const moment2 = moment(actualFilters[filterKey].value);
                         return acc && moment1.isSame(moment2, 'day');
-                    } else {
+                    } else if(props.filtersMatchMode && props.filtersMatchMode[filterKey] !== undefined) {
+                        const matchMode = props.filtersMatchMode[filterKey];
+                        if(matchMode === FilterMatchMode.IN && actualFilters[filterKey].value.length > 0) return acc && actualFilters[filterKey].value.includes(parseNestedObject(el, filterKey));
+                        if(matchMode === FilterMatchMode.EQUALS) {
+                            return acc && String(actualFilters[filterKey].value) === String(parseNestedObject(el, filterKey));
+                        }
+                        return acc;
+                    }
+                    else {
                         //@ts-ignore
                         return acc && String(parseNestedObject(el, filterKey)).toLowerCase().indexOf(String(actualFilters[filterKey].value).toLowerCase()) !== -1;
                     }
@@ -397,15 +400,15 @@ export const SimpleDataTable = <T, K extends string>(
             setItems(result);
         }
         setExcelFilters(actualFilters);
-        if (props.onFilterCb) props.onFilterCb(result);
+        if (props.onFilterCb) props.onFilterCb(result, actualFilters);
     }
 
     const textEditor = (options: any, cName: string) => {
-        return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)}/>;
+        return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
     }
 
     const defaultFilter = (options: any, cName: string) => {
-        return <InputText id={'filter-' + cName} type="text" value={options.value} onChange={(e) => options.filterApplyCallback(e.target.value)}/>;
+        return <InputText id={'filter-' + cName} type="text" value={options.value} onChange={(e) => options.filterApplyCallback(e.target.value)} />;
     }
 
     const generateColumns = () => {
@@ -414,8 +417,8 @@ export const SimpleDataTable = <T, K extends string>(
                 setRebuildColumns(props.rebuildColumns);
             const tempColumns = props.columnOrder.map((cName: any) => {
                 let columnHeader = getColumnHeaderTranslated(cName);
-                const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : {textAlign: 'center'}};
-                const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : {textAlign: "center"};
+                const columnHeaderStyle = { textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : { textAlign: 'center' } };
+                const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : { textAlign: "center" };
                 //TO BE TESTED
                 // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
                 return <Column
@@ -430,21 +433,21 @@ export const SimpleDataTable = <T, K extends string>(
                     bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
                     onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                     filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
-                    filterHeaderStyle={{textAlign: 'center'}}
-                    key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle}/>
+                    filterHeaderStyle={{ textAlign: 'center' }}
+                    key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle} />
             });
             //@ts-ignore
             if (props.rowEditHandler !== undefined && !props.columnOrder.includes('operations'))
-                tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
-                                         bodyStyle={{textAlign: 'center'}}/>);
-            if(props.expandable)
-                tempColumns.unshift(<Column expander headerStyle={{width: '3em'}} />)
+                tempColumns.push(<Column rowEditor headerStyle={{ width: '7rem' }}
+                    bodyStyle={{ textAlign: 'center' }} />);
+            if (props.expandable)
+                tempColumns.unshift(<Column expander headerStyle={{ width: '3em' }} />)
             if (props.selectionMode === "checkbox")
-                tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
+                tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{ width: '3em' }} />);
             //Put specialColumns in columns
             Object.keys(props.specialColumns || []).forEach(cName => {
-                const col = <Column field={cName} header={f({id: cName})}
-                                    body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
+                const col = <Column field={cName} header={f({ id: cName })}
+                    body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)} />
                 if (props.specialColumns![cName].atStart) {
                     tempColumns.unshift(col);
                 } else {
@@ -505,31 +508,31 @@ export const SimpleDataTable = <T, K extends string>(
     };
 
     const getHeader = () => {
-        return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
+        return <div className="export-buttons" style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
                 {props.xlsx ?
                     <Button type="button" icon="pi pi-file-excel" onClick={exportExcel}
-                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
+                        className="p-button-success p-mr-2" data-pr-tooltip="XLS" />
                     : null
                 }
                 {props.toggleSelect ?
                     <Button type="button" icon="fas fa-check-square" onClick={props.toggleSelect.handler}
-                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
+                        className="p-button-success p-mr-2" data-pr-tooltip="XLS" />
                     : null
                 }
                 {
                     props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
-                                                           tooltip={el.tooltipLabel} label={el.label}
-                                                           tooltipOptions={{position: 'top'}}
-                                                           className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
+                        tooltip={el.tooltipLabel} label={el.label}
+                        tooltipOptions={{ position: 'top' }}
+                        className={`${el.className} table-header-left-align-buttons p-mr-2`} />)
                 }
             </div>
             <div>
                 {
                     props.rightHeaderButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
-                                                                tooltip={el.tooltipLabel} label={el.label}
-                                                                tooltipOptions={{position: 'top'}}
-                                                                className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
+                        tooltip={el.tooltipLabel} label={el.label}
+                        tooltipOptions={{ position: 'top' }}
+                        className={`${el.className} table-header-left-align-buttons p-mr-2`} />)
                 }
             </div>
         </div>
@@ -594,14 +597,14 @@ export const SimpleDataTable = <T, K extends string>(
         setSelectedRowPerPage(newSelectedRowsPerPage)
         setSelectedRow(newElementsForPage);
 
-        if (props.selectionHandler) props.selectionHandler({value: newSelectedRow});
+        if (props.selectionHandler) props.selectionHandler({ value: newSelectedRow });
         //@ts-ignore
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
     };
 
-    const onRowEditComplete = (e:  DataTableRowEditCompleteParams) => {
+    const onRowEditComplete = (e: DataTableRowEditCompleteParams) => {
         let newItems = [...items];
-        let {newData, index} = e;
+        let { newData, index } = e;
 
         newItems[index] = newData;
 
@@ -610,7 +613,7 @@ export const SimpleDataTable = <T, K extends string>(
     }
 
     const onCellEditComplete = (e: any) => {
-        let {rowData, newValue, field, originalEvent: event} = e;
+        let { rowData, newValue, field, originalEvent: event } = e;
         rowData[field] = newValue;
         props.cellEditHandler!(e);
     }
@@ -623,7 +626,7 @@ export const SimpleDataTable = <T, K extends string>(
         let res = [];
         for (let i = 0; i < rows; i++) {
             const row = props.columnOrder.reduce((acc, elem) => {
-                return {...acc, [elem]: ''}
+                return { ...acc, [elem]: '' }
             }, {});
             res.push(row);
         }
@@ -632,8 +635,8 @@ export const SimpleDataTable = <T, K extends string>(
 
     const getColumnHeaderTranslated = (cName: string) => {
         if (props.specialLabels && props.specialLabels[cName])
-            return f({id: props.specialLabels[cName]})
-        return f({id: cName});
+            return f({ id: props.specialLabels[cName] })
+        return f({ id: cName });
     }
 
 
@@ -657,8 +660,8 @@ export const SimpleDataTable = <T, K extends string>(
                 <div onKeyDown={props.disableArrowKeys ? () => 0 : listener} className="datatable-responsive-demo">
                     {props.contextMenu ?
                         <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
-                                     appendTo={document.body}/> : null}
-                    <Tooltip target=".export-buttons>button" position="bottom"/>
+                            appendTo={document.body} /> : null}
+                    <Tooltip target=".export-buttons>button" position="bottom" />
 
                     <DataTable
                         rowHover
@@ -683,14 +686,14 @@ export const SimpleDataTable = <T, K extends string>(
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
                         emptyMessage="No records found"
-                        tableStyle={{tableLayout: "auto"}}
+                        tableStyle={{ tableLayout: "auto" }}
                         header={props.showHeader ? getHeader() : null}
                         rowsPerPageOptions={[20, 30, 50]}
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
                         scrollable={props.virtualScroll || props.frozenColumns !== undefined}
                         scrollHeight={props.scrollHeight ? props.scrollHeight : undefined}
-                        virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
+                        virtualScrollerOptions={props.scrollHeight ? { itemSize: 32 } : undefined}
                         onPage={onPage}
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
@@ -701,7 +704,7 @@ export const SimpleDataTable = <T, K extends string>(
                                     props.setSelected([e.value], true);
                                     setSelectedRow([e.value]);
                                     const page = Math.floor(first / rows) + 1;
-                                    setSelectedRowPerPage({[page]: [e.value]});
+                                    setSelectedRowPerPage({ [page]: [e.value] });
                                     for (let i = 0; i < items.length; i++) {
                                         if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
                                             setSelectedRowIndex(i);
@@ -735,11 +738,11 @@ export const SimpleDataTable = <T, K extends string>(
             </>
             :
             <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={5} paginator={true}
-                       className="p-datatable-striped">
+                className="p-datatable-striped">
                 {
                     props.columnOrder.map(column => <Column field={column} header={getColumnHeaderTranslated(column)}
-                                                            style={{width: `${100 / props.columnOrder.length}%`}}
-                                                            body={skeletonTemplate} key={column}/>)
+                        style={{ width: `${100 / props.columnOrder.length}%` }}
+                        body={skeletonTemplate} key={column} />)
                 }
             </DataTable>
         }
