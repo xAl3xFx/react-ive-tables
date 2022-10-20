@@ -121,7 +121,6 @@ export const SimpleDataTable = <T, K extends string>(
     //     props.doubleClick!(selectedElement);
     // }, [selectedElement])
 
-
     useEffect(() => {
         if (props.doubleClick && showTable && filters && props.data.length > 0) {
             const body = document.getElementsByClassName("p-datatable-tbody");
@@ -318,7 +317,7 @@ export const SimpleDataTable = <T, K extends string>(
     }, [selectedRowIndex]);
 
     useEffect(() => {
-        if (dt.current)
+        if (dt.current && dt.current.table)
             dt.current.table.querySelectorAll('tr')[2].focus();
     }, [first]);
 
