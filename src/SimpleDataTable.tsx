@@ -642,7 +642,6 @@ export const SimpleDataTable = <T, K extends string>(
     const setRef = (ref: any) => {
         dt.current = ref;
         if (ref && ref.getTable && ref.getTable() && props.tableHeight) {
-            console.log("setting the height");
             ref.getTable().parentElement.style.height = props.tableHeight;
         }
     }
@@ -650,7 +649,6 @@ export const SimpleDataTable = <T, K extends string>(
     const setSkeletonDtRef = (ref: any) => {
         skeletonDtRef.current = ref;
         if (ref && ref.getTable && ref.getTable() && props.tableHeight) {
-            console.log("setting the height")
             ref.getTable().parentElement.style.height = props.tableHeight;
         }
     }
