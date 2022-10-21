@@ -317,8 +317,8 @@ export const SimpleDataTable = <T, K extends string>(
     }, [selectedRowIndex]);
 
     useEffect(() => {
-        if (dt.current && dt.current.table)
-            dt.current.table.querySelectorAll('tr')[2].focus();
+        if (dt.current && dt.current.getTable && dt.current.getTable())
+            dt.current.getTable().querySelectorAll('tr')[2].focus();
     }, [first]);
 
     const exportExcel = () => {
@@ -641,15 +641,17 @@ export const SimpleDataTable = <T, K extends string>(
 
     const setRef = (ref: any) => {
         dt.current = ref;
-        if (ref && props.tableHeight) {
-            ref.table.parentElement.style.height = props.tableHeight;
+        if (ref && ref.getTable && ref.getTable() && props.tableHeight) {
+            console.log("setting the height");
+            ref.getTable().parentElement.style.height = props.tableHeight;
         }
     }
 
     const setSkeletonDtRef = (ref: any) => {
         skeletonDtRef.current = ref;
-        if (ref && props.tableHeight) {
-            ref.table.parentElement.style.height = props.tableHeight;
+        if (ref && ref.getTable && ref.getTable() && props.tableHeight) {
+            console.log("setting the height")
+            ref.getTable().parentElement.style.height = props.tableHeight;
         }
     }
 

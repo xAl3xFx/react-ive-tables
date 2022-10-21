@@ -163,6 +163,7 @@ export const ManyColumns = () => {
         <InputText value={balanceFilter} onChange={e => setBalanceFilter(e.target.value)} placeholder={'balance'}/>
         <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
                          expandable
+                         forOverlay={true}
                          columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
                          xlsx={"doo"}
                          onFilterCb={handleOnFilterCallback}
