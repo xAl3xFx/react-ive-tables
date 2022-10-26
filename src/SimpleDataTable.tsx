@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 import React, { useEffect, useRef, useState } from "react";
-import { Column, ColumnBodyOptions } from "primereact/column";
+import {Column, ColumnBodyOptions, ColumnEventParams} from "primereact/column";
 import {
     DataTable,
     DataTableFilterParams,
@@ -612,8 +612,12 @@ export const SimpleDataTable = <T, K extends string>(
     }
 
     const onCellEditComplete = (e: any) => {
-        let { rowData, newValue, field, originalEvent: event } = e;
-        rowData[field] = newValue;
+        const { newRowData, rowIndex } = e;
+
+        let newItems = [...items];
+        newItems[rowIndex] = newRowData;
+
+        setItems(newItems);
         props.cellEditHandler!(e);
     }
 

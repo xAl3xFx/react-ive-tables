@@ -154,6 +154,18 @@ export const ManyColumns = () => {
         </Row>
     </ColumnGroup>;
 
+    const statusOptions = [
+        {key: 1, value: true, label: "yes"},
+        {key: 2, value: false, label: "no"}
+    ]
+
+    const getSpecialEditors = () => {
+        return {
+            verified: (options: any) => <Dropdown value={options.value} options={statusOptions}
+                                                  onChange={(e) => options.editorCallback(e.value)}/>
+        }
+    }
+
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())}/>
         <Button label={"Add selectedIDs"} onClick={addSelectedIds}/>
@@ -169,18 +181,19 @@ export const ManyColumns = () => {
                          onFilterCb={handleOnFilterCallback}
                          // selectedIds={selectedIds} selectionHandler={handleSelection}
                          // initialFilters={{name: nameFilter}}
-                         rowEditHandler={() => 0}
             // externalFilters={getExternalFilters()}
                          columnTemplate={getColumnTemplate()}
             // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
                          specialFilters={getSpecialFilters()}
             // initialFilters={{id: 5, test: 'qu'}}
                          showPaginator={false}
-                         editableColumns={['name']}
                          doubleClick={dbClickCb} selectionKey={"id"}
                          footerTemplate={footerTemplate}
                          rebuildColumns={rebuildColumns}
                          dtProps={{footerColumnGroup: footerGroup}}
+                         editableColumns={['verified']}
+                         cellEditHandler={(result) => 0}
+                         specialEditors={getSpecialEditors()}
         />
 
 
