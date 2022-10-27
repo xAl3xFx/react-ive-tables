@@ -173,24 +173,27 @@ export const ManyColumns = () => {
         <Button label={"Filter"} onClick={() => setFilters({})}/>
         <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)} placeholder={'name'}/>
         <InputText value={balanceFilter} onChange={e => setBalanceFilter(e.target.value)} placeholder={'balance'}/>
-        <SimpleDataTable data={data} contextMenu={menuModel} setSelected={setSelected}
-                         expandable
-                         forOverlay={true}
+        <SimpleDataTable data={data}
+                         contextMenu={menuModel}
+                         setSelected={setSelected}
+                         selectionMode={'single'}
+                         // expandable
+                         // forOverlay={true}
                          columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
-                         xlsx={"doo"}
-                         onFilterCb={handleOnFilterCallback}
+                         // xlsx={"doo"}
+                         // onFilterCb={handleOnFilterCallback}
                          // selectedIds={selectedIds} selectionHandler={handleSelection}
                          // initialFilters={{name: nameFilter}}
             // externalFilters={getExternalFilters()}
                          columnTemplate={getColumnTemplate()}
             // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
-                         specialFilters={getSpecialFilters()}
+            //              specialFilters={getSpecialFilters()}
             // initialFilters={{id: 5, test: 'qu'}}
-                         showPaginator={false}
+            //              showPaginator={false}
                          doubleClick={dbClickCb} selectionKey={"id"}
-                         footerTemplate={footerTemplate}
-                         rebuildColumns={rebuildColumns}
-                         dtProps={{footerColumnGroup: footerGroup}}
+                         // footerTemplate={footerTemplate}
+                         // rebuildColumns={rebuildColumns}
+                         // dtProps={{footerColumnGroup: footerGroup}}
                          editableColumns={['verified']}
                          cellEditHandler={(result) => 0}
                          specialEditors={getSpecialEditors()}

@@ -614,10 +614,12 @@ export const SimpleDataTable = <T, K extends string>(
     const onCellEditComplete = (e: any) => {
         const { newRowData, rowIndex } = e;
 
-        let newItems = [...items];
-        newItems[rowIndex] = newRowData;
+        setItems((prevState) => {
+            let newItems = [...prevState];
+            newItems[rowIndex] = newRowData;
+            return newItems
 
-        setItems(newItems);
+        });
         props.cellEditHandler!(e);
     }
 

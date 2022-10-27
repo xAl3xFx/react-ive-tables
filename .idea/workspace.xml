@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Removed console.logs">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="SimpleDataTable.tsx -&gt; Fixed CellEdit.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
@@ -91,7 +91,7 @@
       <workItem from="1665654364748" duration="596000" />
       <workItem from="1666011076981" duration="2106000" />
       <workItem from="1666693075754" duration="567000" />
-      <workItem from="1666791285436" duration="3983000" />
+      <workItem from="1666791285436" duration="6780000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -282,7 +282,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666354998741</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="SimpleDataTable.tsx -&gt; Fixed CellEdit.">
+      <created>1666798632220</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1666798632220</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -313,7 +320,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Fixed index.ts" />
     <MESSAGE value="Unversioned files" />
     <MESSAGE value="Moved moment to peerDependency." />
     <MESSAGE value="Fixed typescript for SimpleDataTable.tsx" />
@@ -338,6 +344,7 @@
     <MESSAGE value="Initial filters come back fix attempt." />
     <MESSAGE value="Fixed a bug with table ref" />
     <MESSAGE value="Removed console.logs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed console.logs" />
+    <MESSAGE value="SimpleDataTable.tsx -&gt; Fixed CellEdit." />
+    <option name="LAST_COMMIT_MESSAGE" value="SimpleDataTable.tsx -&gt; Fixed CellEdit." />
   </component>
 </project>
