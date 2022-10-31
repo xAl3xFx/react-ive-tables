@@ -50,9 +50,7 @@ export const ManyColumns = () => {
     }
 
     useEffect(() => {
-        getData().then(setData);
-
-        setTimeout(() => {
+        // getData().then(setData);
             const addedOptions : number[] = [];
             const activityOptions = customers.data.slice(0,15).reduce((acc, el : Customer) => {
                 if(addedOptions.includes(el.activity)){
@@ -69,7 +67,9 @@ export const ManyColumns = () => {
             }, []);
             setActivityOptions(activityOptions)
             setRebuildColumns(new Date().getTime());
-        }, 4000);
+            setTimeout(() => {
+                setData(customers.data.slice(0, 15))
+            }, 1000)
     }, []);
 
 
