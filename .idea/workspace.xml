@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable -&gt; handleFilter fix.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
@@ -93,7 +93,7 @@
       <workItem from="1666693075754" duration="567000" />
       <workItem from="1666791285436" duration="6780000" />
       <workItem from="1667292425088" duration="2520000" />
-      <workItem from="1667311697158" duration="127000" />
+      <workItem from="1667311697158" duration="1635000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -312,7 +312,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667232477778</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="ReactiveTable -&gt; handleFilter fix.">
+      <created>1667311866796</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1667311866797</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -343,7 +350,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Exported HeaderButton from index." />
     <MESSAGE value="Fixed typescript in SimpleDataTable.tsx." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Skeleton -&gt; Show 5 rows only." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Added xlsx support." />
@@ -368,6 +374,7 @@
     <MESSAGE value="ReactiveTable - Created" />
     <MESSAGE value="workspace.xml" />
     <MESSAGE value="unversioned files." />
-    <option name="LAST_COMMIT_MESSAGE" value="unversioned files." />
+    <MESSAGE value="ReactiveTable -&gt; handleFilter fix." />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; handleFilter fix." />
   </component>
 </project>

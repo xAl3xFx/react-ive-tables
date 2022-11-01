@@ -438,6 +438,7 @@ export const ReactiveTable = <T, K extends string>(
             setFirst(0);
             setFilters(e.filters);
             setExcelFilters(actualFilters);
+            if (props.onFilterCb) props.onFilterCb(undefined, actualFilters);
             return;
         }
 
