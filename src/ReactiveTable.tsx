@@ -1,5 +1,5 @@
-import { useIntl } from "react-intl";
-import React, { useEffect, useRef, useState } from "react";
+import {useIntl} from "react-intl";
+import React, {useEffect, useRef, useState} from "react";
 import {Column, ColumnBodyOptions, ColumnEventParams} from "primereact/column";
 import {
     DataTable,
@@ -8,16 +8,16 @@ import {
     DataTableProps, DataTableRowEditCompleteParams,
     DataTableSelectionModeType, DataTableFilterMatchModeType,
 } from "primereact/datatable";
-import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
+import {InputText} from "primereact/inputtext";
+import {Button} from "primereact/button";
 import "./DataTable.css";
-import { ContextMenu } from 'primereact/contextmenu';
-import { Tooltip } from 'primereact/tooltip';
+import {ContextMenu} from 'primereact/contextmenu';
+import {Tooltip} from 'primereact/tooltip';
 import clone from 'lodash.clone';
 import isEqual from 'lodash.isequal';
-import { Skeleton } from "primereact/skeleton";
+import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
-import { HeaderButton } from "./types";
+import {HeaderButton} from "./types";
 import axios, {AxiosResponse} from "axios";
 import {FilterMatchMode} from "primereact/api";
 
@@ -28,7 +28,7 @@ export type FiltersMatchMode<K extends string> = { [key in K]?: FilterMatchMode.
 interface Props<T, K extends string> {
     data?: T[] | undefined;                                                      // This property gives all the data for the table when not using lazy fetching or when using SWR
     fetchData?: (offset: number, limit: number, filters: any,                    // Function which is responsible for fetching data when using lazy fetching. When 'swr' prop is false it fetches and returns Promise with data. When 'swr' is true it is responsible to trigger SWR refetch which on its hand will refresh 'data' prop.
-                columns?: { [key: string]: string }, excelName?: string)
+                 columns?: { [key: string]: string }, excelName?: string)
         => Promise<{ rows: any[], totalRecords: number } | AxiosResponse | void>
     totalRecords?: number;                                                      // When using lazy fetching this prop gives the total count of records in 'data' prop.
     swr?: boolean;                                                              // Defines if SWR will be used or not.
@@ -40,7 +40,7 @@ interface Props<T, K extends string> {
     showFilters?: boolean;                                                      // Should filters be rendered.
     showHeader?: boolean;                                                       // Should header be rendered.
     setSelected?: (value: any,                                                  // Callback for selection. Provides the selected row/rows.
-        contextMenuClick: boolean) => void,
+                   contextMenuClick: boolean) => void,
     contextMenu?: Object[],                                                     // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
     rowEditHandler?: (event: DataTableRowEditCompleteParams)
         => void,                                                                // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
@@ -59,8 +59,10 @@ interface Props<T, K extends string> {
             atStart: boolean
         }
     };
-    columnTemplate?: { [key in K]?:
-        (rowData: T, options: ColumnBodyOptions) => any };        // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
+    columnTemplate?: {
+        [key in K]?:
+        (rowData: T, options: ColumnBodyOptions) => any
+    };        // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
     xlsx?: string;                                                // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
     excelUrl?: string;                                            // The url of the endpoint for excel
     formatDateToLocal?: boolean;                                  // Specifies whether dates should be formatted to local or not.
@@ -83,7 +85,7 @@ interface Props<T, K extends string> {
         (rowData: T, filterValue: string) => boolean
     }
     onFilterCb?: (filteredData: T[],                              // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
-        filters: { [key in keyof T]: DataTableFilterMetaData })
+                  filters: { [key in keyof T]: DataTableFilterMetaData })
         => void
     columnStyle?: { [key in K]?: { header: any, body: any } }     // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean                                       // Whether to show to paginator or no
@@ -98,7 +100,7 @@ interface Props<T, K extends string> {
 export const ReactiveTable = <T, K extends string>(
     props: Props<T, K>
 ) => {
-    const { formatMessage: f } = useIntl();
+    const {formatMessage: f} = useIntl();
 
     const [items, setItems] = useState<T[]>([]);
     const [originalItems, setOriginalItems] = useState<any>([]);
@@ -132,17 +134,17 @@ export const ReactiveTable = <T, K extends string>(
 
     const refreshTable = () => {
         //Not lazy
-        if(!props.fetchData) {
+        if (!props.fetchData) {
             setLoading(false);
             return;
         }
 
 
-        if(props.swr){
+        if (props.swr) {
             props.fetchData(first, rows, filters).then(() => {
                 setLoading(false);
             });
-        }else{
+        } else {
             //@ts-ignore
             props.fetchData(first, rows, filters).then((response) => {
                 //@ts-ignore
@@ -157,7 +159,7 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     useEffect(() => {
-        if(props.totalRecords && props.totalRecords !== totalRecords)
+        if (props.totalRecords && props.totalRecords !== totalRecords)
             setTotalRecords(props.totalRecords);
     }, [props.totalRecords]);
 
@@ -216,7 +218,7 @@ export const ReactiveTable = <T, K extends string>(
         if (filters && Object.keys(filters).length > 0 && props.initialFilters && showTable) {
             const tempFilters = Object.keys(props.initialFilters).reduce((acc, key) => {
                 let matchMode = "contains";
-                if(props.filtersMatchMode && props.filtersMatchMode[key]) matchMode = props.filtersMatchMode[key];
+                if (props.filtersMatchMode && props.filtersMatchMode[key]) matchMode = props.filtersMatchMode[key];
                 return {
                     ...acc, [key]: {
                         value: props.initialFilters![key],
@@ -226,7 +228,7 @@ export const ReactiveTable = <T, K extends string>(
             }, {...filters});
 
             //@ts-ignore
-            handleFilter({ filters: tempFilters });
+            handleFilter({filters: tempFilters});
             setFilters(tempFilters);
             setPrevInitialFilters(props.initialFilters);
         }
@@ -266,7 +268,7 @@ export const ReactiveTable = <T, K extends string>(
     }, [showTable]);
 
     useEffect(() => {
-        if(items && items.length > 0)
+        if (items && items.length > 0)
             generateColumns();
     }, [items]);
 
@@ -320,7 +322,7 @@ export const ReactiveTable = <T, K extends string>(
     }, [props.selectionResetter]);
 
     useEffect(() => {
-        if(props.rebuildColumns && props.rebuildColumns !== rebuildColumns){
+        if (props.rebuildColumns && props.rebuildColumns !== rebuildColumns) {
             generateColumns();
         }
     }, [props.rebuildColumns]);
@@ -335,8 +337,8 @@ export const ReactiveTable = <T, K extends string>(
         const initialFilters = props.columnOrder.reduce((acc: any, el) => {
             let matchMode = "contains";
             //@ts-ignore
-            if(props.filtersMatchMode) matchMode = props.filtersMatchMode[el];
-            return { ...acc, [el]: { value: null, matchMode : matchMode || "contains" } }
+            if (props.filtersMatchMode) matchMode = props.filtersMatchMode[el];
+            return {...acc, [el]: {value: null, matchMode: matchMode || "contains"}}
         }, {});
 
         setFilters(initialFilters);
@@ -353,7 +355,7 @@ export const ReactiveTable = <T, K extends string>(
                     if (!selectedRowIndex) {
                         selectedRowIndex = i;
                     }
-                    elements.push({ ...items[i] });
+                    elements.push({...items[i]});
                 }
             }
             if (selectedRow)
@@ -367,7 +369,7 @@ export const ReactiveTable = <T, K extends string>(
             for (let i = 0; i < items.length; i++) {
                 //@ts-ignore
                 if (props.selectedIds!.includes(items[i][props.selectionKey!])) {
-                    element = { ...items[i] };
+                    element = {...items[i]};
                     setSelectedRowIndex(i);
                     break;
                 }
@@ -402,10 +404,15 @@ export const ReactiveTable = <T, K extends string>(
                 acc[el] = String(excelFilters[el].value || '');
             return acc;
         }, {})
-        axios.post(props.excelUrl, { filters: formattedFilters, columns: props.columnOrder, sheetName: props.xlsx, labelsMap }, { withCredentials: true, responseType: "arraybuffer" }).then(response => {
+        axios.post(props.excelUrl, {
+            filters: formattedFilters,
+            columns: props.columnOrder,
+            sheetName: props.xlsx,
+            labelsMap
+        }, {withCredentials: true, responseType: "arraybuffer"}).then(response => {
             import('file-saver').then(FileSaver => {
                 //@ts-ignore
-                const blob = new Blob([response.data], { type: response.headers["content-type"] });
+                const blob = new Blob([response.data], {type: response.headers["content-type"]});
                 FileSaver.saveAs(blob, props.xlsx + ".xlsx");
             });
         });
@@ -424,16 +431,16 @@ export const ReactiveTable = <T, K extends string>(
 
     const handleFilter = (e: DataTableFilterParams) => {
         let result;
-        filterRef.current = { ...filterRef.current, ...e ?? {} };
+        filterRef.current = {...filterRef.current, ...e ?? {}};
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
             //@ts-ignore
             if (e.filters[key].value === null || e.filters[key].value === '' || e.filters[key].value === undefined)
                 return acc;
-            acc[key] = { ...e.filters[key] };
+            acc[key] = {...e.filters[key]};
             return acc;
         }, {});
 
-        if(props.fetchData){
+        if (props.fetchData) {
             e['first'] = 0;
             setFirst(0);
             setFilters(e.filters);
@@ -456,15 +463,14 @@ export const ReactiveTable = <T, K extends string>(
                         const moment1 = moment(parseNestedObject(el, filterKey));
                         const moment2 = moment(actualFilters[filterKey].value);
                         return acc && moment1.isSame(moment2, 'day');
-                    } else if(props.filtersMatchMode && props.filtersMatchMode[filterKey] !== undefined) {
+                    } else if (props.filtersMatchMode && props.filtersMatchMode[filterKey] !== undefined) {
                         const matchMode = props.filtersMatchMode[filterKey];
-                        if(matchMode === FilterMatchMode.IN && actualFilters[filterKey].value.length > 0) return acc && actualFilters[filterKey].value.includes(parseNestedObject(el, filterKey));
-                        if(matchMode === FilterMatchMode.EQUALS) {
+                        if (matchMode === FilterMatchMode.IN && actualFilters[filterKey].value.length > 0) return acc && actualFilters[filterKey].value.includes(parseNestedObject(el, filterKey));
+                        if (matchMode === FilterMatchMode.EQUALS) {
                             return acc && String(actualFilters[filterKey].value) === String(parseNestedObject(el, filterKey));
                         }
                         return acc;
-                    }
-                    else {
+                    } else {
                         //@ts-ignore
                         return acc && String(parseNestedObject(el, filterKey)).toLowerCase().indexOf(String(actualFilters[filterKey].value).toLowerCase()) !== -1;
                     }
@@ -477,21 +483,22 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const textEditor = (options: any, cName: string) => {
-        return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
+        return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)}/>;
     }
 
     const defaultFilter = (options: any, cName: string) => {
-        return <InputText id={'filter-' + cName} type="text" value={options.value} onChange={(e) => options.filterApplyCallback(e.target.value)} />;
+        return <InputText id={'filter-' + cName} type="text" value={options.value}
+                          onChange={(e) => options.filterApplyCallback(e.target.value)}/>;
     }
 
     const generateColumns = () => {
         if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle) || (props.rebuildColumns && props.rebuildColumns !== rebuildColumns)) {
-            if(props.rebuildColumns)
+            if (props.rebuildColumns)
                 setRebuildColumns(props.rebuildColumns);
             const tempColumns = props.columnOrder.map((cName: any) => {
                 let columnHeader = getColumnHeaderTranslated(cName);
-                const columnHeaderStyle = { textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : { textAlign: 'center' } };
-                const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : { textAlign: "center" };
+                const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : {textAlign: 'center'}};
+                const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : {textAlign: "center"};
                 //TO BE TESTED
                 // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
                 return <Column
@@ -502,25 +509,26 @@ export const ReactiveTable = <T, K extends string>(
                     alignFrozen={"right"}
                     rowEditor={cName === 'operations' && props.rowEditHandler !== undefined}
                     sortable={props.sortableColumns?.includes(cName)}
-                    filterElement={options => props.specialFilters[cName] ? props.specialFilters[cName](options, cName) : defaultFilter(options, cName)} showClearButton={false}
+                    filterElement={options => props.specialFilters[cName] ? props.specialFilters[cName](options, cName) : defaultFilter(options, cName)}
+                    showClearButton={false}
                     bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
                     onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                     filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
-                    filterHeaderStyle={{ textAlign: 'center' }}
-                    key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle} />
+                    filterHeaderStyle={{textAlign: 'center'}}
+                    key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle}/>
             });
             //@ts-ignore
             if (props.rowEditHandler !== undefined && !props.columnOrder.includes('operations'))
-                tempColumns.push(<Column rowEditor headerStyle={{ width: '7rem' }}
-                    bodyStyle={{ textAlign: 'center' }} />);
+                tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
+                                         bodyStyle={{textAlign: 'center'}}/>);
             if (props.expandable)
-                tempColumns.unshift(<Column expander headerStyle={{ width: '3em' }} />)
+                tempColumns.unshift(<Column expander headerStyle={{width: '3em'}}/>)
             if (props.selectionMode === "checkbox")
-                tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{ width: '3em' }} />);
+                tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
             //Put specialColumns in columns
             Object.keys(props.specialColumns || []).forEach(cName => {
-                const col = <Column field={cName} header={f({ id: cName })}
-                    body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)} />
+                const col = <Column field={cName} header={f({id: cName})}
+                                    body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
                 if (props.specialColumns![cName].atStart) {
                     tempColumns.unshift(col);
                 } else {
@@ -545,17 +553,17 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const onPage = (event: any) => {
-        if(props.fetchData){
-            if(event.first === first && event.rows === rows) return;
+        if (props.fetchData) {
+            if (event.first === first && event.rows === rows) return;
             setLoading(true);
             setFirst(event.first);
             setRows(event.rows);
             //Parent responsible to pass new 'data' prop
-            if(props.swr){
+            if (props.swr) {
                 props.fetchData(event.first, event.rows, filters).then(() => {
                     setLoading(false)
                 });
-            }else{
+            } else {
                 //'fetchData' should return new items.
                 //@ts-ignore
                 props.fetchData(event.first, event.rows, filters).then((response) => {
@@ -567,38 +575,40 @@ export const ReactiveTable = <T, K extends string>(
                 });
             }
 
-        }else{
+        } else {
             setRows(event.rows);
             setFirst(event.first);
         }
     }
 
     const getHeader = () => {
-        return <div className="export-buttons" style={{ display: "flex", justifyContent: "space-between" }}>
+        return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
             <div>
                 {props.xlsx ?
                     <Button type="button" icon="pi pi-file-excel" onClick={exportExcel}
-                        className="p-button-success p-mr-2" data-pr-tooltip="XLS" />
+                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
                     : null
                 }
                 {props.toggleSelect ?
                     <Button type="button" icon="fas fa-check-square" onClick={props.toggleSelect.handler}
-                        className="p-button-success p-mr-2" data-pr-tooltip="XLS" />
+                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
                     : null
                 }
                 {
                     props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
-                        tooltip={el.tooltipLabel} label={el.label}
-                        tooltipOptions={{ position: 'top' }}
-                        className={`${el.className} table-header-left-align-buttons p-mr-2`} />)
+                                                           tooltip={el.tooltipLabel} label={el.label}
+                                                           ref={el.ref}
+                                                           tooltipOptions={{position: 'top'}}
+                                                           className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>
             <div>
                 {
                     props.rightHeaderButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
-                        tooltip={el.tooltipLabel} label={el.label}
-                        tooltipOptions={{ position: 'top' }}
-                        className={`${el.className} table-header-left-align-buttons p-mr-2`} />)
+                                                                tooltip={el.tooltipLabel} label={el.label}
+                                                                ref={el.ref}
+                                                                tooltipOptions={{position: 'top'}}
+                                                                className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>
         </div>
@@ -663,14 +673,14 @@ export const ReactiveTable = <T, K extends string>(
         setSelectedRowPerPage(newSelectedRowsPerPage)
         setSelectedRow(newElementsForPage);
 
-        if (props.selectionHandler) props.selectionHandler({ value: newSelectedRow });
+        if (props.selectionHandler) props.selectionHandler({value: newSelectedRow});
         //@ts-ignore
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
     };
 
     const onRowEditComplete = (e: DataTableRowEditCompleteParams) => {
         let newItems = [...items];
-        let { newData, index } = e;
+        let {newData, index} = e;
 
         newItems[index] = newData;
 
@@ -679,7 +689,7 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const onCellEditComplete = (e: any) => {
-        const { newRowData, rowIndex } = e;
+        const {newRowData, rowIndex} = e;
 
         setItems((prevState) => {
             let newItems = [...prevState];
@@ -698,7 +708,7 @@ export const ReactiveTable = <T, K extends string>(
         let res = [];
         for (let i = 0; i < rows; i++) {
             const row = props.columnOrder.reduce((acc, elem) => {
-                return { ...acc, [elem]: '' }
+                return {...acc, [elem]: ''}
             }, {});
             res.push(row);
         }
@@ -707,8 +717,8 @@ export const ReactiveTable = <T, K extends string>(
 
     const getColumnHeaderTranslated = (cName: string) => {
         if (props.specialLabels && props.specialLabels[cName])
-            return f({ id: props.specialLabels[cName] })
-        return f({ id: cName });
+            return f({id: props.specialLabels[cName]})
+        return f({id: cName});
     }
 
     const setRef = (ref: any) => {
@@ -731,8 +741,8 @@ export const ReactiveTable = <T, K extends string>(
                 <div onKeyDown={props.disableArrowKeys ? () => 0 : listener} className="datatable-responsive-demo">
                     {props.contextMenu ?
                         <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
-                            appendTo={document.body} /> : null}
-                    <Tooltip target=".export-buttons>button" position="bottom" />
+                                     appendTo={document.body}/> : null}
+                    <Tooltip target=".export-buttons>button" position="bottom"/>
 
                     <DataTable
                         rowHover
@@ -759,14 +769,14 @@ export const ReactiveTable = <T, K extends string>(
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
                         emptyMessage="No records found"
-                        tableStyle={{ tableLayout: "auto" }}
+                        tableStyle={{tableLayout: "auto"}}
                         header={props.showHeader ? getHeader() : null}
                         rowsPerPageOptions={[20, 30, 50]}
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
                         scrollable={props.virtualScroll || props.frozenColumns !== undefined}
                         scrollHeight={props.scrollHeight ? props.scrollHeight : undefined}
-                        virtualScrollerOptions={props.scrollHeight ? { itemSize: 32 } : undefined}
+                        virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
                         onPage={onPage}
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
@@ -777,7 +787,7 @@ export const ReactiveTable = <T, K extends string>(
                                     props.setSelected([e.value], true);
                                     setSelectedRow([e.value]);
                                     const page = Math.floor(first / rows) + 1;
-                                    setSelectedRowPerPage({ [page]: [e.value] });
+                                    setSelectedRowPerPage({[page]: [e.value]});
                                     for (let i = 0; i < items.length; i++) {
                                         if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
                                             setSelectedRowIndex(i);
@@ -811,11 +821,11 @@ export const ReactiveTable = <T, K extends string>(
             </>
             :
             <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={5} paginator={true}
-                className="p-datatable-striped">
+                       className="p-datatable-striped">
                 {
                     props.columnOrder.map(column => <Column field={column} header={getColumnHeaderTranslated(column)}
-                        style={{ width: `${100 / props.columnOrder.length}%` }}
-                        body={skeletonTemplate} key={column} />)
+                                                            style={{width: `${100 / props.columnOrder.length}%`}}
+                                                            body={skeletonTemplate} key={column}/>)
                 }
             </DataTable>
         }
