@@ -145,7 +145,6 @@ export const ReactiveTable = <T, K extends string>(
         }else{
             //@ts-ignore
             props.fetchData(first, rows, filters).then((response) => {
-                console.log('fetching data in refreshTable')
                 //@ts-ignore
                 setItems(response.rows);
                 //@ts-ignore
@@ -165,7 +164,6 @@ export const ReactiveTable = <T, K extends string>(
 
     useEffect(() => {
         if (props.refresher !== refresher) {
-            console.log('refresher, refreshTable')
             setRefresher(props.refresher);
             refreshTable();
         }
@@ -425,12 +423,6 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const handleFilter = (e: DataTableFilterParams) => {
-        if(props.fetchData){
-            e['first'] = 0;
-            setFirst(0);
-            setFilters(e.filters);
-            return;
-        }
         let result;
         filterRef.current = { ...filterRef.current, ...e ?? {} };
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
@@ -440,6 +432,14 @@ export const ReactiveTable = <T, K extends string>(
             acc[key] = { ...e.filters[key] };
             return acc;
         }, {});
+
+        if(props.fetchData){
+            e['first'] = 0;
+            setFirst(0);
+            setFilters(e.filters);
+            setExcelFilters(actualFilters);
+            return;
+        }
 
         //@ts-ignore
         if (Object.keys(actualFilters).length === 0) {
@@ -724,7 +724,6 @@ export const ReactiveTable = <T, K extends string>(
         }
     }
 
-    console.log(props.forOverlay || (showTable && ((filters && items) || !props.showSkeleton)), filters)
     return <>
         {props.forOverlay || (showTable && ((filters && items) || !props.showSkeleton)) ?
             <>
