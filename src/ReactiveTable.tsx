@@ -95,6 +95,7 @@ interface Props<T, K extends string> {
     expandable?: boolean                                          // When true expander column is added at the beginning
     rebuildColumns?: number;
     refresher?: number;                                           // Used to manually refresh the table from parent component
+    textAlign?: 'left' | 'center' | 'right'                       // Used to override columns body text align which defaults to 'center'
 }
 
 export const ReactiveTable = <T, K extends string>(
@@ -498,7 +499,7 @@ export const ReactiveTable = <T, K extends string>(
             const tempColumns = props.columnOrder.map((cName: any) => {
                 let columnHeader = getColumnHeaderTranslated(cName);
                 const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : {textAlign: 'center'}};
-                const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : {textAlign: "center"};
+                const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : {textAlign: props.textAlign || 'center'};
                 //TO BE TESTED
                 // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
                 return <Column
