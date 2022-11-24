@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Fixed a bug with the cellEdit">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -337,7 +337,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667319660517</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Fix from prev">
+      <created>1669301431564</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1669301431564</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -368,7 +375,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="SimpleDataTable.tsx -&gt; Added xlsx support." />
     <MESSAGE value="example" />
     <MESSAGE value="SimpleDataTable -&gt; Fixed excel filters." />
     <MESSAGE value="workspace.." />
@@ -393,6 +399,7 @@
     <MESSAGE value="ReactiveTable -&gt; handleFilter fix." />
     <MESSAGE value="ReactiveTable -&gt; handleFilter -&gt; call props.onFilterCb for lazy fetching as well." />
     <MESSAGE value="ReactiveTable -&gt; HeaderButtons -&gt; Added ref prop." />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; HeaderButtons -&gt; Added ref prop." />
+    <MESSAGE value="Fix from prev" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix from prev" />
   </component>
 </project>
