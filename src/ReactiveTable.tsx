@@ -6,7 +6,7 @@ import {
     DataTableFilterParams,
     DataTableFilterMetaData,
     DataTableProps, DataTableRowEditCompleteParams,
-    DataTableSelectionModeType, DataTableFilterMatchModeType,
+    DataTableSelectionModeType, DataTableFilterMatchModeType, DataTablePFSEvent,
 } from "primereact/datatable";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
@@ -24,11 +24,19 @@ import {FilterMatchMode} from "primereact/api";
 export type StringKeys<T> = Extract<keyof T, string>;
 export type SpecialFilter<K extends string> = { [key in K]?: (options: any) => JSX.Element }
 export type FiltersMatchMode<K extends string> = { [key in K]?: FilterMatchMode.IN | FilterMatchMode.EQUALS }
+export interface FetchDataParams {
+    offset: number;
+    limit: number;
+    filters: any;
+    columns?: { [key: string]: string };
+    excelName?: string;
+    page? : number;
+
+}
 
 interface Props<T, K extends string> {
     data?: T[] | undefined;                                                      // This property gives all the data for the table when not using lazy fetching or when using SWR
-    fetchData?: (offset: number, limit: number, filters: any,                    // Function which is responsible for fetching data when using lazy fetching. When 'swr' prop is false it fetches and returns Promise with data. When 'swr' is true it is responsible to trigger SWR refetch which on its hand will refresh 'data' prop.
-                 columns?: { [key: string]: string }, excelName?: string)
+    fetchData?: (params: FetchDataParams)                                        // Function which is responsible for fetching data when using lazy fetching. When 'swr' prop is false it fetches and returns Promise with data. When 'swr' is true it is responsible to trigger SWR refetch which on its hand will refresh 'data' prop.
         => Promise<{ rows: any[], totalRecords: number } | AxiosResponse | void>
     totalRecords?: number;                                                      // When using lazy fetching this prop gives the total count of records in 'data' prop.
     swr?: boolean;                                                              // Defines if SWR will be used or not.
@@ -142,12 +150,12 @@ export const ReactiveTable = <T, K extends string>(
 
 
         if (props.swr) {
-            props.fetchData(first, rows, filters).then(() => {
+            props.fetchData({offset: first, limit: rows, filters}).then(() => {
                 setLoading(false);
             });
         } else {
             //@ts-ignore
-            props.fetchData(first, rows, filters).then((response) => {
+            props.fetchData({offset: first, limit: rows, filters}).then((response) => {
                 //@ts-ignore
                 setItems(response.rows);
                 //@ts-ignore
@@ -559,7 +567,8 @@ export const ReactiveTable = <T, K extends string>(
         })
     }
 
-    const onPage = (event: any) => {
+    const onPage = (event: DataTablePFSEvent) => {
+        console.log("the page is: ", event.page);
         if (props.fetchData) {
             if (event.first === first && event.rows === rows) return;
             setLoading(true);
@@ -567,13 +576,13 @@ export const ReactiveTable = <T, K extends string>(
             setRows(event.rows);
             //Parent responsible to pass new 'data' prop
             if (props.swr) {
-                props.fetchData(event.first, event.rows, filters).then(() => {
+                props.fetchData({offset: event.first, limit: event.rows, filters, page: event.page}).then(() => {
                     setLoading(false)
                 });
             } else {
                 //'fetchData' should return new items.
                 //@ts-ignore
-                props.fetchData(event.first, event.rows, filters).then((response) => {
+                props.fetchData({offset: event.first, limit: event.rows, filters}).then((response) => {
                     //@ts-ignore
                     setItems(response.rows);
                     //@ts-ignore
@@ -784,7 +793,7 @@ export const ReactiveTable = <T, K extends string>(
                         scrollable={props.virtualScroll || props.frozenColumns !== undefined}
                         scrollHeight={props.scrollHeight ? props.scrollHeight : undefined}
                         virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
-                        onPage={onPage}
+                        onPage={(e) => onPage(e)}
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
                         onContextMenuSelectionChange={(e: any) => {
