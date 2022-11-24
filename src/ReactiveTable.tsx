@@ -386,9 +386,11 @@ export const ReactiveTable = <T, K extends string>(
 
     useEffect(() => {
         if (dt.current && dt.current.getTable && dt.current.getTable()) {
-            if(props.showFilters === false)
-                dt.current.getTable().querySelectorAll('tr')[1].focus();
-            dt.current.getTable().querySelectorAll('tr')[2].focus();
+            const trs = dt.current.getTable().querySelectorAll('tr');
+            if(props.showFilters === false && trs.length >= 2)
+                trs[1].focus();
+            else if(trs.length >= 3)
+                trs[2].focus();
 
         }
     }, [first]);
