@@ -385,8 +385,12 @@ export const ReactiveTable = <T, K extends string>(
     }, [selectedRowIndex]);
 
     useEffect(() => {
-        if (dt.current && dt.current.getTable && dt.current.getTable())
+        if (dt.current && dt.current.getTable && dt.current.getTable()) {
+            if(props.showFilters === false)
+                dt.current.getTable().querySelectorAll('tr')[1].focus();
             dt.current.getTable().querySelectorAll('tr')[2].focus();
+
+        }
     }, [first]);
 
     const exportExcel = () => {

@@ -1,4 +1,4 @@
-import {SimpleDataTable} from "../src";
+import {ReactiveTable, SimpleDataTable} from "../src";
 import * as React from 'react';
 import {useCallback, useEffect, useRef, useState} from "react";
 import * as customers from './lib/customers.json'
@@ -52,7 +52,7 @@ export const ManyColumns = () => {
     useEffect(() => {
         // getData().then(setData);
             const addedOptions : number[] = [];
-            const activityOptions = customers.data.slice(0,15).reduce((acc, el : Customer) => {
+            const activityOptions = customers.data.slice(0,30).reduce((acc, el : Customer) => {
                 if(addedOptions.includes(el.activity)){
                     return acc;
                 }else{
@@ -68,7 +68,7 @@ export const ManyColumns = () => {
             setActivityOptions(activityOptions)
             setRebuildColumns(new Date().getTime());
             setTimeout(() => {
-                setData(customers.data.slice(0, 15))
+                setData(customers.data.slice(0, 30))
             }, 1000)
     }, []);
 
@@ -173,8 +173,9 @@ export const ManyColumns = () => {
         <Button label={"Filter"} onClick={() => setFilters({})}/>
         <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)} placeholder={'name'}/>
         <InputText value={balanceFilter} onChange={e => setBalanceFilter(e.target.value)} placeholder={'balance'}/>
-        <SimpleDataTable data={data}
+        <ReactiveTable data={data}
                          contextMenu={menuModel}
+                         showFilters={false}
                          setSelected={setSelected}
                          selectionMode={'single'}
                          // expandable
