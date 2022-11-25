@@ -29,7 +29,7 @@ export const ManyColumns = () => {
     const [companyFilter, setCompanyFilter] = useState('');
     const [nameFilter, setNameFilter] = useState('J');
     const [balanceFilter, setBalanceFilter] = useState('');
-    const dtRef = useRef(null);
+    const dtRef = useRef<any>(null);
     const [filtered, setFiltered] = useState<any>();
     const [activityOptions, setActivityOptions] = useState<IDropdownOption[]>();
     const [rebuildColumns, setRebuildColumns] = useState(0);
@@ -172,12 +172,13 @@ export const ManyColumns = () => {
         <Button label={"Add records"} onClick={addToTable}/>
         <Button label={"Filter"} onClick={() => setFilters({})}/>
         <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)} placeholder={'name'}/>
-        <InputText value={balanceFilter} onChange={e => setBalanceFilter(e.target.value)} placeholder={'balance'}/>
+        <InputText value={balanceFilter} onChange={e => console.log(dtRef.current)} placeholder={'balance'}/>
         <ReactiveTable data={data}
                          contextMenu={menuModel}
                          showFilters={false}
                          setSelected={setSelected}
                          selectionMode={'single'}
+                       setDtRef={(ref) => dtRef.current = ref}
                          // expandable
                          // forOverlay={true}
                          columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
@@ -209,7 +210,7 @@ export const ManyColumns = () => {
         >
 
             <div className="datatable-responsive-demo">
-                <SimpleDataTable
+                <ReactiveTable
                     data={data}
                     columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
                     forOverlay={true}

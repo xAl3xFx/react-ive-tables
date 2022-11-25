@@ -104,6 +104,7 @@ interface Props<T, K extends string> {
     rebuildColumns?: number;
     refresher?: number;                                           // Used to manually refresh the table from parent component
     textAlign?: 'left' | 'center' | 'right'                       // Used to override columns body text align which defaults to 'center'
+    setDtRef?: (ref: DataTable) => void;                          // Used to pass the table's ref back to parent
 }
 
 export const ReactiveTable = <T, K extends string>(
@@ -737,7 +738,9 @@ export const ReactiveTable = <T, K extends string>(
         return f({id: cName});
     }
 
-    const setRef = (ref: any) => {
+    const setRef = (ref: DataTable) => {
+        if(props.setDtRef)
+            props.setDtRef(ref);
         dt.current = ref;
         if (ref && ref.getTable && ref.getTable() && props.tableHeight) {
             ref.getTable().parentElement.style.height = props.tableHeight;
