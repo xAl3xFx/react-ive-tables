@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/lib/products.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_11_2022___13_30__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_11_2022_г__13_30_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/FakeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +101,7 @@
       <workItem from="1668527509351" duration="1646000" />
       <workItem from="1668590217505" duration="595000" />
       <workItem from="1669375848430" duration="1715000" />
-      <workItem from="1670232976790" duration="11644000" />
+      <workItem from="1670232976790" duration="12812000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -369,7 +362,21 @@
       <option name="project" value="LOCAL" />
       <updated>1669384775220</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Fixed a bug where when selecting a row the page gets changed. Fixed arrows selection.">
+      <created>1670322493767</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1670322493767</updated>
+    </task>
+    <task id="LOCAL-00039" summary="pomiq">
+      <created>1670322610604</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1670322610604</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -400,8 +407,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="workspace.." />
-    <MESSAGE value="initialFilters can be used as external/additional filters." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; expandable property." />
     <MESSAGE value="Important! -&gt; SimpleDataTable -&gt; Handle skeleton better: When the props.data is undefined -&gt; show skeleton; If it is empty -&gt; show no data; Show data otherwise." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; onRowEdit fixed type." />
@@ -425,6 +430,8 @@
     <MESSAGE value="ReactiveTable.tsx -&gt; Added textAlign prop to override columns body text alignment." />
     <MESSAGE value="ReactiveTable -&gt; added setRef prop" />
     <MESSAGE value="shelved" />
-    <option name="LAST_COMMIT_MESSAGE" value="shelved" />
+    <MESSAGE value="Fixed a bug where when selecting a row the page gets changed. Fixed arrows selection." />
+    <MESSAGE value="pomiq" />
+    <option name="LAST_COMMIT_MESSAGE" value="pomiq" />
   </component>
 </project>

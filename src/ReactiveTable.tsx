@@ -842,7 +842,7 @@ export const ReactiveTable = <T, K extends string>(
                                     setSelectedRowPerPage({[page]: [e.value]});
                                     for (let i = 0; i < items.length; i++) {
                                         if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
-                                            setSelectedRowIndex(i);
+                                            setSelectedRowIndex(props.fetchData ? first + i : i);
                                             break;
                                         }
                                     }
@@ -851,7 +851,7 @@ export const ReactiveTable = <T, K extends string>(
                                     setSelectedRow(e.value);
                                     for (let i = 0; i < items.length; i++) {
                                         if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
-                                            setSelectedRowIndex(i);
+                                            setSelectedRowIndex(props.fetchData ? first + i : i);
                                             break;
                                         }
                                     }

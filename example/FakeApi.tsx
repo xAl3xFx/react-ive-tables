@@ -62,7 +62,6 @@ export const FakeApi : React.FC<Props> = props => {
         setRebuildColumns(new Date().getTime())
     }
 
-
     const fetcher = ({offset, limit, filters, columns, excelName} : FetchDataParams): Promise<LazyResponse<Product>> => {
         const parsedFilters = Object.keys(filters).reduce((acc, key) => {
             //Handle multiselect with empty array.
@@ -89,6 +88,6 @@ export const FakeApi : React.FC<Props> = props => {
 
     return <>
         <Button onClick={() => test()} >Trigger multiple selection</Button>
-        <ReactiveTable data={products.products} columnOrder={['title', 'description', 'price', 'rating', 'brand']} selectionMode={selection} contextMenu={contextMenu} rebuildColumns={rebuildColumns} selectionResetter={rebuildColumns} />
+        <ReactiveTable fetchData={fetcher} columnOrder={['title', 'description', 'price', 'rating', 'brand']} setSelected={() => 0} selectionMode={selection} contextMenu={contextMenu} rebuildColumns={rebuildColumns} selectionResetter={rebuildColumns} />
     </>
 };
