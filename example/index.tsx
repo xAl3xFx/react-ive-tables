@@ -12,18 +12,20 @@ import {ManyColumns} from "./ManyColumns";
 import {useState} from "react";
 import {SWRConfig} from "swr";
 import axios from "axios";
+import {FakeApi} from "./FakeApi";
 
 const App = () => {
-    const [selectedTable, setSelectedTable] = useState(<ManyColumns />);
+    const [selectedTable, setSelectedTable] = useState(<FakeApi />);
   return (
       <div className="App">
-          <IntlProvider locale={"bg-BG"} messages={{"id" : "ID", "name" : "Name", 'type' : 'Type', 'size' : "Size", title: "Title", body: "Body", balance: 'balance', operations: 'operations', status: 'status', 'company' : 'company', date: 'date'}}>
+          <IntlProvider locale={"bg-BG"} onError={() => 0} messages={{"id" : "ID", "name" : "Name", 'type' : 'Type', 'size' : "Size", title: "Title", body: "Body", balance: 'balance', operations: 'operations', status: 'status', 'company' : 'company', date: 'date'}}>
               <SWRConfig value={{fetcher: (url) => axios(url, {withCredentials: true}).then(res => res.data)}}>
                   <Card>
 
                       <h1>Select Table</h1>
                       <div className={'p-mb-3'}>
                           <Button className={"p-mr-2"} onClick={() => setSelectedTable(<ManyColumns />)}>Many Columns</Button>
+                          <Button className={"p-mr-2"} onClick={() => setSelectedTable(<FakeApi />)}>Fake Api</Button>
                       </div>
                       {selectedTable}
                   </Card>

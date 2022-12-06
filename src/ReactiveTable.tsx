@@ -15,6 +15,7 @@ import {ContextMenu} from 'primereact/contextmenu';
 import {Tooltip} from 'primereact/tooltip';
 import clone from 'lodash.clone';
 import isEqual from 'lodash.isequal';
+import cloneDeep from 'lodash.clonedeep';
 import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
 import {HeaderButton} from "./types";
@@ -74,7 +75,7 @@ interface Props<T, K extends string> {
     xlsx?: string;                                                // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
     excelUrl?: string;                                            // The url of the endpoint for excel
     formatDateToLocal?: boolean;                                  // Specifies whether dates should be formatted to local or not.
-    toggleSelect?: { toggle: boolean, handler: () => void };      // Toggles checkbox column used for excel. Not very template prop.
+    // toggleSelect?: { toggle: boolean, handler: () => void };      // Toggles checkbox column used for excel. Not very template prop.
     headerButtons?: HeaderButton[];                               // Array with buttons to be shown in the header.
     rightHeaderButtons?: HeaderButton[];                          // Array with buttons to be shown in the header (from the right side).
     sortableColumns?: K[];                                        // Array of columns which should be sortable.
@@ -266,10 +267,10 @@ export const ReactiveTable = <T, K extends string>(
             initFilters();
     }, [columns])
 
-    useEffect(() => {
-        if (props.toggleSelect)
-            generateColumns();
-    }, [props.toggleSelect])
+    // useEffect(() => {
+    //     if (props.toggleSelect)
+    //         generateColumns();
+    // }, [props.toggleSelect])
 
     useEffect(() => {
         if (showTable) {
@@ -289,25 +290,32 @@ export const ReactiveTable = <T, K extends string>(
 
 
     const listener = (event: any) => {
+        if(props.selectionMode !== 'single') return;
         if (event.code === "ArrowUp") {
             if (selectedRowIndex - 1 >= 0) {
                 const newSelectedElement = items[selectedRowIndex - 1];
-                setSelectedRowIndex(selectedRowIndex - 1);
-                if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
-                    setSelectedRow([newSelectedElement]);
-                } else {
-                    setSelectedRow(newSelectedElement);
+                if(selectedRowIndex % rows === 0){
+                    focusRow(false);
                 }
+                setSelectedRowIndex(selectedRowIndex - 1);
+                // if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
+                //     setSelectedRow([newSelectedElement]);
+                // } else {
+                //     setSelectedRow(newSelectedElement);
+                // }
             }
         } else if (event.code === "ArrowDown") {
             if (selectedRowIndex + 1 < items.length) {
                 const newSelectedElement = items[selectedRowIndex + 1];
-                setSelectedRowIndex(selectedRowIndex + 1);
-                if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
-                    setSelectedRow([newSelectedElement]);
-                } else {
-                    setSelectedRow(newSelectedElement);
+                if((selectedRowIndex + 1) % rows === 0){
+                    focusRow(true);
                 }
+                setSelectedRowIndex(selectedRowIndex + 1);
+                // if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
+                //     setSelectedRow([newSelectedElement]);
+                // } else {
+                //     setSelectedRow(newSelectedElement);
+                // }
             }
         } else if (event.code === "ArrowRight") {
             // if(first + rows < items.length)
@@ -389,20 +397,42 @@ export const ReactiveTable = <T, K extends string>(
     };
 
     useEffect(() => {
+        console.log('useEffect selectedRowIndex: ', selectedRowIndex)
         const newPage = Math.floor(selectedRowIndex / rows) + 1;
         setFirst((newPage - 1) * rows);
     }, [selectedRowIndex]);
 
-    useEffect(() => {
-        if (dt.current && dt.current.getTable && dt.current.getTable()) {
-            const trs = dt.current.getTable().querySelectorAll('tr');
-            if(props.showFilters === false && trs.length >= 2)
-                trs[1].focus();
-            else if(trs.length >= 3)
-                trs[2].focus();
+    //TODO: Check if this works properly with arrow selection
+    // useEffect(() => {
+    //     if (dt.current && dt.current.getTable && dt.current.getTable()) {
+    //         const trs = dt.current.getTable().querySelectorAll('tr');
+    //         if(props.showFilters === false && trs.length >= 2)
+    //             trs[1].focus();
+    //         else if(trs.length >= 3)
+    //                 trs[2].focus();
+    //     }
+    // }, [first]);
 
-        }
-    }, [first]);
+    const focusRow = (focusFirstRow: boolean) => {
+        setTimeout(() => {
+            if (dt.current && dt.current.getTable && dt.current.getTable()) {
+                const trs = dt.current.getTable().querySelectorAll('tr');
+                if(focusFirstRow){
+                    if(props.showFilters === false && trs.length >= 2)
+                        trs[1].focus();
+                    else if(trs.length >= 3){
+                        trs[2].focus();
+                    }
+                }else{
+                    if(trs.length >= 2){
+                        trs[trs.length - 1].focus();
+                    }
+                }
+
+            }
+        }, 100);
+
+    }
 
     const exportExcel = () => {
         if (props.excelUrl === undefined) {
@@ -467,7 +497,7 @@ export const ReactiveTable = <T, K extends string>(
 
         //@ts-ignore
         if (Object.keys(actualFilters).length === 0) {
-            result = clone(originalItems);
+            result = cloneDeep(originalItems);
             setItems(result);
         } else {
             result = originalItems.filter((el: any) => {
@@ -508,7 +538,7 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const generateColumns = () => {
-        if (columns.length === 0 || (props.toggleSelect && props.toggleSelect.toggle) || (props.rebuildColumns && props.rebuildColumns !== rebuildColumns)) {
+        if (columns.length === 0 || (props.rebuildColumns && props.rebuildColumns !== rebuildColumns)) {
             if (props.rebuildColumns)
                 setRebuildColumns(props.rebuildColumns);
             const tempColumns = props.columnOrder.map((cName: any) => {
@@ -553,11 +583,6 @@ export const ReactiveTable = <T, K extends string>(
             })
 
             setColumns(tempColumns);
-        } else if (props.toggleSelect) {
-            const firstColumn = columns[0];
-            if (firstColumn.key && firstColumn.key === "checkbox") {
-                setColumns(columns.splice(1));
-            }
         }
     };
 
@@ -569,7 +594,8 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const onPage = (event: DataTablePFSEvent) => {
-        console.log("the page is: ", event.page);
+        setSelectedRowIndex(event.first)
+        focusRow(true);
         if (props.fetchData) {
             if (event.first === first && event.rows === rows) return;
             setLoading(true);
@@ -606,11 +632,11 @@ export const ReactiveTable = <T, K extends string>(
                             className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
                     : null
                 }
-                {props.toggleSelect ?
-                    <Button type="button" icon="fas fa-check-square" onClick={props.toggleSelect.handler}
-                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
-                    : null
-                }
+                {/*{props.toggleSelect ?*/}
+                {/*    <Button type="button" icon="fas fa-check-square" onClick={props.toggleSelect.handler}*/}
+                {/*            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>*/}
+                {/*    : null*/}
+                {/*}*/}
                 {
                     props.headerButtons!.map(el => <Button type="button" icon={el.icon} onClick={el.onClick}
                                                            tooltip={el.tooltipLabel} label={el.label}
@@ -635,35 +661,9 @@ export const ReactiveTable = <T, K extends string>(
         if (cm.current) {
             cm.current.hide(e.originalEvent);
         }
-        if (!Array.isArray(e.value)) {
-            if (props.setSelected) props.setSelected(e.value, false)
-            if (props.selectionHandler) props.selectionHandler(e);
-            for (let i = 0; i < items.length; i++) {
-                if (e.value.length === 0) {
-                    setSelectedRowIndex(0);
-                    break;
-                }
-                if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
-                    setSelectedRowIndex(i);
-                    break;
-                }
-            }
-            setSelectedRow(e.value);
-            return;
-        } else {
-            for (let i = 0; i < items.length; i++) {
-                if (e.value.length === 0) {
-                    setSelectedRowIndex(0);
-                    break;
-                }
-                if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
-                    setSelectedRowIndex(i);
-                    break;
-                }
-            }
-        }
         const page = Math.floor(first / rows) + 1;
-        const newSelectedRowsPerPage = clone(selectedRowsPerPage);
+
+        const newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage);
         //Add elems
         for (let row of e.value) {
             //@ts-ignore
@@ -681,14 +681,47 @@ export const ReactiveTable = <T, K extends string>(
             if (e.value.find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) !== undefined)
                 newElementsForPage.push(row)
         }
+
+        let itemUnselected = false;
+        if(newSelectedRowsPerPage[page] !== undefined && newSelectedRowsPerPage[page].length !== newElementsForPage.length)
+            itemUnselected = true;
+
         newSelectedRowsPerPage[page] = newElementsForPage;
 
+        if (!Array.isArray(e.value)) {
+            if (props.setSelected) props.setSelected(e.value, false)
+            if (props.selectionHandler) props.selectionHandler(e);
+            for (let i = 0; i < items.length; i++) {
+                if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
+                    setSelectedRowIndex(props.fetchData ? first + i : i);
+                    break;
+                }
+            }
+            setSelectedRow(e.value);
+            return;
+        } else {
+            //In order to prevent switching page to the page that corresponds to the last selected row when using multiple select
+            //We only will set selectedRowIndex if we do not unselect item
+            if(!itemUnselected){
+                for (let i = 0; i < items.length; i++) {
+                    if (e.value.length === 0) {
+                        setSelectedRowIndex(0);
+                        break;
+                    }
+                    if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
+                        setSelectedRowIndex(props.fetchData ? first + i : i);
+                        break;
+                    }
+                }
+            }
+
+        }
 
         //@ts-ignore
         const newSelectedRow = Object.values(newSelectedRowsPerPage).flat();
 
         setSelectedRowPerPage(newSelectedRowsPerPage)
-        setSelectedRow(newElementsForPage);
+        setSelectedRow(newSelectedRow);
 
         if (props.selectionHandler) props.selectionHandler({value: newSelectedRow});
         //@ts-ignore
@@ -773,7 +806,7 @@ export const ReactiveTable = <T, K extends string>(
                         first={first}
                         rows={rows}
                         totalRecords={totalRecords}
-                        lazy={props.fetchData ? true : false}
+                        lazy={props.fetchData !== undefined}
                         paginator={props.showPaginator && !props.virtualScroll}
                         footer={props.footerTemplate || null}
                         onFilter={handleFilter}
@@ -854,7 +887,7 @@ export const ReactiveTable = <T, K extends string>(
 ReactiveTable.defaultProps = {
     showFilters: true,
     ignoreFilters: [],
-    showHeader: true,
+    showHeader: false,
     selectionMode: undefined,
     selectionHandler: () => 0,
     onRowUnselect: undefined,

@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/example/lib/products.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_11_2022___13_30__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_11_2022_г__13_30_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +45,7 @@
     &quot;last_opened_file_path&quot;: &quot;C:/Users/alexp/WebstormProjects/react-ive-tables/src&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/alex/Documents/Local/packages/react-ive-tables/node_modules/typescript/lib&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\alexp\\WebstormProjects\\react-ive-tables\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -98,8 +105,10 @@
       <workItem from="1668097631981" duration="2516000" />
       <workItem from="1668445671244" duration="50000" />
       <workItem from="1668505995668" duration="292000" />
-      <workItem from="1668527509351" duration="429000" />
-      <workItem from="1669387026921" duration="42000" />
+      <workItem from="1668527509351" duration="1646000" />
+      <workItem from="1668590217505" duration="595000" />
+      <workItem from="1669375848430" duration="1715000" />
+      <workItem from="1670232976790" duration="11644000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -339,26 +348,26 @@
       <option name="project" value="LOCAL" />
       <updated>1667319660517</updated>
     </task>
-    <task id="LOCAL-00035" summary="Fix from prev">
-      <created>1669301431564</created>
+    <task id="LOCAL-00035" summary="ReactiveTable.tsx -&gt; Added textAlign prop to override columns body text alignment.">
+      <created>1668528015579</created>
       <option name="number" value="00035" />
       <option name="presentableId" value="LOCAL-00035" />
       <option name="project" value="LOCAL" />
-      <updated>1669301431564</updated>
+      <updated>1668528015579</updated>
     </task>
-    <task id="LOCAL-00036" summary="Before release">
-      <created>1669301492285</created>
+    <task id="LOCAL-00036" summary="ReactiveTable -&gt; added setRef prop">
+      <created>1669384722857</created>
       <option name="number" value="00036" />
       <option name="presentableId" value="LOCAL-00036" />
       <option name="project" value="LOCAL" />
-      <updated>1669301492285</updated>
+      <updated>1669384722857</updated>
     </task>
-    <task id="LOCAL-00037" summary="ReactiveTable -&gt; props.fetchData now accepts an object as an argument and onPage passes page to it as well">
-      <created>1669302767107</created>
+    <task id="LOCAL-00037" summary="shelved">
+      <created>1669384775220</created>
       <option name="number" value="00037" />
       <option name="presentableId" value="LOCAL-00037" />
       <option name="project" value="LOCAL" />
-      <updated>1669302767107</updated>
+      <updated>1669384775220</updated>
     </task>
     <option name="localTasksCounter" value="38" />
     <servers />
@@ -413,9 +422,9 @@
     <MESSAGE value="ReactiveTable -&gt; handleFilter fix." />
     <MESSAGE value="ReactiveTable -&gt; handleFilter -&gt; call props.onFilterCb for lazy fetching as well." />
     <MESSAGE value="ReactiveTable -&gt; HeaderButtons -&gt; Added ref prop." />
-    <MESSAGE value="Fix from prev" />
-    <MESSAGE value="Before release" />
-    <MESSAGE value="ReactiveTable -&gt; props.fetchData now accepts an object as an argument and onPage passes page to it as well" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; props.fetchData now accepts an object as an argument and onPage passes page to it as well" />
+    <MESSAGE value="ReactiveTable.tsx -&gt; Added textAlign prop to override columns body text alignment." />
+    <MESSAGE value="ReactiveTable -&gt; added setRef prop" />
+    <MESSAGE value="shelved" />
+    <option name="LAST_COMMIT_MESSAGE" value="shelved" />
   </component>
 </project>
