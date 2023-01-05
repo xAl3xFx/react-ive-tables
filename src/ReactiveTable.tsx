@@ -397,7 +397,6 @@ export const ReactiveTable = <T, K extends string>(
     };
 
     useEffect(() => {
-        console.log('useEffect selectedRowIndex: ', selectedRowIndex)
         const newPage = Math.floor(selectedRowIndex / rows) + 1;
         setFirst((newPage - 1) * rows);
     }, [selectedRowIndex]);
@@ -664,29 +663,32 @@ export const ReactiveTable = <T, K extends string>(
         const page = Math.floor(first / rows) + 1;
 
         const newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage);
-        //Add elems
-        for (let row of e.value) {
-            //@ts-ignore
-            if (Object.values(newSelectedRowsPerPage).flat().find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) === undefined) {
-                if (newSelectedRowsPerPage[page] === undefined)
-                    newSelectedRowsPerPage[page] = [];
-                newSelectedRowsPerPage[page].push(row);
-            }
-        }
-
-        //Remove elems
-        const currPageElements = newSelectedRowsPerPage[page] || [];
-        const newElementsForPage = [];
-        for (let row of currPageElements) {
-            if (e.value.find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) !== undefined)
-                newElementsForPage.push(row)
-        }
-
         let itemUnselected = false;
-        if(newSelectedRowsPerPage[page] !== undefined && newSelectedRowsPerPage[page].length !== newElementsForPage.length)
-            itemUnselected = true;
 
-        newSelectedRowsPerPage[page] = newElementsForPage;
+        if (Array.isArray(e.value)) {
+            //Add elems
+            for (let row of e.value) {
+                //@ts-ignore
+                if (Object.values(newSelectedRowsPerPage).flat().find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) === undefined) {
+                    if (newSelectedRowsPerPage[page] === undefined)
+                        newSelectedRowsPerPage[page] = [];
+                    newSelectedRowsPerPage[page].push(row);
+                }
+            }
+
+            //Remove elems
+            const currPageElements = newSelectedRowsPerPage[page] || [];
+            const newElementsForPage = [];
+            for (let row of currPageElements) {
+                if (e.value.find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) !== undefined)
+                    newElementsForPage.push(row)
+            }
+
+            if(newSelectedRowsPerPage[page] !== undefined && newSelectedRowsPerPage[page].length !== newElementsForPage.length)
+                itemUnselected = true;
+
+            newSelectedRowsPerPage[page] = newElementsForPage;
+        }
 
         if (!Array.isArray(e.value)) {
             if (props.setSelected) props.setSelected(e.value, false)

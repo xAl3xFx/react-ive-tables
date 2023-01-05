@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_12_2022___12_44__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_12_2022_г__12_44_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/FakeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +42,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\alexp\\WebstormProjects\\react-ive-tables\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JavaScript&quot;
+    ]
   }
 }</component>
   <component name="RecentsManager">
@@ -51,7 +58,10 @@
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables\src" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Node.js.scratch_2.js">
+    <configuration name="scratch_2.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
     <configuration name="run example" type="js.build_tools.npm">
       <package-json value="$PROJECT_DIR$/example/package.json" />
       <command value="start" />
@@ -60,6 +70,11 @@
       <envs />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.scratch_2.js" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -101,7 +116,10 @@
       <workItem from="1668527509351" duration="1646000" />
       <workItem from="1668590217505" duration="595000" />
       <workItem from="1669375848430" duration="1715000" />
-      <workItem from="1670232976790" duration="12812000" />
+      <workItem from="1670232976790" duration="13616000" />
+      <workItem from="1671639440030" duration="1574000" />
+      <workItem from="1672316827582" duration="66000" />
+      <workItem from="1672935621317" duration="472000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -376,7 +394,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670322610604</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="ReactiveTable -&gt; Fixed issue with always going to first page when using context menu selection">
+      <created>1670324234356</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1670324234356</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -389,7 +414,6 @@
         <option value="Default.Author" />
         <option value="Default.Date" />
         <option value="Default.Subject" />
-        <option value="Space.CommitStatus" />
       </list>
     </option>
   </component>
@@ -407,7 +431,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="SimpleDataTable.tsx -&gt; expandable property." />
     <MESSAGE value="Important! -&gt; SimpleDataTable -&gt; Handle skeleton better: When the props.data is undefined -&gt; show skeleton; If it is empty -&gt; show no data; Show data otherwise." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; onRowEdit fixed type." />
     <MESSAGE value="SimpleDataTable -&gt; columnTemplate pass ColumnBodyOptions and set rowEditor to operations column." />
@@ -432,6 +455,7 @@
     <MESSAGE value="shelved" />
     <MESSAGE value="Fixed a bug where when selecting a row the page gets changed. Fixed arrows selection." />
     <MESSAGE value="pomiq" />
-    <option name="LAST_COMMIT_MESSAGE" value="pomiq" />
+    <MESSAGE value="ReactiveTable -&gt; Fixed issue with always going to first page when using context menu selection" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Fixed issue with always going to first page when using context menu selection" />
   </component>
 </project>
