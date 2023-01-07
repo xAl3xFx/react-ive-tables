@@ -37,7 +37,7 @@ export interface LazyResponse<T> {
 }
 
 
-export const FakeApi : React.FC<Props> = props => {
+export const FakeApi: React.FC<Props> = props => {
     const {formatMessage: f} = useIntl();
     const didMountRef = useRef(false);
     const [contextMenu, setContextMenu] = useState<any>([]);
@@ -45,16 +45,16 @@ export const FakeApi : React.FC<Props> = props => {
     const [rebuildColumns, setRebuildColumns] = useState<number>();
 
     useEffect(() => {
-        if(!didMountRef.current) {
+        if (!didMountRef.current) {
             didMountRef.current = true;
         }
     }, []);
 
     const test = () => {
-        if(contextMenu === undefined){
+        if (contextMenu === undefined) {
             setContextMenu([]);
             setSelection('single');
-        }else {
+        } else {
             setContextMenu(undefined);
             setSelection('checkbox');
         }
@@ -62,7 +62,7 @@ export const FakeApi : React.FC<Props> = props => {
         setRebuildColumns(new Date().getTime())
     }
 
-    const fetcher = ({offset, limit, filters, columns, excelName} : FetchDataParams): Promise<LazyResponse<Product>> => {
+    const fetcher = ({offset, limit, filters, columns, excelName}: FetchDataParams): Promise<LazyResponse<Product>> => {
         const parsedFilters = Object.keys(filters).reduce((acc, key) => {
             //Handle multiselect with empty array.
             if (Array.isArray(filters[key].value) && filters[key].value.length === 0) return acc;
@@ -73,7 +73,12 @@ export const FakeApi : React.FC<Props> = props => {
         }, {});
 
         return new Promise(resolve => {
-            axios.get<FakeApiResponse>("https://dummyjson.com/products", {params: {skip: offset, limit: limit}}).then(res => {
+            axios.get<FakeApiResponse>("https://dummyjson.com/products", {
+                params: {
+                    skip: offset,
+                    limit: limit
+                }
+            }).then(res => {
                 resolve({
                     rows: res.data.products,
                     totalRecords: res.data.total
@@ -85,9 +90,20 @@ export const FakeApi : React.FC<Props> = props => {
         })
     }
 
+    const getColumnTemplate = () => {
+        return {
+            'operations' : (rowData: any) => <><Button icon={'pi pi-plus'} className={'p-mr-3'}/><Button icon={'pi pi-minus'} /></>
+        }
+    }
+
 
     return <>
-        <Button onClick={() => test()} >Trigger multiple selection</Button>
-        <ReactiveTable fetchData={fetcher} columnOrder={['title', 'description', 'price', 'rating', 'brand']} setSelected={() => 0} selectionMode={selection} contextMenu={contextMenu} rebuildColumns={rebuildColumns} selectionResetter={rebuildColumns} />
+        <Button onClick={() => test()}>Trigger multiple selection</Button>
+        <ReactiveTable fetchData={fetcher}
+                       frozenColumns={['title', 'operations']}
+                       columnOrder={['title', 'description', 'price', 'rating', 'brand','price', 'rating', 'brand','price', 'rating', 'brand', 'operations']}
+                       setSelected={() => 0} selectionMode={selection} contextMenu={contextMenu}
+                       columnTemplate={getColumnTemplate()}
+                       rebuildColumns={rebuildColumns} selectionResetter={rebuildColumns}/>
     </>
 };

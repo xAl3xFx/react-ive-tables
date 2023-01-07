@@ -532,7 +532,7 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const defaultFilter = (options: any, cName: string) => {
-        return <InputText id={'filter-' + cName} type="text" value={options.value}
+        return <InputText id={'filter-' + cName} type="text" value={options.value} style={{minWidth: '100px'}}
                           onChange={(e) => options.filterApplyCallback(e.target.value)}/>;
     }
 
