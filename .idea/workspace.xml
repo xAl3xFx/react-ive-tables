@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -121,14 +118,7 @@
       <workItem from="1673051192020" duration="1151000" />
       <workItem from="1673091567768" duration="904000" />
       <workItem from="1673351105377" duration="10088000" />
-      <workItem from="1673370636121" duration="802000" />
-    </task>
-    <task id="LOCAL-00002" summary="Fixed index.ts">
-      <created>1661268369751</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1661268369751</updated>
+      <workItem from="1673370636121" duration="1468000" />
     </task>
     <task id="LOCAL-00003" summary="Unversioned files">
       <created>1661268437434</created>
@@ -466,7 +456,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673366859742</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="Fixed pagination for swr in ReactiveTable.tsx">
+      <created>1673371461894</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1673371461894</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -496,7 +493,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Initial filters come back fix attempt." />
     <MESSAGE value="Fixed a bug with table ref" />
     <MESSAGE value="Removed console.logs" />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Fixed CellEdit." />
@@ -521,6 +517,7 @@
     <MESSAGE value="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization." />
     <MESSAGE value="ReactiveTable.tsx -&gt; Risky optimization which doesn't call props.fetchData on the first change of filters when using swr." />
     <MESSAGE value="Addition to previous commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Addition to previous commit" />
+    <MESSAGE value="Fixed pagination for swr in ReactiveTable.tsx" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed pagination for swr in ReactiveTable.tsx" />
   </component>
 </project>

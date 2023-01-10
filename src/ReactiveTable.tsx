@@ -279,12 +279,12 @@ export const ReactiveTable = <T, K extends string>(
     useEffect(() => {
         // if (filters === null)
         //     initFilters();
-        if(props.swr){
+        if(props.swr && props.data !== undefined){
             setItems(props.data);
             setShowTable(true);
             setLoading(false);
         }
-        else if ((props.data) || !props.showSkeleton) {
+        else if (props.data !== undefined || !props.showSkeleton) {
             setItems(props.data);
             setOriginalItems(props.data);
             setShowTable(true);
