@@ -202,9 +202,10 @@ export const ReactiveTable = <T, K extends string>(
 
     useEffect(() => {
         if (filters && Object.keys(filters).length > 0 && !isEqual(filters, prevFilters)) {
+            if(!props.swr || (props.swr  && prevFilters !== null && Object.values(filters).every((filter: any) => filter.value === null)))
+                refreshTable();
             setPrevFilters(filters);
             setLoading(true);
-            refreshTable();
         }
     }, [filters]);
 

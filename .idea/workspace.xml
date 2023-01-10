@@ -120,7 +120,7 @@
       <workItem from="1672935621317" duration="666000" />
       <workItem from="1673051192020" duration="1151000" />
       <workItem from="1673091567768" duration="904000" />
-      <workItem from="1673351105377" duration="6925000" />
+      <workItem from="1673351105377" duration="8045000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -444,7 +444,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673363345278</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization.">
+      <created>1673364431953</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1673364431953</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -474,7 +481,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb." />
     <MESSAGE value="Fix bug where the html value is not set from initial filters." />
     <MESSAGE value="Missing options parameter to props.specialFilters" />
     <MESSAGE value="Initial filters come back fix attempt." />
@@ -499,6 +505,7 @@
     <MESSAGE value="workspace" />
     <MESSAGE value="Added resetFilters to ReactiveTable.tsx" />
     <MESSAGE value="ReactiveTable -&gt; New concept of initializing filters in order to prevent two calls to props.fetchData upon receiving initialFilters." />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; New concept of initializing filters in order to prevent two calls to props.fetchData upon receiving initialFilters." />
+    <MESSAGE value="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization." />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization." />
   </component>
 </project>
