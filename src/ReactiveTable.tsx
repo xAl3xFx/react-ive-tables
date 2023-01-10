@@ -99,7 +99,7 @@ interface Props<T, K extends string> {
     columnStyle?: { [key in K]?: { header: any, body: any } }     // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean                                       // Whether to show to paginator or no
     footerTemplate?: () => JSX.Element                            // A function that returns a template for the footer of the table
-    initialFilters?: { [key in K]?: string | number | Date | boolean | string[] | number[] | Date[] | boolean[] },
+    initialFilters?: { [key in keyof T]?: string | number | Date | boolean | string[] | number[] | Date[] | boolean[] },
     frozenColumns?: K[]                                           // Specify which columns should be frozen (default right aligned)
     expandable?: boolean                                          // When true expander column is added at the beginning
     rebuildColumns?: number;
