@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/FakeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,6 +119,8 @@
       <workItem from="1672316827582" duration="66000" />
       <workItem from="1672935621317" duration="666000" />
       <workItem from="1673051192020" duration="1151000" />
+      <workItem from="1673091567768" duration="904000" />
+      <workItem from="1673351105377" duration="69000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -407,7 +409,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672936147407</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element">
+      <created>1673091757787</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1673091757787</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,7 +446,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="SimpleDataTable.tsx -&gt; onRowEdit fixed type." />
     <MESSAGE value="SimpleDataTable -&gt; columnTemplate pass ColumnBodyOptions and set rowEditor to operations column." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Improved types." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Improved spread props.dtProps at the end." />
@@ -462,6 +470,7 @@
     <MESSAGE value="pomiq" />
     <MESSAGE value="ReactiveTable -&gt; Fixed issue with always going to first page when using context menu selection" />
     <MESSAGE value="ReactiveTable -&gt; Fixed a bug handleSelection where e.value (selected items) were always iterated no matter if they are array or just single element." />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Fixed a bug handleSelection where e.value (selected items) were always iterated no matter if they are array or just single element." />
+    <MESSAGE value="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element" />
   </component>
 </project>
