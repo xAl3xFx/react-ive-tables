@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -120,7 +119,7 @@
       <workItem from="1672935621317" duration="666000" />
       <workItem from="1673051192020" duration="1151000" />
       <workItem from="1673091567768" duration="904000" />
-      <workItem from="1673351105377" duration="8045000" />
+      <workItem from="1673351105377" duration="8376000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -451,7 +450,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673364431953</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="ReactiveTable.tsx -&gt; Risky optimization which doesn't call props.fetchData on the first change of filters when using swr.">
+      <created>1673366018931</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1673366018931</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -481,7 +487,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Fix bug where the html value is not set from initial filters." />
     <MESSAGE value="Missing options parameter to props.specialFilters" />
     <MESSAGE value="Initial filters come back fix attempt." />
     <MESSAGE value="Fixed a bug with table ref" />
@@ -506,6 +511,7 @@
     <MESSAGE value="Added resetFilters to ReactiveTable.tsx" />
     <MESSAGE value="ReactiveTable -&gt; New concept of initializing filters in order to prevent two calls to props.fetchData upon receiving initialFilters." />
     <MESSAGE value="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization." />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization." />
+    <MESSAGE value="ReactiveTable.tsx -&gt; Risky optimization which doesn't call props.fetchData on the first change of filters when using swr." />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable.tsx -&gt; Risky optimization which doesn't call props.fetchData on the first change of filters when using swr." />
   </component>
 </project>
