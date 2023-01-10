@@ -106,6 +106,7 @@ interface Props<T, K extends string> {
     refresher?: number;                                           // Used to manually refresh the table from parent component
     textAlign?: 'left' | 'center' | 'right'                       // Used to override columns body text align which defaults to 'center'
     setDtRef?: (ref: DataTable) => void;                          // Used to pass the table's ref back to parent
+    resetFilters?: number;
 }
 
 export const ReactiveTable = <T, K extends string>(
@@ -168,6 +169,23 @@ export const ReactiveTable = <T, K extends string>(
         }
 
     }
+
+    useEffect(() => {
+        if(props.resetFilters === undefined) return;
+        const newFilters = initFilters();
+        handleFilter({filters: newFilters});
+        setTimeout(() => {
+            Object.keys(filters).forEach(key => {
+                const filter = document.querySelector("#filter-" + key);
+                if (filter) {
+                    //@ts-ignore
+                    filter.value = "";
+                }
+            })
+        },  100);
+
+    }, [props.resetFilters]);
+
 
     useEffect(() => {
         if (props.totalRecords && props.totalRecords !== totalRecords)
@@ -360,6 +378,7 @@ export const ReactiveTable = <T, K extends string>(
         }, {});
 
         setFilters(initialFilters);
+        return initialFilters;
     }
 
     const handleExternalSelection = () => {

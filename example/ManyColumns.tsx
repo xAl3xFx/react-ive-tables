@@ -33,6 +33,7 @@ export const ManyColumns = () => {
     const [filtered, setFiltered] = useState<any>();
     const [activityOptions, setActivityOptions] = useState<IDropdownOption[]>();
     const [rebuildColumns, setRebuildColumns] = useState(0);
+    const [resetFilters, setResetFilters] = useState<number>();
 
     const overlayRef = useRef<OverlayPanel>(null);
 
@@ -173,11 +174,12 @@ export const ManyColumns = () => {
         <Button label={"Filter"} onClick={() => setFilters({})}/>
         <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)} placeholder={'name'}/>
         <InputText value={balanceFilter} onChange={e => console.log(dtRef.current)} placeholder={'balance'}/>
+        <Button onClick={() => setResetFilters(new Date().getTime())}>Reset Filters</Button>
         <ReactiveTable data={data}
                          contextMenu={menuModel}
-                         showFilters={false}
                          setSelected={setSelected}
                          selectionMode={'single'}
+                       resetFilters={resetFilters}
                        setDtRef={(ref) => dtRef.current = ref}
                          // expandable
                          // forOverlay={true}

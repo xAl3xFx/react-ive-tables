@@ -43,6 +43,7 @@ export const FakeApi: React.FC<Props> = props => {
     const [contextMenu, setContextMenu] = useState<any>([]);
     const [selection, setSelection] = useState<'single' | 'checkbox'>('single');
     const [rebuildColumns, setRebuildColumns] = useState<number>();
+    const [resetFilters, setResetFilters] = useState<number>();
 
     useEffect(() => {
         if (!didMountRef.current) {
@@ -99,11 +100,13 @@ export const FakeApi: React.FC<Props> = props => {
 
     return <>
         <Button onClick={() => test()}>Trigger multiple selection</Button>
+        <Button onClick={() => setResetFilters(new Date().getTime())}>Reset Filters</Button>
         <ReactiveTable fetchData={fetcher}
                        frozenColumns={['title', 'operations']}
-                       columnOrder={['title', 'description', 'price', 'rating', 'brand','price', 'rating', 'brand','price', 'rating', 'brand', 'operations']}
+                       columnOrder={['title', 'description', 'price', 'rating', 'brand', 'operations']}
                        setSelected={() => 0} selectionMode={selection} contextMenu={contextMenu}
                        columnTemplate={getColumnTemplate()}
+                       resetFilters={resetFilters}
                        rebuildColumns={rebuildColumns} selectionResetter={rebuildColumns}/>
     </>
 };

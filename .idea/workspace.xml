@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/FakeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -120,7 +122,7 @@
       <workItem from="1672935621317" duration="666000" />
       <workItem from="1673051192020" duration="1151000" />
       <workItem from="1673091567768" duration="904000" />
-      <workItem from="1673351105377" duration="69000" />
+      <workItem from="1673351105377" duration="3120000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -416,7 +418,21 @@
       <option name="project" value="LOCAL" />
       <updated>1673091757787</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="ReactiveTable.tsx -&gt; Changed the type of initialFilters">
+      <created>1673351193902</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1673351193902</updated>
+    </task>
+    <task id="LOCAL-00044" summary="workspace">
+      <created>1673351239772</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1673351239772</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -446,8 +462,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="SimpleDataTable -&gt; columnTemplate pass ColumnBodyOptions and set rowEditor to operations column." />
-    <MESSAGE value="SimpleDataTable.tsx -&gt; Improved types." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Improved spread props.dtProps at the end." />
     <MESSAGE value="SimpleDataTable -&gt; initialFilters write over actual inputs." />
     <MESSAGE value="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb." />
@@ -471,6 +485,8 @@
     <MESSAGE value="ReactiveTable -&gt; Fixed issue with always going to first page when using context menu selection" />
     <MESSAGE value="ReactiveTable -&gt; Fixed a bug handleSelection where e.value (selected items) were always iterated no matter if they are array or just single element." />
     <MESSAGE value="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element" />
+    <MESSAGE value="ReactiveTable.tsx -&gt; Changed the type of initialFilters" />
+    <MESSAGE value="workspace" />
+    <option name="LAST_COMMIT_MESSAGE" value="workspace" />
   </component>
 </project>
