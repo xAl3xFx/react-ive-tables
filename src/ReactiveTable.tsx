@@ -23,7 +23,7 @@ import axios, {AxiosResponse} from "axios";
 import {FilterMatchMode} from "primereact/api";
 
 export type StringKeys<T> = Extract<keyof T, string>;
-export type SpecialFilter<K extends string> = { [key in K]?: (options: any) => JSX.Element }
+export type SpecialFilter<K extends string> = { [key in K]?: (options: any, cName: string) => JSX.Element }
 export type FiltersMatchMode<K extends string> = { [key in K]?: FilterMatchMode.IN | FilterMatchMode.EQUALS }
 export interface FetchDataParams {
     offset: number;
@@ -244,7 +244,11 @@ export const ReactiveTable = <T, K extends string>(
         const equal = isEqual(props.initialFilters, prevInitialFilters);
         if (equal && props.initialFilters !== undefined) return;
 
-        if (filters && Object.keys(filters).length > 0 && props.initialFilters && showTable) {
+        let newFilters = cloneDeep(filters);
+        if(newFilters == null)
+            newFilters = initFilters();
+
+        if (props.initialFilters && showTable) {
             const tempFilters = Object.keys(props.initialFilters).reduce((acc, key) => {
                 let matchMode = "contains";
                 if (props.filtersMatchMode && props.filtersMatchMode[key]) matchMode = props.filtersMatchMode[key];
@@ -254,19 +258,21 @@ export const ReactiveTable = <T, K extends string>(
                         matchMode
                     }
                 }
-            }, {...filters});
+            }, {...newFilters});
+            newFilters = tempFilters;
 
             //@ts-ignore
-            handleFilter({filters: tempFilters});
-            setFilters(tempFilters);
             setPrevInitialFilters(props.initialFilters);
         }
-    }, [filters, props.initialFilters]);
+        handleFilter({filters: newFilters});
+        if(!props.fetchData)
+            setFilters(newFilters);
+    }, [props.initialFilters]);
 
 
     useEffect(() => {
-        if (filters === null)
-            initFilters();
+        // if (filters === null)
+        //     initFilters();
         if ((props.data) || !props.showSkeleton) {
             setItems(props.data);
             setOriginalItems(props.data);
@@ -377,7 +383,7 @@ export const ReactiveTable = <T, K extends string>(
             return {...acc, [el]: {value: null, matchMode: matchMode || "contains"}}
         }, {});
 
-        setFilters(initialFilters);
+        // setFilters(initialFilters);
         return initialFilters;
     }
 

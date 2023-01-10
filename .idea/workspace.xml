@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/FakeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -122,7 +120,7 @@
       <workItem from="1672935621317" duration="666000" />
       <workItem from="1673051192020" duration="1151000" />
       <workItem from="1673091567768" duration="904000" />
-      <workItem from="1673351105377" duration="3120000" />
+      <workItem from="1673351105377" duration="5647000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -432,7 +430,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673351239772</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="Added resetFilters to ReactiveTable.tsx">
+      <created>1673354925844</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1673354925844</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -462,7 +467,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="SimpleDataTable.tsx -&gt; Improved spread props.dtProps at the end." />
     <MESSAGE value="SimpleDataTable -&gt; initialFilters write over actual inputs." />
     <MESSAGE value="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb." />
     <MESSAGE value="Fix bug where the html value is not set from initial filters." />
@@ -487,6 +491,7 @@
     <MESSAGE value="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element" />
     <MESSAGE value="ReactiveTable.tsx -&gt; Changed the type of initialFilters" />
     <MESSAGE value="workspace" />
-    <option name="LAST_COMMIT_MESSAGE" value="workspace" />
+    <MESSAGE value="Added resetFilters to ReactiveTable.tsx" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added resetFilters to ReactiveTable.tsx" />
   </component>
 </project>
