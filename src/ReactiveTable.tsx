@@ -248,7 +248,7 @@ export const ReactiveTable = <T, K extends string>(
         if(newFilters == null)
             newFilters = initFilters();
 
-        if (props.initialFilters && showTable) {
+        if (props.initialFilters) {
             const tempFilters = Object.keys(props.initialFilters).reduce((acc, key) => {
                 let matchMode = "contains";
                 if (props.filtersMatchMode && props.filtersMatchMode[key]) matchMode = props.filtersMatchMode[key];
