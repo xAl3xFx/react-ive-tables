@@ -1,17 +1,14 @@
-import {ReactiveTable, SimpleDataTable} from "../src";
+import {ReactiveTable} from "../src";
 import * as React from 'react';
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from 'react';
 import * as customers from './lib/customers.json'
 import {Button} from "primereact/button";
 import {Dropdown} from "primereact/dropdown";
-import {Calendar} from "primereact/calendar";
 import {Customer} from "./types";
-import {SpecialFilter, StringKeys} from "../src/SimpleDataTable";
 import {InputText} from "primereact/inputtext";
 import {Column, ColumnBodyOptions} from "primereact/column";
 import {ColumnGroup} from "primereact/columngroup";
 import {Row} from "primereact/row";
-import {act} from "react-dom/test-utils";
 import {OverlayPanel} from "primereact/overlaypanel";
 
 interface IDropdownOption {
@@ -52,25 +49,25 @@ export const ManyColumns = () => {
 
     useEffect(() => {
         // getData().then(setData);
-            const addedOptions : number[] = [];
-            const activityOptions = customers.data.slice(0,30).reduce((acc, el : Customer) => {
-                if(addedOptions.includes(el.activity)){
-                    return acc;
-                }else{
-                    addedOptions.push(el.activity);
-                    acc.push({
-                        id: el.activity,
-                        key: el.activity,
-                        description: 'Activity ' + el.activity
-                    })
-                    return acc;
-                }
-            }, []);
-            setActivityOptions(activityOptions)
-            setRebuildColumns(new Date().getTime());
-            setTimeout(() => {
-                setData(customers.data.slice(0, 30))
-            }, 1000)
+        const addedOptions: number[] = [];
+        const activityOptions = customers.data.slice(0, 30).reduce((acc, el: Customer) => {
+            if (addedOptions.includes(el.activity)) {
+                return acc;
+            } else {
+                addedOptions.push(el.activity);
+                acc.push({
+                    id: el.activity,
+                    key: el.activity,
+                    description: 'Activity ' + el.activity
+                })
+                return acc;
+            }
+        }, []);
+        setActivityOptions(activityOptions)
+        setRebuildColumns(new Date().getTime());
+        setTimeout(() => {
+            setData(customers.data.slice(0, 30))
+        }, 1000)
     }, []);
 
 
@@ -93,7 +90,7 @@ export const ManyColumns = () => {
             verified: (options: any) => <Dropdown filter={true} showClear value={options.value}
                                                   options={[{value: true, label: "Yes"}]}
                                                   onChange={(e) => options.filterApplyCallback(e.value)}
-                                                  style={{ textAlign: "left" }} />,
+                                                  style={{textAlign: "left"}}/>,
 
         }
     }
@@ -123,11 +120,14 @@ export const ManyColumns = () => {
     const getColumnTemplate = () => {
         console.log('getColumnTemplate')
         return {
-            verified : (rowData: any) => rowData.verified ? "Yes" : "No",
+            verified: (rowData: any) => rowData.verified ? "Yes" : "No",
             operations: (rowData: any, columnOptions: ColumnBodyOptions) => {
-                const editButton = columnOptions.rowEditor && !columnOptions.rowEditor.editing ? <Button icon={'pi pi-pencil'} onClick={columnOptions.rowEditor?.onInitClick}/> : null;
-                const saveButton = columnOptions.rowEditor && columnOptions.rowEditor.editing ? <Button icon={'pi pi-check'} onClick={columnOptions.rowEditor?.onSaveClick}/> : null;
-                const cancelButton = columnOptions.rowEditor && columnOptions.rowEditor.editing ? <Button icon={'pi pi-times'} onClick={columnOptions.rowEditor?.onCancelClick}/> : null;
+                const editButton = columnOptions.rowEditor && !columnOptions.rowEditor.editing ?
+                    <Button icon={'pi pi-pencil'} onClick={columnOptions.rowEditor?.onInitClick}/> : null;
+                const saveButton = columnOptions.rowEditor && columnOptions.rowEditor.editing ?
+                    <Button icon={'pi pi-check'} onClick={columnOptions.rowEditor?.onSaveClick}/> : null;
+                const cancelButton = columnOptions.rowEditor && columnOptions.rowEditor.editing ?
+                    <Button icon={'pi pi-times'} onClick={columnOptions.rowEditor?.onCancelClick}/> : null;
                 const overlayButton = <Button icon={'pi pi-save'} onClick={(e) => overlayRef.current?.toggle(e)}/>
 
                 return <>
@@ -137,11 +137,11 @@ export const ManyColumns = () => {
                     {overlayButton}
                 </>
             },
-            activity: (rowData: any) => activityOptions ? ( activityOptions.find(el => el.id === rowData.activity)?.description || rowData.activity) : rowData.activity
+            activity: (rowData: any) => activityOptions ? (activityOptions.find(el => el.id === rowData.activity)?.description || rowData.activity) : rowData.activity
         }
     }
 
-    const handleOnFilterCallback = (rowData : any) => {
+    const handleOnFilterCallback = (rowData: any) => {
         console.log(rowData);
         setFiltered(rowData)
     }
@@ -167,6 +167,16 @@ export const ManyColumns = () => {
         }
     }
 
+    const getColumnOrder = () => {
+        // 'balance', 'name', 'verified', 'activity', 'operations'
+        const ignoreColumns = ["id", "country", "company", "date", "status", "representative"];
+        if (data && data.length > 0 && data[0]) {
+            console.log(Object.keys(data[0]).filter(el => !ignoreColumns.includes(el)))
+            return Object.keys(data[0]).filter(el => !ignoreColumns.includes(el));
+        }
+        return [];
+    }
+
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())}/>
         <Button label={"Add selectedIDs"} onClick={addSelectedIds}/>
@@ -175,40 +185,48 @@ export const ManyColumns = () => {
         <InputText value={nameFilter} onChange={e => setNameFilter(e.target.value)} placeholder={'name'}/>
         <InputText value={balanceFilter} onChange={e => console.log(dtRef.current)} placeholder={'balance'}/>
         <Button onClick={() => setResetFilters(new Date().getTime())}>Reset Filters</Button>
-        <ReactiveTable data={data}
-                         contextMenu={menuModel}
-                         setSelected={setSelected}
-                         selectionMode={'single'}
-                       resetFilters={resetFilters}
-                       setDtRef={(ref) => dtRef.current = ref}
-                         // expandable
-                         // forOverlay={true}
-                         columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
-                         // xlsx={"doo"}
-                         // onFilterCb={handleOnFilterCallback}
-                         // selectedIds={selectedIds} selectionHandler={handleSelection}
-                         // initialFilters={{name: nameFilter}}
-            // externalFilters={getExternalFilters()}
-                         columnTemplate={getColumnTemplate()}
-            // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}
-            //              specialFilters={getSpecialFilters()}
-            // initialFilters={{id: 5, test: 'qu'}}
-            //              showPaginator={false}
-                         doubleClick={dbClickCb} selectionKey={"id"}
-                         // footerTemplate={footerTemplate}
-                         // rebuildColumns={rebuildColumns}
-                         // dtProps={{footerColumnGroup: footerGroup}}
-                         editableColumns={['verified']}
-                         cellEditHandler={(result) => 0}
-                         specialEditors={getSpecialEditors()}
-        />
+        {/*<ReactiveTable data={data}*/}
+        {/*                 contextMenu={menuModel}*/}
+        {/*                 setSelected={setSelected}*/}
+        {/*                 selectionMode={'single'}*/}
+        {/*               resetFilters={resetFilters}*/}
+        {/*               setDtRef={(ref) => dtRef.current = ref}*/}
+        {/*                 // expandable*/}
+        {/*                 // forOverlay={true}*/}
+        {/*                 columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}*/}
+        {/*                 // xlsx={"doo"}*/}
+        {/*                 // onFilterCb={handleOnFilterCallback}*/}
+        {/*                 // selectedIds={selectedIds} selectionHandler={handleSelection}*/}
+        {/*                 // initialFilters={{name: nameFilter}}*/}
+        {/*    // externalFilters={getExternalFilters()}*/}
+        {/*                 columnTemplate={getColumnTemplate()}*/}
+        {/*    // columnStyle={{balance: {header: {display: 'flex', justifyContent : "flex-start"}, body: {width: "20%"}}}}*/}
+        {/*    //              specialFilters={getSpecialFilters()}*/}
+        {/*    // initialFilters={{id: 5, test: 'qu'}}*/}
+        {/*    //              showPaginator={false}*/}
+        {/*                 doubleClick={dbClickCb} selectionKey={"id"}*/}
+        {/*                 // footerTemplate={footerTemplate}*/}
+        {/*                 // rebuildColumns={rebuildColumns}*/}
+        {/*                 // dtProps={{footerColumnGroup: footerGroup}}*/}
+        {/*                 editableColumns={['verified']}*/}
+        {/*                 cellEditHandler={(result) => 0}*/}
+        {/*                 specialEditors={getSpecialEditors()}*/}
+        {/*/>*/}
+
+        {/*{getColumnOrder().length > 0 ?*/}
+            <ReactiveTable
+                data={data}
+                columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
+                onFilterCb={(data) => console.log("THE DATA IS: ", data)}
+            />
+            {/*: null}*/}
 
 
         <OverlayPanel
             ref={overlayRef}
             showCloseIcon
             id="overlay_panel"
-            style={{ width: "450px" }}
+            style={{width: "450px"}}
         >
 
             <div className="datatable-responsive-demo">

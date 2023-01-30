@@ -147,6 +147,7 @@ export const ReactiveTable = <T, K extends string>(
     const refreshTable = () => {
         //Not lazy
         if (!props.fetchData) {
+            console.log("SETTING LOADING TO FALSE!!!")
             setLoading(false);
             return;
         }
@@ -206,8 +207,8 @@ export const ReactiveTable = <T, K extends string>(
             if(props.swr && prevFilters === null && Object.values(filters).every((filter: any) => filter.value === null)){
                 //Do nothing
             }else{
-                refreshTable();
                 setLoading(true);
+                refreshTable();
             }
 
             setPrevFilters(filters);
@@ -300,6 +301,7 @@ export const ReactiveTable = <T, K extends string>(
     useEffect(() => {
         if (columns.length)
             initFilters();
+            // setFilters(initFilters());
     }, [columns])
 
     // useEffect(() => {
