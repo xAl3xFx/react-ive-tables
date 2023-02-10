@@ -107,6 +107,7 @@ interface Props<T, K extends string> {
     textAlign?: 'left' | 'center' | 'right'                       // Used to override columns body text align which defaults to 'center'
     setDtRef?: (ref: DataTable) => void;                          // Used to pass the table's ref back to parent
     resetFilters?: number;
+    paginatorOptions?: number[]                                   // Used to overwrite the default paginator options, which are [20, 30, 50]
 }
 
 export const ReactiveTable = <T, K extends string>(
@@ -143,6 +144,12 @@ export const ReactiveTable = <T, K extends string>(
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
     // }, [selectedElement])
+
+    useEffect(() => {
+        if(props.paginatorOptions && props.paginatorOptions.length > 0){
+            setRows(props.paginatorOptions[0]);
+        }
+    }, [props.paginatorOptions])
 
     const refreshTable = () => {
         //Not lazy
@@ -863,7 +870,7 @@ export const ReactiveTable = <T, K extends string>(
                         emptyMessage="No records found"
                         tableStyle={{tableLayout: "auto"}}
                         header={props.showHeader ? getHeader() : null}
-                        rowsPerPageOptions={[20, 30, 50]}
+                        rowsPerPageOptions={props.paginatorOptions || [20, 30, 50]}
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
                         scrollable={props.virtualScroll || props.frozenColumns !== undefined}
