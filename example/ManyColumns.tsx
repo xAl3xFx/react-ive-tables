@@ -218,6 +218,7 @@ export const ManyColumns = () => {
                 data={data}
                 columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
                 onFilterCb={(data) => console.log("THE DATA IS: ", data)}
+                paginatorOptions={[5,10,20]}
             />
             {/*: null}*/}
 
@@ -236,6 +237,7 @@ export const ManyColumns = () => {
                     forOverlay={true}
                     ignoreFilters={['edit', 'delete']}
                     showHeader={false}
+                    paginatorOptions={[5,10,20]}
                 />
             </div>
             {/*<div className={"p-grid p-jc-center p-fluid"}>*/}

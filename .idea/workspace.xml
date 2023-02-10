@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/FakeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,22 +35,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/alexp/WebstormProjects/react-ive-tables/src",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/alexp/WebstormProjects/react-ive-tables/src&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables\src" />
@@ -113,7 +113,8 @@
       <workItem from="1675092394845" duration="6077000" />
       <workItem from="1675172499430" duration="136000" />
       <workItem from="1675172842135" duration="20000" />
-      <workItem from="1676024838182" duration="647000" />
+      <workItem from="1676024838182" duration="2347000" />
+      <workItem from="1676033224839" duration="1731000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -388,7 +389,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675097658690</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="ReactiveTable -&gt; added paginatorOptions prop">
+      <created>1676025607169</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1676025607169</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -419,7 +427,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="SimpleDataTable.tsx -&gt; expandable property." />
     <MESSAGE value="Important! -&gt; SimpleDataTable -&gt; Handle skeleton better: When the props.data is undefined -&gt; show skeleton; If it is empty -&gt; show no data; Show data otherwise." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; onRowEdit fixed type." />
     <MESSAGE value="SimpleDataTable -&gt; columnTemplate pass ColumnBodyOptions and set rowEditor to operations column." />
@@ -444,6 +451,18 @@
     <MESSAGE value="ReactiveTable -&gt; props.fetchData now accepts an object as an argument and onPage passes page to it as well" />
     <MESSAGE value="Exported FetchDataParams type" />
     <MESSAGE value="ReactiveTable - fixed a bug with loading in tbe simple variant" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable - fixed a bug with loading in tbe simple variant" />
+    <MESSAGE value="ReactiveTable -&gt; added paginatorOptions prop" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; added paginatorOptions prop" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/example/ManyColumns.tsx</url>
+          <line>230</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

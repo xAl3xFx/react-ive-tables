@@ -104,9 +104,14 @@ export const FakeApi: React.FC<Props> = props => {
         <ReactiveTable fetchData={fetcher}
                        frozenColumns={['title', 'operations']}
                        columnOrder={['title', 'description', 'price', 'rating', 'brand', 'operations']}
-                       setSelected={() => 0} selectionMode={selection} contextMenu={contextMenu}
+                       setSelected={() => 0}
+                       selectionMode={selection}
+                       contextMenu={contextMenu}
                        columnTemplate={getColumnTemplate()}
                        resetFilters={resetFilters}
-                       rebuildColumns={rebuildColumns} selectionResetter={rebuildColumns}/>
+                       rebuildColumns={rebuildColumns}
+                       selectionResetter={rebuildColumns}
+                       paginatorOptions={[5,10,20]}
+        />
     </>
 };

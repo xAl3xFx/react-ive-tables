@@ -134,6 +134,7 @@ export const ReactiveTable = <T, K extends string>(
     const [prevInitialFilters, setPrevInitialFilters] = useState<any>(); //Used for comparison with props.initialFilters to escape inifinite loop
     const [excelFilters, setExcelFilters] = useState({});
     const [areFiltersInited, setAreFiltersInited] = useState(false);
+    const [paginatorOptions, setPaginatorOptions] = useState([20,30,50]);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const [refresher, setRefresher] = useState<number>();
     const cm = useRef<any>();
@@ -146,8 +147,9 @@ export const ReactiveTable = <T, K extends string>(
     // }, [selectedElement])
 
     useEffect(() => {
-        if(props.paginatorOptions && props.paginatorOptions.length > 0){
+        if(props.paginatorOptions && props.paginatorOptions.length > 0 && !isEqual(props.paginatorOptions, paginatorOptions)){
             setRows(props.paginatorOptions[0]);
+            setPaginatorOptions(props.paginatorOptions);
         }
     }, [props.paginatorOptions])
 
@@ -870,7 +872,7 @@ export const ReactiveTable = <T, K extends string>(
                         emptyMessage="No records found"
                         tableStyle={{tableLayout: "auto"}}
                         header={props.showHeader ? getHeader() : null}
-                        rowsPerPageOptions={props.paginatorOptions || [20, 30, 50]}
+                        rowsPerPageOptions={paginatorOptions}
                         editMode={editMode}
                         onRowEditComplete={onRowEditComplete}
                         scrollable={props.virtualScroll || props.frozenColumns !== undefined}
