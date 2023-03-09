@@ -114,7 +114,8 @@
       <workItem from="1676024838182" duration="2347000" />
       <workItem from="1676033224839" duration="4351000" />
       <workItem from="1678278229262" duration="5000" />
-      <workItem from="1678372646751" duration="38000" />
+      <workItem from="1678372646751" duration="168000" />
+      <workItem from="1678373170676" duration="56000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
       <created>1661268262844</created>
@@ -403,7 +404,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676035017666</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="ReactiveTable -&gt; added dataKey">
+      <created>1678372713709</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1678372713709</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -434,7 +442,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="SimpleDataTable.tsx -&gt; onRowEdit fixed type." />
     <MESSAGE value="SimpleDataTable -&gt; columnTemplate pass ColumnBodyOptions and set rowEditor to operations column." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Improved types." />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Improved spread props.dtProps at the end." />
@@ -459,7 +466,8 @@
     <MESSAGE value="ReactiveTable - fixed a bug with loading in tbe simple variant" />
     <MESSAGE value="ReactiveTable -&gt; added paginatorOptions prop" />
     <MESSAGE value="ReactiveTable -&gt; Fix for paginatorOptions" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Fix for paginatorOptions" />
+    <MESSAGE value="ReactiveTable -&gt; added dataKey" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; added dataKey" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
