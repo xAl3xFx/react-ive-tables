@@ -860,7 +860,7 @@ export const ReactiveTable = <T, K extends string>(
                         footer={props.footerTemplate || null}
                         onFilter={handleFilter}
                         responsiveLayout={'stack'}
-                        dataKey={props.selectionKey}
+                        dataKey={props.selectionKey || "id"}
                         className="p-datatable-sm p-datatable-striped"
                         filterDisplay={props.showFilters ? 'row' : undefined}
                         // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
