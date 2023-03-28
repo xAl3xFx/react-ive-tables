@@ -13,6 +13,7 @@ import {useState} from "react";
 import {SWRConfig} from "swr";
 import axios from "axios";
 import {FakeApi} from "./FakeApi";
+import {SimpleDT} from "./SimpleDT";
 
 const App = () => {
     const [selectedTable, setSelectedTable] = useState(<FakeApi />);
@@ -26,6 +27,7 @@ const App = () => {
                       <div className={'p-mb-3'}>
                           <Button className={"p-mr-2"} onClick={() => setSelectedTable(<ManyColumns />)}>Many Columns</Button>
                           <Button className={"p-mr-2"} onClick={() => setSelectedTable(<FakeApi />)}>Fake Api</Button>
+                          <Button className={"p-mr-2"} onClick={() => setSelectedTable(<SimpleDT />)}>Simple DT</Button>
                       </div>
                       {selectedTable}
                   </Card>

@@ -4,7 +4,7 @@ import {useEffect, useState, useRef} from 'react';
 import {FetchDataParams, ReactiveTable} from "../src/ReactiveTable";
 import axios from "axios";
 import {Button} from "primereact/button";
-import products from './lib/products.json'
+import {Dropdown} from "primereact/dropdown";
 
 interface Props {
 
@@ -44,6 +44,7 @@ export const FakeApi: React.FC<Props> = props => {
     const [selection, setSelection] = useState<'single' | 'checkbox'>('single');
     const [rebuildColumns, setRebuildColumns] = useState<number>();
     const [resetFilters, setResetFilters] = useState<number>();
+    const [products, setProducts] = useState<Product[]>();
 
     useEffect(() => {
         if (!didMountRef.current) {
@@ -80,6 +81,8 @@ export const FakeApi: React.FC<Props> = props => {
                     limit: limit
                 }
             }).then(res => {
+                console.log('aaa')
+                setProducts(res.data.products);
                 resolve({
                     rows: res.data.products,
                     totalRecords: res.data.total
@@ -91,27 +94,53 @@ export const FakeApi: React.FC<Props> = props => {
         })
     }
 
+    const brandOptions = (products || []).map((el) => {
+        return {
+            id: el.brand,
+            key: el.brand,
+            description: el.brand
+        }
+    })
+
+    const getSpecialFilters = () => {
+        console.log(brandOptions)
+        return {
+            brand: (options: any) => <Dropdown filter={true} showClear value={options.value}
+                                               resetFilterOnHide
+                                               options={brandOptions}
+                                               optionValue={'id'} optionLabel={'description'}
+                                               placeholder={f({id: 'chooseLabel'})}
+                                               onChange={(e) => options.filterApplyCallback(e.value)}
+                                               style={{textAlign: "left"}}/>,
+        }
+    }
+
+    useEffect(() => {
+        setRebuildColumns(Date.now())
+    }, [products]);
+
+
     const getColumnTemplate = () => {
         return {
             'operations' : (rowData: any) => <><Button icon={'pi pi-plus'} className={'p-mr-3'}/><Button icon={'pi pi-minus'} /></>
         }
     }
 
-
     return <>
         <Button onClick={() => test()}>Trigger multiple selection</Button>
         <Button onClick={() => setResetFilters(new Date().getTime())}>Reset Filters</Button>
         <ReactiveTable fetchData={fetcher}
-                       frozenColumns={['title', 'operations']}
-                       columnOrder={['title', 'description', 'price', 'rating', 'brand', 'operations']}
-                       setSelected={() => 0}
-                       selectionMode={selection}
-                       contextMenu={contextMenu}
-                       columnTemplate={getColumnTemplate()}
-                       resetFilters={resetFilters}
-                       rebuildColumns={rebuildColumns}
-                       selectionResetter={rebuildColumns}
-                       paginatorOptions={[5,10,20]}
+                        frozenColumns={['title', 'operations']}
+                        columnOrder={['title', 'description', 'price', 'rating', 'brand', 'operations']}
+                        setSelected={() => 0}
+                        selectionMode={selection}
+                        contextMenu={contextMenu}
+                        columnTemplate={getColumnTemplate()}
+                        specialFilters={getSpecialFilters()}
+                        resetFilters={resetFilters}
+                        rebuildColumns={rebuildColumns}
+                        selectionResetter={rebuildColumns}
+                        paginatorOptions={[5, 10, 20]}
         />
     </>
 };
