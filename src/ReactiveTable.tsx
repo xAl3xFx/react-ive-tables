@@ -6,7 +6,7 @@ import {
     DataTableFilterParams,
     DataTableFilterMetaData,
     DataTableProps, DataTableRowEditCompleteParams,
-    DataTableSelectionModeType, DataTableFilterMatchModeType, DataTablePFSEvent,
+    DataTableSelectionModeType, DataTableFilterMatchModeType, DataTablePFSEvent, DataTableSortMeta,
 } from "primereact/datatable";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
@@ -143,6 +143,7 @@ export const ReactiveTable = <T, K extends string>(
     const dt = useRef<any>();
     const skeletonDtRef = useRef<any>();
     const filterRef = useRef<any>();
+    const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([]);
 
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
@@ -706,6 +707,7 @@ export const ReactiveTable = <T, K extends string>(
     };
 
     const handleSort = (event: any) => {
+        setMultiSortMeta(event.multiSortMeta);
         refreshTable(event);
     }
 
@@ -871,6 +873,7 @@ export const ReactiveTable = <T, K extends string>(
                         className="p-datatable-sm p-datatable-striped"
                         filterDisplay={props.showFilters ? 'row' : undefined}
                         // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
+                        multiSortMeta={multiSortMeta}
                         sortMode={'multiple'}
                         //@ts-ignore
                         selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
