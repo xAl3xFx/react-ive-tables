@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/example/SimpleDT.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/FakeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/index.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -135,14 +130,7 @@
       <workItem from="1677163317896" duration="439000" />
       <workItem from="1678278205743" duration="23000" />
       <workItem from="1678726059562" duration="771000" />
-      <workItem from="1679989309575" duration="1514000" />
-    </task>
-    <task id="LOCAL-00004" summary="Moved moment to peerDependency.">
-      <created>1661268914885</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1661268914885</updated>
+      <workItem from="1679989309575" duration="1558000" />
     </task>
     <task id="LOCAL-00005" summary="Fixed typescript for SimpleDataTable.tsx">
       <created>1661284794602</created>
@@ -480,7 +468,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673385164468</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="Some tests">
+      <created>1679990869355</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1679990869355</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -510,7 +505,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Removed console.logs" />
     <MESSAGE value="SimpleDataTable.tsx -&gt; Fixed CellEdit." />
     <MESSAGE value="ReactiveTable - Created" />
     <MESSAGE value="workspace.xml" />
@@ -535,6 +529,7 @@
     <MESSAGE value="Addition to previous commit" />
     <MESSAGE value="Fixed pagination for swr in ReactiveTable.tsx" />
     <MESSAGE value="ReactiveTable.tsx -&gt; showTable when data is not undefined when using swr." />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable.tsx -&gt; showTable when data is not undefined when using swr." />
+    <MESSAGE value="Some tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Some tests" />
   </component>
 </project>

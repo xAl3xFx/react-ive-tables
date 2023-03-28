@@ -30,6 +30,8 @@ export interface FetchDataParams {
     limit: number;
     filters: any;
     columns?: { [key: string]: string };
+    //Add type for this
+    sort?: any;
     excelName?: string;
     page? : number;
 
@@ -153,7 +155,7 @@ export const ReactiveTable = <T, K extends string>(
         }
     }, [props.paginatorOptions])
 
-    const refreshTable = () => {
+    const refreshTable = (sort?: any) => {
         //Not lazy
         if (!props.fetchData) {
             console.log("SETTING LOADING TO FALSE!!!")
@@ -163,12 +165,12 @@ export const ReactiveTable = <T, K extends string>(
 
 
         if (props.swr) {
-            props.fetchData({offset: first, limit: rows, filters}).then(() => {
+            props.fetchData({offset: first, limit: rows, filters, sort}).then(() => {
                 setLoading(false);
             });
         } else {
             //@ts-ignore
-            props.fetchData({offset: first, limit: rows, filters}).then((response) => {
+            props.fetchData({offset: first, limit: rows, filters, sort}).then((response) => {
                 //@ts-ignore
                 setItems(response.rows);
                 //@ts-ignore
@@ -703,6 +705,10 @@ export const ReactiveTable = <T, K extends string>(
         </div>
     };
 
+    const handleSort = (event: any) => {
+        refreshTable(event);
+    }
+
     const handleSelection = (e: any) => {
         if (cm.current) {
             cm.current.hide(e.originalEvent);
@@ -859,6 +865,7 @@ export const ReactiveTable = <T, K extends string>(
                         paginator={props.showPaginator && !props.virtualScroll}
                         footer={props.footerTemplate || null}
                         onFilter={handleFilter}
+                        onSort={handleSort}
                         responsiveLayout={'stack'}
                         dataKey={props.selectionKey || "id"}
                         className="p-datatable-sm p-datatable-striped"
