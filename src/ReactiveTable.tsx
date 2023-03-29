@@ -34,7 +34,15 @@ export interface FetchDataParams {
     sort?: any;
     excelName?: string;
     page? : number;
+}
 
+export interface ExportExcelParams {
+    filters: any;
+    //Add type for this
+    sort?: any;
+    excelName?: string;
+    columns: string[];
+    labelsMap: Record<string, string>
 }
 
 interface Props<T, K extends string> {
@@ -75,7 +83,8 @@ interface Props<T, K extends string> {
         (rowData: T, options: ColumnBodyOptions) => any
     };        // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
     xlsx?: string;                                                // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
-    excelUrl?: string;                                            // The url of the endpoint for excel
+    // excelUrl?: string;                                            // The url of the endpoint for excel
+    exportExcel?: (params: ExportExcelParams) => void;
     formatDateToLocal?: boolean;                                  // Specifies whether dates should be formatted to local or not.
     // toggleSelect?: { toggle: boolean, handler: () => void };      // Toggles checkbox column used for excel. Not very template prop.
     headerButtons?: HeaderButton[];                               // Array with buttons to be shown in the header.
@@ -484,8 +493,8 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const exportExcel = () => {
-        if (props.excelUrl === undefined) {
-            console.warn("excelUrl is undefined.");
+        if (props.exportExcel === undefined) {
+            console.error("'exportExcel' function is not provided. Could not export DT to excel.");
             return;
         }
         const labelsMap = props.columnOrder.reduce((acc, el) => {
@@ -499,18 +508,19 @@ export const ReactiveTable = <T, K extends string>(
                 acc[el] = String(excelFilters[el].value || '');
             return acc;
         }, {})
-        axios.post(props.excelUrl, {
-            filters: formattedFilters,
-            columns: props.columnOrder,
-            sheetName: props.xlsx,
-            labelsMap
-        }, {withCredentials: true, responseType: "arraybuffer"}).then(response => {
-            import('file-saver').then(FileSaver => {
-                //@ts-ignore
-                const blob = new Blob([response.data], {type: response.headers["content-type"]});
-                FileSaver.saveAs(blob, props.xlsx + ".xlsx");
-            });
-        });
+        props.exportExcel({sort: multiSortMeta, excelName: props.xlsx, filters: formattedFilters, columns: props.columnOrder, labelsMap});
+        // axios.post(props.excelUrl, {
+        //     filters: formattedFilters,
+        //     columns: props.columnOrder,
+        //     sheetName: props.xlsx,
+        //     labelsMap
+        // }, {withCredentials: true, responseType: "arraybuffer"}).then(response => {
+        //     import('file-saver').then(FileSaver => {
+        //         //@ts-ignore
+        //         const blob = new Blob([response.data], {type: response.headers["content-type"]});
+        //         FileSaver.saveAs(blob, props.xlsx + ".xlsx");
+        //     });
+        // });
     }
 
     const parseNestedObject = (object: any, key: string | number | symbol) => {
