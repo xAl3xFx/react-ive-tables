@@ -118,7 +118,8 @@ interface Props<T, K extends string> {
     textAlign?: 'left' | 'center' | 'right'                       // Used to override columns body text align which defaults to 'center'
     setDtRef?: (ref: DataTable) => void;                          // Used to pass the table's ref back to parent
     resetFilters?: number;
-    paginatorOptions?: number[]                                   // Used to overwrite the default paginator options, which are [20, 30, 50]
+    paginatorOptions?: number[];                                  // Used to overwrite the default paginator options, which are [20, 30, 50]
+    wrapperClassName?: string;
 }
 
 export const ReactiveTable = <T, K extends string>(
@@ -857,7 +858,7 @@ export const ReactiveTable = <T, K extends string>(
     return <>
         {props.forOverlay || (showTable && ((filters && items) || !props.showSkeleton)) ?
             <>
-                <div onKeyDown={props.disableArrowKeys ? () => 0 : listener} className="datatable-responsive-demo">
+                <div onKeyDown={props.disableArrowKeys ? () => 0 : listener} className={"datatable-responsive-demo " + props.wrapperClassName || ""}>
                     {props.contextMenu ?
                         <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
                                      appendTo={document.body}/> : null}

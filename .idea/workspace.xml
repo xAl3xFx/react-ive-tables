@@ -38,6 +38,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/alexp/WebstormProjects/react-ive-tables/src&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -45,13 +46,8 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\alexp\\WebstormProjects\\react-ive-tables\\node_modules\\typescript\\lib&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;JavaScript&quot;
-    ]
   }
 }</component>
   <component name="RecentsManager">
@@ -63,10 +59,7 @@
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables\src" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.run example">
-    <configuration name="scratch_2.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.js" working-dir="$PROJECT_DIR$">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager">
     <configuration name="run example" type="js.build_tools.npm">
       <package-json value="$PROJECT_DIR$/example/package.json" />
       <command value="start" />
@@ -75,11 +68,6 @@
       <envs />
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Node.js.scratch_2.js" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -118,24 +106,61 @@
       <workItem from="1668097631981" duration="2516000" />
       <workItem from="1668445671244" duration="50000" />
       <workItem from="1668505995668" duration="292000" />
-      <workItem from="1668527509351" duration="1646000" />
-      <workItem from="1668590217505" duration="595000" />
-      <workItem from="1669375848430" duration="1715000" />
-      <workItem from="1670232976790" duration="13616000" />
-      <workItem from="1671639440030" duration="1574000" />
-      <workItem from="1672316827582" duration="66000" />
-      <workItem from="1672935621317" duration="666000" />
-      <workItem from="1673051192020" duration="1151000" />
-      <workItem from="1673091567768" duration="904000" />
-      <workItem from="1673351105377" duration="10088000" />
-      <workItem from="1673370636121" duration="1468000" />
-      <workItem from="1673385019843" duration="830000" />
-      <workItem from="1677163317896" duration="439000" />
-      <workItem from="1678278205743" duration="23000" />
-      <workItem from="1678726059562" duration="771000" />
-      <workItem from="1679989309575" duration="1558000" />
-      <workItem from="1680009835857" duration="397000" />
-      <workItem from="1680011185950" duration="2431000" />
+      <workItem from="1668527509351" duration="429000" />
+      <workItem from="1669387026921" duration="121000" />
+      <workItem from="1673881341285" duration="2401000" />
+      <workItem from="1675092394845" duration="6077000" />
+      <workItem from="1675172499430" duration="136000" />
+      <workItem from="1675172842135" duration="20000" />
+      <workItem from="1676024838182" duration="2347000" />
+      <workItem from="1676033224839" duration="4351000" />
+      <workItem from="1678278229262" duration="5000" />
+      <workItem from="1678372646751" duration="168000" />
+      <workItem from="1678373170676" duration="1535000" />
+      <workItem from="1678459979916" duration="598000" />
+      <workItem from="1690294210481" duration="2768000" />
+    </task>
+    <task id="LOCAL-00001" summary="Refactored project to use tsdx.">
+      <created>1661268262844</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1661268262844</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Fixed index.ts">
+      <created>1661268369751</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1661268369751</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Unversioned files">
+      <created>1661268437434</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1661268437434</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Moved moment to peerDependency.">
+      <created>1661268914885</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1661268914885</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Fixed typescript for SimpleDataTable.tsx">
+      <created>1661284794602</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1661284794602</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Exported HeaderButton from index.">
+      <created>1661284918695</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1661284918695</updated>
     </task>
     <task id="LOCAL-00007" summary="Removed console.logs">
       <created>1661285307185</created>
@@ -333,154 +358,70 @@
       <option name="project" value="LOCAL" />
       <updated>1667319660517</updated>
     </task>
-    <task id="LOCAL-00035" summary="ReactiveTable.tsx -&gt; Added textAlign prop to override columns body text alignment.">
-      <created>1668528015579</created>
+    <task id="LOCAL-00035" summary="Fix from prev">
+      <created>1669301431564</created>
       <option name="number" value="00035" />
       <option name="presentableId" value="LOCAL-00035" />
       <option name="project" value="LOCAL" />
-      <updated>1668528015579</updated>
+      <updated>1669301431564</updated>
     </task>
-    <task id="LOCAL-00036" summary="ReactiveTable -&gt; added setRef prop">
-      <created>1669384722857</created>
+    <task id="LOCAL-00036" summary="Before release">
+      <created>1669301492285</created>
       <option name="number" value="00036" />
       <option name="presentableId" value="LOCAL-00036" />
       <option name="project" value="LOCAL" />
-      <updated>1669384722857</updated>
+      <updated>1669301492285</updated>
     </task>
-    <task id="LOCAL-00037" summary="shelved">
-      <created>1669384775220</created>
+    <task id="LOCAL-00037" summary="ReactiveTable -&gt; props.fetchData now accepts an object as an argument and onPage passes page to it as well">
+      <created>1669302767107</created>
       <option name="number" value="00037" />
       <option name="presentableId" value="LOCAL-00037" />
       <option name="project" value="LOCAL" />
-      <updated>1669384775220</updated>
+      <updated>1669302767107</updated>
     </task>
-    <task id="LOCAL-00038" summary="Fixed a bug where when selecting a row the page gets changed. Fixed arrows selection.">
-      <created>1670322493767</created>
+    <task id="LOCAL-00038" summary="Exported FetchDataParams type">
+      <created>1669387086727</created>
       <option name="number" value="00038" />
       <option name="presentableId" value="LOCAL-00038" />
       <option name="project" value="LOCAL" />
-      <updated>1670322493767</updated>
+      <updated>1669387086727</updated>
     </task>
-    <task id="LOCAL-00039" summary="pomiq">
-      <created>1670322610604</created>
+    <task id="LOCAL-00039" summary="ReactiveTable - fixed a bug with loading in tbe simple variant">
+      <created>1675097658690</created>
       <option name="number" value="00039" />
       <option name="presentableId" value="LOCAL-00039" />
       <option name="project" value="LOCAL" />
-      <updated>1670322610604</updated>
+      <updated>1675097658690</updated>
     </task>
-    <task id="LOCAL-00040" summary="ReactiveTable -&gt; Fixed issue with always going to first page when using context menu selection">
-      <created>1670324234356</created>
+    <task id="LOCAL-00040" summary="ReactiveTable -&gt; added paginatorOptions prop">
+      <created>1676025607169</created>
       <option name="number" value="00040" />
       <option name="presentableId" value="LOCAL-00040" />
       <option name="project" value="LOCAL" />
-      <updated>1670324234356</updated>
+      <updated>1676025607169</updated>
     </task>
-    <task id="LOCAL-00041" summary="ReactiveTable -&gt; Fixed a bug handleSelection where e.value (selected items) were always iterated no matter if they are array or just single element.">
-      <created>1672936147407</created>
+    <task id="LOCAL-00041" summary="ReactiveTable -&gt; Fix for paginatorOptions">
+      <created>1676035017666</created>
       <option name="number" value="00041" />
       <option name="presentableId" value="LOCAL-00041" />
       <option name="project" value="LOCAL" />
-      <updated>1672936147407</updated>
+      <updated>1676035017666</updated>
     </task>
-    <task id="LOCAL-00042" summary="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element">
-      <created>1673091757787</created>
+    <task id="LOCAL-00042" summary="ReactiveTable -&gt; added dataKey">
+      <created>1678372713709</created>
       <option name="number" value="00042" />
       <option name="presentableId" value="LOCAL-00042" />
       <option name="project" value="LOCAL" />
-      <updated>1673091757787</updated>
+      <updated>1678372713709</updated>
     </task>
-    <task id="LOCAL-00043" summary="ReactiveTable.tsx -&gt; Changed the type of initialFilters">
-      <created>1673351193902</created>
+    <task id="LOCAL-00043" summary="ReactiveTable -&gt; added keys to header buttons">
+      <created>1678373344763</created>
       <option name="number" value="00043" />
       <option name="presentableId" value="LOCAL-00043" />
       <option name="project" value="LOCAL" />
-      <updated>1673351193902</updated>
+      <updated>1678373344763</updated>
     </task>
-    <task id="LOCAL-00044" summary="workspace">
-      <created>1673351239772</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1673351239772</updated>
-    </task>
-    <task id="LOCAL-00045" summary="Added resetFilters to ReactiveTable.tsx">
-      <created>1673354925844</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1673354925844</updated>
-    </task>
-    <task id="LOCAL-00046" summary="ReactiveTable -&gt; New concept of initializing filters in order to prevent two calls to props.fetchData upon receiving initialFilters.">
-      <created>1673363345278</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1673363345278</updated>
-    </task>
-    <task id="LOCAL-00047" summary="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization.">
-      <created>1673364431953</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1673364431953</updated>
-    </task>
-    <task id="LOCAL-00048" summary="ReactiveTable.tsx -&gt; Risky optimization which doesn't call props.fetchData on the first change of filters when using swr.">
-      <created>1673366018931</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1673366018931</updated>
-    </task>
-    <task id="LOCAL-00049" summary="Addition to previous commit">
-      <created>1673366332488</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1673366332488</updated>
-    </task>
-    <task id="LOCAL-00050" summary="Addition to previous commit">
-      <created>1673366859741</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1673366859742</updated>
-    </task>
-    <task id="LOCAL-00051" summary="Fixed pagination for swr in ReactiveTable.tsx">
-      <created>1673371461894</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1673371461894</updated>
-    </task>
-    <task id="LOCAL-00052" summary="ReactiveTable.tsx -&gt; showTable when data is not undefined when using swr.">
-      <created>1673385164468</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1673385164468</updated>
-    </task>
-    <task id="LOCAL-00053" summary="Some tests">
-      <created>1679990869355</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1679990869355</updated>
-    </task>
-    <task id="LOCAL-00054" summary="Added sort prop to fetchData.">
-      <created>1680010079855</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1680010079855</updated>
-    </task>
-    <task id="LOCAL-00055" summary="Properly support sorting.">
-      <created>1680011800915</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1680011800915</updated>
-    </task>
-    <option name="localTasksCounter" value="56" />
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -493,6 +434,7 @@
         <option value="Default.Author" />
         <option value="Default.Date" />
         <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
       </list>
     </option>
   </component>
@@ -510,31 +452,42 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="SimpleDataTable.tsx -&gt; Improved types." />
+    <MESSAGE value="SimpleDataTable.tsx -&gt; Improved spread props.dtProps at the end." />
+    <MESSAGE value="SimpleDataTable -&gt; initialFilters write over actual inputs." />
+    <MESSAGE value="SimpleDataTable -&gt; Use _isEqual to compare props.initialFilters with prevInitialFilters to avoid infinite loop when using onFilterCb." />
+    <MESSAGE value="Fix bug where the html value is not set from initial filters." />
+    <MESSAGE value="Missing options parameter to props.specialFilters" />
+    <MESSAGE value="Initial filters come back fix attempt." />
+    <MESSAGE value="Fixed a bug with table ref" />
+    <MESSAGE value="Removed console.logs" />
+    <MESSAGE value="SimpleDataTable.tsx -&gt; Fixed CellEdit." />
+    <MESSAGE value="ReactiveTable - Created" />
     <MESSAGE value="workspace.xml" />
     <MESSAGE value="unversioned files." />
     <MESSAGE value="ReactiveTable -&gt; handleFilter fix." />
     <MESSAGE value="ReactiveTable -&gt; handleFilter -&gt; call props.onFilterCb for lazy fetching as well." />
     <MESSAGE value="ReactiveTable -&gt; HeaderButtons -&gt; Added ref prop." />
-    <MESSAGE value="ReactiveTable.tsx -&gt; Added textAlign prop to override columns body text alignment." />
-    <MESSAGE value="ReactiveTable -&gt; added setRef prop" />
-    <MESSAGE value="shelved" />
-    <MESSAGE value="Fixed a bug where when selecting a row the page gets changed. Fixed arrows selection." />
-    <MESSAGE value="pomiq" />
-    <MESSAGE value="ReactiveTable -&gt; Fixed issue with always going to first page when using context menu selection" />
-    <MESSAGE value="ReactiveTable -&gt; Fixed a bug handleSelection where e.value (selected items) were always iterated no matter if they are array or just single element." />
-    <MESSAGE value="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element" />
-    <MESSAGE value="ReactiveTable.tsx -&gt; Changed the type of initialFilters" />
-    <MESSAGE value="workspace" />
-    <MESSAGE value="Added resetFilters to ReactiveTable.tsx" />
-    <MESSAGE value="ReactiveTable -&gt; New concept of initializing filters in order to prevent two calls to props.fetchData upon receiving initialFilters." />
-    <MESSAGE value="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization." />
-    <MESSAGE value="ReactiveTable.tsx -&gt; Risky optimization which doesn't call props.fetchData on the first change of filters when using swr." />
-    <MESSAGE value="Addition to previous commit" />
-    <MESSAGE value="Fixed pagination for swr in ReactiveTable.tsx" />
-    <MESSAGE value="ReactiveTable.tsx -&gt; showTable when data is not undefined when using swr." />
-    <MESSAGE value="Some tests" />
-    <MESSAGE value="Added sort prop to fetchData." />
-    <MESSAGE value="Properly support sorting." />
-    <option name="LAST_COMMIT_MESSAGE" value="Properly support sorting." />
+    <MESSAGE value="Fix from prev" />
+    <MESSAGE value="Before release" />
+    <MESSAGE value="ReactiveTable -&gt; props.fetchData now accepts an object as an argument and onPage passes page to it as well" />
+    <MESSAGE value="Exported FetchDataParams type" />
+    <MESSAGE value="ReactiveTable - fixed a bug with loading in tbe simple variant" />
+    <MESSAGE value="ReactiveTable -&gt; added paginatorOptions prop" />
+    <MESSAGE value="ReactiveTable -&gt; Fix for paginatorOptions" />
+    <MESSAGE value="ReactiveTable -&gt; added dataKey" />
+    <MESSAGE value="ReactiveTable -&gt; added keys to header buttons" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; added keys to header buttons" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/example/ManyColumns.tsx</url>
+          <line>230</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
