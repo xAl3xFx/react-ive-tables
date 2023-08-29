@@ -138,7 +138,6 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                 onContextMenu={e => {
                     //if(items[0].id !== null)
                     if(props.contextMenu){
-                        console.log(e.node.key);
                         if(props.showContextMenuOnRootElements){
                             cm.current!.show(e.originalEvent)
                         }else{

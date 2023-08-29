@@ -14,6 +14,7 @@ import {SWRConfig} from "swr";
 import axios from "axios";
 import {FakeApi} from "./FakeApi";
 import {SimpleDT} from "./SimpleDT";
+import {TreeTableExample} from "./TreeTableExample";
 
 const App = () => {
     const [selectedTable, setSelectedTable] = useState(<FakeApi />);
@@ -28,6 +29,7 @@ const App = () => {
                           <Button className={"p-mr-2"} onClick={() => setSelectedTable(<ManyColumns />)}>Many Columns</Button>
                           <Button className={"p-mr-2"} onClick={() => setSelectedTable(<FakeApi />)}>Fake Api</Button>
                           <Button className={"p-mr-2"} onClick={() => setSelectedTable(<SimpleDT />)}>Simple DT</Button>
+                          <Button className={"p-mr-2"} onClick={() => setSelectedTable(<TreeTableExample />)}>TreeTable Example</Button>
                       </div>
                       {selectedTable}
                   </Card>
