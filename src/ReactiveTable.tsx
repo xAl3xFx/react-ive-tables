@@ -93,7 +93,7 @@ interface Props<T, K extends string> {
     virtualScroll?: boolean;                                      // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string;                                        // Height for the scroll
     dtProps?: Partial<DataTableProps>;                            // Additional properties to be passed directly to the datatable.
-    doubleClick?: (e: any) => void;                               // Double click handler function
+    doubleClick?: (e: any) => void;                               // Double click handler function. !!! SHOULD BE DEPRECATED !!! the datatable support onRowDoubleClick!
     showSkeleton?: boolean;                                       // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                   // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
     disableArrowKeys?: boolean;                                   // When true arrow keys will not select rows above or below

@@ -134,6 +134,7 @@ export const FakeApi: React.FC<Props> = props => {
                         columnOrder={['title', 'description', 'price', 'rating', 'brand', 'operations']}
                         setSelected={() => 0}
                         selectionMode={selection}
+                        doubleClick={console.log}
                         contextMenu={contextMenu}
                         columnTemplate={getColumnTemplate()}
                         specialFilters={getSpecialFilters()}
