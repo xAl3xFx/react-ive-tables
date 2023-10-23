@@ -40,9 +40,14 @@ export interface ExportExcelParams {
     filters: any;
     //Add type for this
     sort?: any;
-    excelName?: string;
     columns: string[];
     labelsMap: Record<string, string>
+}
+
+export interface ExportConfig {
+    exportButtonLabel?: string;
+    exportButtonIcon?: string;
+    onExportExcel: (params: ExportExcelParams) => void;
 }
 
 interface Props<T, K extends string> {
@@ -82,9 +87,11 @@ interface Props<T, K extends string> {
         [key in K]?:
         (rowData: T, options: ColumnBodyOptions) => any
     };        // Used for special template for columns. The key is the cName corresponding in the `data` prop and the value is the template itself. Reference : https://primefaces.org/primereact/showcase/#/datatable/templating
-    xlsx?: string;                                                // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
+    // xlsx?: string;                                                // If present, an excel icon is added to the header which when clicked downloads an excel file. The value of the prop is used for fileName and is translated using intl.
     // excelUrl?: string;                                            // The url of the endpoint for excel
-    exportExcel?: (params: ExportExcelParams) => void;
+    // exportExcel?: (params: ExportExcelParams) => void;
+
+    exportConfig?: ExportConfig;                                    //Configuration for excel export. If this property is present an export button is added to the table's header.
     formatDateToLocal?: boolean;                                  // Specifies whether dates should be formatted to local or not.
     // toggleSelect?: { toggle: boolean, handler: () => void };      // Toggles checkbox column used for excel. Not very template prop.
     headerButtons?: HeaderButton[];                               // Array with buttons to be shown in the header.
@@ -494,8 +501,8 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const exportExcel = () => {
-        if (props.exportExcel === undefined) {
-            console.error("'exportExcel' function is not provided. Could not export DT to excel.");
+        if (props.exportConfig === undefined || props.exportConfig.onExportExcel === undefined) {
+            console.error("'onExportExcel' function is not provided. Could not export DT to excel.");
             return;
         }
         const labelsMap = props.columnOrder.reduce((acc, el) => {
@@ -509,19 +516,8 @@ export const ReactiveTable = <T, K extends string>(
                 acc[el] = String(excelFilters[el].value || '');
             return acc;
         }, {})
-        props.exportExcel({sort: multiSortMeta, excelName: props.xlsx, filters: formattedFilters, columns: props.columnOrder, labelsMap});
-        // axios.post(props.excelUrl, {
-        //     filters: formattedFilters,
-        //     columns: props.columnOrder,
-        //     sheetName: props.xlsx,
-        //     labelsMap
-        // }, {withCredentials: true, responseType: "arraybuffer"}).then(response => {
-        //     import('file-saver').then(FileSaver => {
-        //         //@ts-ignore
-        //         const blob = new Blob([response.data], {type: response.headers["content-type"]});
-        //         FileSaver.saveAs(blob, props.xlsx + ".xlsx");
-        //     });
-        // });
+        props.exportConfig.onExportExcel({sort: multiSortMeta, filters: formattedFilters, columns: props.columnOrder, labelsMap});
+
     }
 
     const parseNestedObject = (object: any, key: string | number | symbol) => {
@@ -687,9 +683,9 @@ export const ReactiveTable = <T, K extends string>(
     const getHeader = () => {
         return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
             <div>
-                {props.xlsx ?
-                    <Button type="button" icon="pi pi-file-excel" onClick={exportExcel}
-                            className="p-button-success p-mr-2" data-pr-tooltip="XLS"/>
+                {props.exportConfig ?
+                    <Button type="button" icon={props.exportConfig.exportButtonIcon || ''} onClick={exportExcel}
+                            className="p-button-success p-mr-2" data-pr-tooltip="XLS">{props.exportConfig.exportButtonLabel || ''}</Button>
                     : null
                 }
                 {/*{props.toggleSelect ?*/}
