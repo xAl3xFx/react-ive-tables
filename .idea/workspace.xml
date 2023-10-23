@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-    </list>
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -144,14 +140,7 @@
       <workItem from="1690892582230" duration="281000" />
       <workItem from="1693302802299" duration="1417000" />
       <workItem from="1695654959060" duration="373000" />
-      <workItem from="1698074673832" duration="334000" />
-    </task>
-    <task id="LOCAL-00010" summary="SimpleDataTable.tsx -&gt; Added xlsx support.">
-      <created>1664378556515</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1664378556515</updated>
+      <workItem from="1698074673832" duration="461000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -489,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695655336702</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="ReactiveTable -&gt; Added exportConfig prop.">
+      <created>1698075026914</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1698075026914</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -519,7 +515,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactiveTable -&gt; handleFilter -&gt; call props.onFilterCb for lazy fetching as well." />
     <MESSAGE value="ReactiveTable -&gt; HeaderButtons -&gt; Added ref prop." />
     <MESSAGE value="ReactiveTable.tsx -&gt; Added textAlign prop to override columns body text alignment." />
     <MESSAGE value="ReactiveTable -&gt; added setRef prop" />
@@ -544,6 +539,7 @@
     <MESSAGE value="ReactiveTable now takes exportExcel function instead of just excelUrl string prop." />
     <MESSAGE value="Added TreeTableExample.tsx" />
     <MESSAGE value="Comment." />
-    <option name="LAST_COMMIT_MESSAGE" value="Comment." />
+    <MESSAGE value="ReactiveTable -&gt; Added exportConfig prop." />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Added exportConfig prop." />
   </component>
 </project>

@@ -511,12 +511,13 @@ export const ReactiveTable = <T, K extends string>(
             return acc;
         }, {})
 
-        const formattedFilters = Object.keys(excelFilters).reduce((acc, el) => {
-            if (excelFilters[el].value !== null && excelFilters[el].value !== undefined)
-                acc[el] = String(excelFilters[el].value || '');
-            return acc;
-        }, {})
-        props.exportConfig.onExportExcel({sort: multiSortMeta, filters: formattedFilters, columns: props.columnOrder, labelsMap});
+        // const formattedFilters = Object.keys(excelFilters).reduce((acc, el) => {
+        //     if (excelFilters[el].value !== null && excelFilters[el].value !== undefined)
+        //         acc[el] = String(excelFilters[el].value || '');
+        //     return acc;
+        // }, {})
+        // props.exportConfig.onExportExcel({sort: multiSortMeta, filters: excelFilters, columns: props.columnOrder, labelsMap});
+        props.exportConfig.onExportExcel({sort: multiSortMeta, filters: filters, columns: props.columnOrder, labelsMap});
 
     }
 
