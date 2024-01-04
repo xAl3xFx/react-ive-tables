@@ -23,7 +23,7 @@ interface Props {
     scrollHeight?: string,                                       // Height for the scroll
     columnTemplate? : any,
     showContextMenuOnRootElements?: boolean,
-    matchMode: ColumnFilterMatchModeType
+    matchMode?: ColumnFilterMatchModeType
 }
 
 export const SimpleTreeTable :  React.FC<Props> = (props) => {

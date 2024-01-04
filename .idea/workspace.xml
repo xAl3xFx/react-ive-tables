@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/example/testData.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/TreeTableExample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/TreeTableExample.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/example/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/testData.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SimpleTreeTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleTreeTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -155,7 +150,7 @@
       <workItem from="1693302802299" duration="1417000" />
       <workItem from="1695654959060" duration="373000" />
       <workItem from="1698074673832" duration="461000" />
-      <workItem from="1704363359370" duration="5555000" />
+      <workItem from="1704363359370" duration="6226000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -500,7 +495,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -530,7 +525,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactiveTable -&gt; HeaderButtons -&gt; Added ref prop." />
     <MESSAGE value="ReactiveTable.tsx -&gt; Added textAlign prop to override columns body text alignment." />
     <MESSAGE value="ReactiveTable -&gt; added setRef prop" />
     <MESSAGE value="shelved" />
@@ -555,6 +549,7 @@
     <MESSAGE value="Added TreeTableExample.tsx" />
     <MESSAGE value="Comment." />
     <MESSAGE value="ReactiveTable -&gt; Added exportConfig prop." />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Added exportConfig prop." />
+    <MESSAGE value="SimpleTreeTable - added matchMode prop for the filters" />
+    <option name="LAST_COMMIT_MESSAGE" value="SimpleTreeTable - added matchMode prop for the filters" />
   </component>
 </project>
