@@ -162,6 +162,10 @@ export const ReactiveTable = <T, K extends string>(
     const filterRef = useRef<any>();
     const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([]);
 
+    useEffect(() => {
+        console.log("REACTIVE TABLE!!!!")
+    }, []);
+
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
     // }, [selectedElement])

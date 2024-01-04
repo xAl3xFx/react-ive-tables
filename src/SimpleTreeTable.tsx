@@ -1,10 +1,10 @@
-import {useState, useEffect, useRef} from 'react';
-import { useIntl } from "react-intl";
+import React, {useEffect, useRef, useState} from 'react';
+import {useIntl} from "react-intl";
 import {TreeTable} from "primereact/treetable";
-import {Column} from "primereact/column";
+import {Column, ColumnFilterMatchModeType} from "primereact/column";
 import "./DataTable.css";
-import { ContextMenu } from 'primereact/contextmenu';
-import React from 'react';
+import {ContextMenu} from 'primereact/contextmenu';
+import {FilterMatchMode} from "primereact/api";
 
 interface Props {
     data: any[],
@@ -19,10 +19,11 @@ interface Props {
     showHeader? : boolean,
     contextMenu? : Object[],
     sortableColumns?: string[],                                  // Array of columns which should be sortable.
-    scrollable?: boolean                                        // When true scrolling is enabled and paginator is hidden
-    scrollHeight?: string                                       // Height for the scroll
-    columnTemplate? : any
-    showContextMenuOnRootElements?: boolean
+    scrollable?: boolean,                                        // When true scrolling is enabled and paginator is hidden
+    scrollHeight?: string,                                       // Height for the scroll
+    columnTemplate? : any,
+    showContextMenuOnRootElements?: boolean,
+    matchMode: ColumnFilterMatchModeType
 }
 
 export const SimpleTreeTable :  React.FC<Props> = (props) => {
@@ -53,6 +54,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                                        sortable={props.sortableColumns?.includes(cName)}
                                        filterElement={props.specialFilters![cName]} showClearButton={false}
                                        showFilterMenu={false} filterField={cName}
+                                       filterMatchMode={props.matchMode || FilterMatchMode.CONTAINS}
                                        filter={props.showFilters && !props.ignoreFilters?.includes(cName)}
                                        key={cName} field={cName} header={label}/>
                     }

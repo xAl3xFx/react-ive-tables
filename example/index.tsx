@@ -17,7 +17,7 @@ import {SimpleDT} from "./SimpleDT";
 import {TreeTableExample} from "./TreeTableExample";
 
 const App = () => {
-    const [selectedTable, setSelectedTable] = useState(<FakeApi />);
+    const [selectedTable, setSelectedTable] = useState(<TreeTableExample />);
   return (
       <div className="App">
           <IntlProvider locale={"bg-BG"} onError={() => 0} messages={{"id" : "ID", "name" : "Name", 'type' : 'Type', 'size' : "Size", title: "Title", body: "Body", balance: 'balance', operations: 'operations', status: 'status', 'company' : 'company', date: 'date'}}>
@@ -39,4 +39,4 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<React.StrictMode><App /></React.StrictMode>, document.getElementById('root'));
