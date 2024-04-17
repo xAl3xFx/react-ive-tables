@@ -162,10 +162,6 @@ export const ReactiveTable = <T, K extends string>(
     const filterRef = useRef<any>();
     const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([]);
 
-    useEffect(() => {
-        console.log("REACTIVE TABLE!!!!")
-    }, []);
-
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
     // }, [selectedElement])
@@ -180,7 +176,6 @@ export const ReactiveTable = <T, K extends string>(
     const refreshTable = (sort?: any) => {
         //Not lazy
         if (!props.fetchData) {
-            console.log("SETTING LOADING TO FALSE!!!")
             setLoading(false);
             return;
         }
@@ -727,6 +722,7 @@ export const ReactiveTable = <T, K extends string>(
         if (cm.current) {
             cm.current.hide(e.originalEvent);
         }
+
         const page = Math.floor(first / rows) + 1;
 
         const newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage);
@@ -760,10 +756,12 @@ export const ReactiveTable = <T, K extends string>(
         if (!Array.isArray(e.value)) {
             if (props.setSelected) props.setSelected(e.value, false)
             if (props.selectionHandler) props.selectionHandler(e);
-            for (let i = 0; i < items.length; i++) {
-                if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
-                    setSelectedRowIndex(props.fetchData ? first + i : i);
-                    break;
+            if(multiSortMeta === []) {
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
+                        setSelectedRowIndex((props.fetchData !== undefined && props.fetchData !== null) ? first + i : i);
+                        break;
+                    }
                 }
             }
             setSelectedRow(e.value);

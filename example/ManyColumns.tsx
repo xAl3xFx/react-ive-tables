@@ -216,6 +216,10 @@ export const ManyColumns = () => {
         {/*{getColumnOrder().length > 0 ?*/}
             <ReactiveTable
                 data={data}
+                sortableColumns={["balance"]}
+                selectionKey={"balance"}
+                setSelected={setSelected}
+                selectionMode={"single"}
                 columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
                 onFilterCb={(data) => console.log("THE DATA IS: ", data)}
                 paginatorOptions={[5,10,20]}

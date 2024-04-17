@@ -5859,9 +5859,9 @@ pretty-format@^25.2.1, pretty-format@^25.5.0:
     react-is "^16.12.0"
 
 primereact@^8.4.0:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/primereact/-/primereact-8.4.0.tgz#15c48f4565da7bf789d3adc12f870cd457a6bf71"
-  integrity sha512-5zDXjB3qPQNEn3q0wbsUdYO/3E/ugaQ1azNr/JrJWpCg5bSz7PIOy5FN7Gdomm/h3hSATGVJKGPuJraX/S7gkA==
+  version "8.7.3"
+  resolved "https://registry.yarnpkg.com/primereact/-/primereact-8.7.3.tgz#07144aeb2b7999b599515b319ecda2c0af479b8a"
+  integrity sha512-BjlIOOsVcUqX9edn7HewN/U28aUqREOvPP3fnpk7X6S7k5JTM570Dm7Z/TEPH1x/Mko1NL6iDaYWnkjKiBrtPQ==
   dependencies:
     "@types/react-transition-group" "^4.4.1"
     react-transition-group "^4.4.1"
