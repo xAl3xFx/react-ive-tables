@@ -756,7 +756,7 @@ export const ReactiveTable = <T, K extends string>(
         if (!Array.isArray(e.value)) {
             if (props.setSelected) props.setSelected(e.value, false)
             if (props.selectionHandler) props.selectionHandler(e);
-            if(multiSortMeta === []) {
+            if(Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
                 for (let i = 0; i < items.length; i++) {
                     if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
                         setSelectedRowIndex((props.fetchData !== undefined && props.fetchData !== null) ? first + i : i);
@@ -769,7 +769,7 @@ export const ReactiveTable = <T, K extends string>(
         } else {
             //In order to prevent switching page to the page that corresponds to the last selected row when using multiple select
             //We only will set selectedRowIndex if we do not unselect item
-            if(!itemUnselected){
+            if(!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0){
                 for (let i = 0; i < items.length; i++) {
                     if (e.value.length === 0) {
                         setSelectedRowIndex(0);
@@ -980,5 +980,5 @@ ReactiveTable.defaultProps = {
     editableColumns: [],
     showPaginator: true,
     initialFilters: {},
-    swr: false
+    swr: false,
 }

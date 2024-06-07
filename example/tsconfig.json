@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": false,
-    "target": "es5",
-    "module": "commonjs",
-    "jsx": "react",
+    "target": "es6",
+    "module": "esnext",
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     "noImplicitAny": false,
     "noUnusedLocals": false,
@@ -12,8 +12,11 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
     "preserveConstEnums": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
     "lib": ["es2015", "es2016", "dom"],
-    "types": ["node"]
-  }
+    "types": ["node"],
+    "rootDir": "."
+  },
+  "include": ["../src"]
 }

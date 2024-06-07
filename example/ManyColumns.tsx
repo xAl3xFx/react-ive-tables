@@ -219,7 +219,7 @@ export const ManyColumns = () => {
                 sortableColumns={["balance"]}
                 selectionKey={"balance"}
                 setSelected={setSelected}
-                selectionMode={"single"}
+                selectionMode={"checkbox"}
                 columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
                 onFilterCb={(data) => console.log("THE DATA IS: ", data)}
                 paginatorOptions={[5,10,20]}
@@ -237,6 +237,7 @@ export const ManyColumns = () => {
             <div className="datatable-responsive-demo">
                 <ReactiveTable
                     data={data}
+                    selectionMode={"checkbox"}
                     columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
                     forOverlay={true}
                     ignoreFilters={['edit', 'delete']}
