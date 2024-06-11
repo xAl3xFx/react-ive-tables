@@ -806,12 +806,19 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const onCellEditComplete = (e: any) => {
-        const {newRowData, rowIndex} = e;
+        const {rowData, newRowData, rowIndex} = e;
 
         setItems((prevState) => {
-            let newItems = [...prevState];
-            newItems[rowIndex] = newRowData;
-            return newItems
+            let newItems = JSON.parse(JSON.stringify(items));
+            if(props.selectionKey) {
+                const selectionKeyOfRowData = rowData[props.selectionKey];
+                const index = items.findIndex(el => el[props.selectionKey] === selectionKeyOfRowData);
+                newItems[index] = newRowData;
+                return newItems
+            }else {
+                newItems[rowIndex] = newRowData;
+                return newItems
+            }
 
         });
         props.cellEditHandler!(e);

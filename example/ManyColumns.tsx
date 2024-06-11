@@ -220,6 +220,9 @@ export const ManyColumns = () => {
                 selectionKey={"balance"}
                 setSelected={setSelected}
                 selectionMode={"checkbox"}
+                specialEditors={getSpecialEditors()}
+                editableColumns={['vehicleStatus']}
+                cellEditHandler={(e) => console.log("CELL EDIT HANDLER", e)}
                 columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
                 onFilterCb={(data) => console.log("THE DATA IS: ", data)}
                 paginatorOptions={[5,10,20]}
