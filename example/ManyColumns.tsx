@@ -31,6 +31,7 @@ export const ManyColumns = () => {
     const [activityOptions, setActivityOptions] = useState<IDropdownOption[]>();
     const [rebuildColumns, setRebuildColumns] = useState(0);
     const [resetFilters, setResetFilters] = useState<number>();
+    const [selectedOperation, setSelectedOperation] = useState<any>();
 
     const overlayRef = useRef<OverlayPanel>(null);
 
@@ -69,6 +70,16 @@ export const ManyColumns = () => {
             setData(customers.data.slice(0, 30))
         }, 1000)
     }, []);
+
+    useEffect(() => {
+        if(!selectedOperation) return;
+        handleSelectionFromOperation();
+    }, [selectedOperation])
+
+    const handleSelectionFromOperation = () => {
+        console.log(selected);
+        setSelectedOperation(undefined);
+    }
 
 
     const addToTable = () => {
@@ -219,13 +230,16 @@ export const ManyColumns = () => {
                 sortableColumns={["balance"]}
                 selectionKey={"balance"}
                 setSelected={setSelected}
-                selectionMode={"checkbox"}
+                selectionMode={"single"}
                 specialEditors={getSpecialEditors()}
                 editableColumns={['vehicleStatus']}
                 cellEditHandler={(e) => console.log("CELL EDIT HANDLER", e)}
                 columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
                 onFilterCb={(data) => console.log("THE DATA IS: ", data)}
-                paginatorOptions={[5,10,20]}
+                dtProps={{
+                    removableSort: true,
+                    onRowDoubleClick: () => setSelectedOperation("firmDetails")
+                }}
             />
             {/*: null}*/}
 

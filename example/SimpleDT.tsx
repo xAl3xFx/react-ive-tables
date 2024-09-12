@@ -11,25 +11,27 @@ interface Props {
 export const SimpleDT: React.FC<Props> = props => {
     const didMountRef = useRef(false);
 
+    const [selectedRow, setSelectedRow] = useState<any>();
+
     useEffect(() => {
         if (!didMountRef.current) {
             didMountRef.current = true;
         }
     }, []);
 
+    const handleSelection = (e:any) => {
+        console.log("SELECTING", e);
+        setSelectedRow(e);
+    }
+
     return <>
-        <ReactiveTable data={data.data} totalRecords={data.data.length}
+        <ReactiveTable data={data.data}
                        sortableColumns={['id', 'name']}
-                       showHeader={false}
-                       showSkeleton={false}
-                       columnTemplate={{}}
-                       columnStyle={{operations: {body: {width: "15%"}, header: {}}}}
-                       specialFilters={{}}
+                       setSelected={handleSelection}
+                       selectionMode="single"
                        selectionKey={'id'}
                        ignoreFilters={['operations']}
-                       selectionMode="single"
                        columnOrder={['id', 'name', 'country.name', 'date', 'status', 'operations']}
-                       selectedIds={[]}
         />
     </>
 };

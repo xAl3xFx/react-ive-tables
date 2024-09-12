@@ -723,6 +723,8 @@ export const ReactiveTable = <T, K extends string>(
             cm.current.hide(e.originalEvent);
         }
 
+        if(!e.value) return;
+
         const page = Math.floor(first / rows) + 1;
 
         const newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage);
