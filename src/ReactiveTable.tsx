@@ -13,13 +13,12 @@ import {Button} from "primereact/button";
 import "./DataTable.css";
 import {ContextMenu} from 'primereact/contextmenu';
 import {Tooltip} from 'primereact/tooltip';
-import clone from 'lodash.clone';
 import isEqual from 'lodash.isequal';
 import cloneDeep from 'lodash.clonedeep';
 import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
 import {HeaderButton} from "./types";
-import axios, {AxiosResponse} from "axios";
+import {AxiosResponse} from "axios";
 import {FilterMatchMode} from "primereact/api";
 
 export type StringKeys<T> = Extract<keyof T, string>;
@@ -727,10 +726,27 @@ export const ReactiveTable = <T, K extends string>(
 
         const page = Math.floor(first / rows) + 1;
 
-        const newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage);
+        let newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage);
         let itemUnselected = false;
 
-        if (Array.isArray(e.value)) {
+        //Handle selection of all/none of the records
+        if(e.type === "all" || e.type === "checkbox") {
+            //Handle unselecting all records
+            if(e.value.length === 0) {
+                newSelectedRowsPerPage = [];
+            }
+            //Handle selecting all records
+            else {
+                let numberOfRecords = e.value.length;
+                let currentPage = 1;
+                do {
+                    newSelectedRowsPerPage[currentPage] = e.value.splice(0, rows);
+                    numberOfRecords -= rows;
+                    currentPage++;
+                }
+                while(numberOfRecords > 0)
+            }
+        } else if (Array.isArray(e.value)) {
             //Add elems
             for (let row of e.value) {
                 //@ts-ignore
@@ -753,9 +769,7 @@ export const ReactiveTable = <T, K extends string>(
                 itemUnselected = true;
 
             newSelectedRowsPerPage[page] = newElementsForPage;
-        }
-
-        if (!Array.isArray(e.value)) {
+        } else if (!Array.isArray(e.value)) {
             if (props.setSelected) props.setSelected(e.value, false)
             if (props.selectionHandler) props.selectionHandler(e);
             if(Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {

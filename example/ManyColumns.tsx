@@ -230,7 +230,7 @@ export const ManyColumns = () => {
                 sortableColumns={["balance"]}
                 selectionKey={"balance"}
                 setSelected={setSelected}
-                selectionMode={"single"}
+                selectionMode={"checkbox"}
                 specialEditors={getSpecialEditors()}
                 editableColumns={['vehicleStatus']}
                 cellEditHandler={(e) => console.log("CELL EDIT HANDLER", e)}
