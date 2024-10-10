@@ -912,7 +912,6 @@ export const ReactiveTable = <T, K extends string>(
                         selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
-                        emptyMessage="No records found"
                         tableStyle={{tableLayout: "auto"}}
                         header={props.showHeader ? getHeader() : null}
                         rowsPerPageOptions={paginatorOptions}
