@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactIveTable - added a check on handle selection - if unselecting - do nothing">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable -&gt; Do not hardcore empty message.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/ManyColumns.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -64,7 +63,7 @@
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
     &quot;npm.run example.executor&quot;: &quot;Run&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;settings.typescriptcompiler&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\alexp\\WebstormProjects\\react-ive-tables\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -193,6 +192,8 @@
       <workItem from="1724316074652" duration="1355000" />
       <workItem from="1726125294791" duration="1329000" />
       <workItem from="1727168617597" duration="2309000" />
+      <workItem from="1728630945947" duration="12000" />
+      <workItem from="1728632482980" duration="84000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -537,7 +538,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -567,7 +568,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactiveTable -&gt; Fixed a bug handleSelection where e.value (selected items) were always iterated no matter if they are array or just single element." />
     <MESSAGE value="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element" />
     <MESSAGE value="ReactiveTable.tsx -&gt; Changed the type of initialFilters" />
     <MESSAGE value="workspace" />
@@ -592,35 +592,35 @@
     <MESSAGE value="ReactIveTable - when simple - removed page switch on selection when sorting is enabled" />
     <MESSAGE value="ReactiveTable - cellEdit now uses selection key to determine which row should be updated" />
     <MESSAGE value="ReactIveTable - added a check on handle selection - if unselecting - do nothing" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactIveTable - added a check on handle selection - if unselecting - do nothing" />
+    <MESSAGE value="ReactiveTable -&gt; Do not hardcore empty message." />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Do not hardcore empty message." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>794</line>
+          <line>795</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>776</line>
+          <line>777</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>824</line>
+          <line>825</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>827</line>
+          <line>828</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>726</line>
-          <properties lambdaOrdinal="-1" />
+          <line>727</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>

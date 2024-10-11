@@ -126,6 +126,7 @@ interface Props<T, K extends string> {
     resetFilters?: number;
     paginatorOptions?: number[];                                  // Used to overwrite the default paginator options, which are [20, 30, 50]
     wrapperClassName?: string;
+    defaultFilterPlaceholder?: string;                            // Set placeholder for default (text) filters
 }
 
 export const ReactiveTable = <T, K extends string>(
@@ -588,7 +589,7 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const defaultFilter = (options: any, cName: string) => {
-        return <InputText id={'filter-' + cName} type="text" value={options.value} style={{minWidth: '100px'}}
+        return <InputText id={'filter-' + cName} type="text" value={options.value} style={{minWidth: '100px'}} placeholder={props.defaultFilterPlaceholder}
                           onChange={(e) => options.filterApplyCallback(e.target.value)}/>;
     }
 
