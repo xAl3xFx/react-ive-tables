@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable -&gt; Default filter placeholder;">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,7 +196,7 @@
       <workItem from="1728632482980" duration="202000" />
       <workItem from="1730378313206" duration="726000" />
       <workItem from="1731920267973" duration="3000" />
-      <workItem from="1731921920723" duration="5770000" />
+      <workItem from="1731921920723" duration="6938000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -540,7 +541,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -571,7 +572,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactiveTable.tsx -&gt; Changed the type of initialFilters" />
     <MESSAGE value="workspace" />
     <MESSAGE value="Added resetFilters to ReactiveTable.tsx" />
     <MESSAGE value="ReactiveTable -&gt; New concept of initializing filters in order to prevent two calls to props.fetchData upon receiving initialFilters." />
@@ -596,7 +596,8 @@
     <MESSAGE value="ReactIveTable - added a check on handle selection - if unselecting - do nothing" />
     <MESSAGE value="ReactiveTable -&gt; Do not hardcore empty message." />
     <MESSAGE value="ReactiveTable -&gt; Default filter placeholder;" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Default filter placeholder;" />
+    <MESSAGE value="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -615,11 +616,6 @@
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
           <line>825</line>
           <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>828</line>
-          <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>

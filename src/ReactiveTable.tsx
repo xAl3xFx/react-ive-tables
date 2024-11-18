@@ -826,7 +826,7 @@ export const ReactiveTable = <T, K extends string>(
         const {rowData, newRowData, rowIndex} = e;
 
         setItems((prevState) => {
-            let newItems = JSON.parse(JSON.stringify(items));
+            const newItems = cloneDeep(prevState);
             if(props.selectionKey) {
                 const selectionKeyOfRowData = rowData[props.selectionKey];
                 const index = items.findIndex(el => el[props.selectionKey] === selectionKeyOfRowData);
