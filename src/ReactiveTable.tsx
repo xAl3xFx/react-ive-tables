@@ -68,7 +68,7 @@ interface Props<T, K extends string> {
     rowEditHandler?: (event: DataTableRowEditCompleteParams)
         => void,                                                                // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
     specialEditors?: { [key in K]?: any },                                      // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
-    cellEditHandler?: (element: Object) => void,                                // Same as rowEditHandler.
+    cellEditHandler?: (element:  ColumnEventParams) => void,                    // Same as rowEditHandler.
     selectionHandler?: (e: any) => void,                                        // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
     selectionMode?: DataTableSelectionModeType | undefined,                     // Selection mode.
     selectionKey?: string,                                                      // Key used for selection. Default value is 'id'. Important for proper selection.
@@ -822,7 +822,7 @@ export const ReactiveTable = <T, K extends string>(
         props.rowEditHandler!(e);
     }
 
-    const onCellEditComplete = (e: any) => {
+    const onCellEditComplete = (e: ColumnEventParams) => {
         const {rowData, newRowData, rowIndex} = e;
 
         setItems((prevState) => {

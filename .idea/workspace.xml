@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable -&gt; Do not hardcore empty message.">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable -&gt; Default filter placeholder;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,7 +192,10 @@
       <workItem from="1726125294791" duration="1329000" />
       <workItem from="1727168617597" duration="2309000" />
       <workItem from="1728630945947" duration="12000" />
-      <workItem from="1728632482980" duration="84000" />
+      <workItem from="1728632482980" duration="202000" />
+      <workItem from="1730378313206" duration="726000" />
+      <workItem from="1731920267973" duration="3000" />
+      <workItem from="1731921920723" duration="5770000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -538,7 +540,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -551,6 +553,7 @@
         <option value="Default.Author" />
         <option value="Default.Date" />
         <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
       </list>
     </option>
   </component>
@@ -568,7 +571,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactiveTable.tsx -&gt; Added min-width 100px to the defaultFilter element" />
     <MESSAGE value="ReactiveTable.tsx -&gt; Changed the type of initialFilters" />
     <MESSAGE value="workspace" />
     <MESSAGE value="Added resetFilters to ReactiveTable.tsx" />
@@ -593,7 +595,8 @@
     <MESSAGE value="ReactiveTable - cellEdit now uses selection key to determine which row should be updated" />
     <MESSAGE value="ReactIveTable - added a check on handle selection - if unselecting - do nothing" />
     <MESSAGE value="ReactiveTable -&gt; Do not hardcore empty message." />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Do not hardcore empty message." />
+    <MESSAGE value="ReactiveTable -&gt; Default filter placeholder;" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Default filter placeholder;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
