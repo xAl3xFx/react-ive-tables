@@ -1,17 +1,15 @@
 import { useIntl } from 'react-intl';
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useState, useRef, ReactNode} from 'react';
 import {
-    DataTable,
-    DataTablePFSEvent,
-    DataTableProps,
-    DataTableSelectionModeType
+    DataTable, DataTableFooterTemplateOptions,
+    DataTableProps, DataTableStateEvent
 } from "primereact/datatable";
 import { AxiosResponse } from "axios";
 import { ContextMenu } from "primereact/contextmenu";
 import { Tooltip } from "primereact/tooltip";
 import clone from "lodash.clone";
 import { Button } from "primereact/button";
-import { Column, ColumnEventParams } from "primereact/column";
+import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { saveAs } from "file-saver";
 import {HeaderButton} from "./types";
@@ -33,14 +31,14 @@ interface Props {
     specialEditors?: { [key: string]: any },                            // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
     cellEditHandler?: (element: Object) => void,                        // Same as rowEditHandler.
     selectionHandler?: (e: any) => void,                                // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
-    selectionMode?: DataTableSelectionModeType | undefined,             // Selection mode.
+    selectionMode?: "multiple" | "checkbox" | undefined,                // Selection mode.
     selectionKey?: string,                                              // Key used for selection. Default value is 'id'. Important for proper selection.
     onRowUnselect?: (e: any) => void,                                   // Callback invoked when row is unselected.
     selectedIds?: string[] | number[],                                  // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
     specialColumns?: {                                                  // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
         [key: string]:                                                  // if the column should be put at the beginning or at the end.
             {
-                element: JSX.Element,
+                element: React.ReactElement,
                 handler: (rowData: any) => void,
                 atStart: boolean
             }
@@ -54,7 +52,7 @@ interface Props {
     sortableColumns?: string[];                                         // Array of columns which should be sortable.
     virtualScroll?: boolean;                                            // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string;                                              // Height for the scroll
-    dtProps?: Partial<DataTableProps>;                                  // Additional properties to be passed directly to the datatable.
+    dtProps?: Partial<DataTableProps<any>>;                                  // Additional properties to be passed directly to the datatable.
     doubleClick?: (e: any) => void;                                     // Double click handler function
     showSkeleton?: boolean;                                             // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                         // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
@@ -69,7 +67,7 @@ interface Props {
     onFilterCb?: (filteredData: any) => void;                           // Function to be called when there is filtering in the table -> the function gets the filtered data and passes it to the parent component
     columnStyle?: { [key: string]: { header: any, body: any } };        // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean;                                            // Whether to show to paginator or no
-    footerTemplate?: () => JSX.Element;                                 // A function that returns a template for the footer of the table
+    footerTemplate?: (options: DataTableFooterTemplateOptions<any>) => ReactNode;                              // A function that returns a template for the footer of the table
     additionalFilters?: {
         [key: string]:
             { matchMode: 'contains' | string, value: any }
@@ -97,8 +95,8 @@ export const LazyDataTable: React.FC<Props> = props => {
     const [selectedRow, setSelectedRow] = useState<any>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
-    const cm = useRef<any>();
-    const dt = useRef<any>();
+    const cm = useRef<any>(undefined);
+    const dt = useRef<any>(undefined);
     const [refresher, setRefresher] = useState<number>();
     const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0);
     const [selectedElement, setSelectedElement] = useState(null);
@@ -177,7 +175,7 @@ export const LazyDataTable: React.FC<Props> = props => {
         generateColumns();
     }, [props.toggleSelect])
 
-    const onPage = (e: DataTablePFSEvent) => {
+    const onPage = (e: DataTableStateEvent) => {
         setLoading(true);
         setFirst(e.first);
         setRows(e.rows);
@@ -308,7 +306,7 @@ export const LazyDataTable: React.FC<Props> = props => {
     const generateColumnBodyTemplate = (column: string, rowData: any) => {
         return React.cloneElement(props.specialColumns![column].element, {
             onClick: (e: any) => props.specialColumns![column].handler(rowData)
-        })
+        } as any)
     }
 
     const getHeader = () => {
@@ -353,7 +351,7 @@ export const LazyDataTable: React.FC<Props> = props => {
         props.rowEditHandler!(e);
     }
 
-    const onFilter = (event: DataTablePFSEvent) => {
+    const onFilter = (event: DataTableStateEvent) => {
         event['first'] = 0;
         setFirst(0);
         setFilters(event.filters);
@@ -390,7 +388,7 @@ export const LazyDataTable: React.FC<Props> = props => {
                 // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
                 sortMode={'multiple'}
                 //@ts-ignore
-                selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
+                selectionMode={props.selectionMode || undefined}
                 selection={selectedRow}
                 onSelectionChange={handleSelection}
                 emptyMessage="No records found"
@@ -444,31 +442,31 @@ export const LazyDataTable: React.FC<Props> = props => {
     </>
 };
 
-LazyDataTable.defaultProps = {
-    showFilters: true,
-    ignoreFilters: [],
-    showHeader: true,
-    selectionMode: undefined,
-    selectionHandler: () => 0,
-    onRowUnselect: undefined,
-    selectedIds: [],
-    columnTemplate: {},
-    columnOrder: undefined,
-    selectionKey: "id",
-    formatDateToLocal: true,
-    // refreshButton: true,
-    headerButtons: [],
-    rightHeaderButtons: [],
-    sortableColumns: [],
-    specialEditors: {},
-    specialColumns: {},
-    specialFilters: {},
-    virtualScroll: false,
-    scrollHeight: undefined,
-    showSkeleton: true,
-    disableArrowKeys: false,
-    forOverlay: false,
-    editableColumns: [],
-    showPaginator: true,
-    refreshButton: true
-}
+// LazyDataTable.defaultProps = {
+//     showFilters: true,
+//     ignoreFilters: [],
+//     showHeader: true,
+//     selectionMode: undefined,
+//     selectionHandler: () => 0,
+//     onRowUnselect: undefined,
+//     selectedIds: [],
+//     columnTemplate: {},
+//     columnOrder: undefined,
+//     selectionKey: "id",
+//     formatDateToLocal: true,
+//     // refreshButton: true,
+//     headerButtons: [],
+//     rightHeaderButtons: [],
+//     sortableColumns: [],
+//     specialEditors: {},
+//     specialColumns: {},
+//     specialFilters: {},
+//     virtualScroll: false,
+//     scrollHeight: undefined,
+//     showSkeleton: true,
+//     disableArrowKeys: false,
+//     forOverlay: false,
+//     editableColumns: [],
+//     showPaginator: true,
+//     refreshButton: true
+// }

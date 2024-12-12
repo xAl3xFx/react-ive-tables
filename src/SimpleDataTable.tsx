@@ -1,12 +1,12 @@
 import { useIntl } from "react-intl";
-import React, { useEffect, useRef, useState } from "react";
-import {Column, ColumnBodyOptions, ColumnEventParams} from "primereact/column";
+import React, {JSX, ReactNode, useEffect, useRef, useState} from "react";
+import {Column, ColumnBodyOptions} from "primereact/column";
 import {
     DataTable,
-    DataTableFilterParams,
     DataTableFilterMetaData,
-    DataTableProps, DataTableRowEditCompleteParams,
-    DataTableSelectionModeType, DataTableFilterMatchModeType,
+    DataTableFooterTemplateOptions,
+    DataTableFilterEvent,
+    DataTableRowEditCompleteEvent, DataTableValueArray, DataTableProps, DataTableBaseProps,
 } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -22,10 +22,10 @@ import axios from "axios";
 import {FilterMatchMode} from "primereact/api";
 
 export type StringKeys<T> = Extract<keyof T, string>;
-export type SpecialFilter<K extends string> = { [key in K]?: (options: any) => JSX.Element }
+export type SpecialFilter<K extends string> = { [key in K]?: (options: any) => React.ReactNode }
 export type FiltersMatchMode<K extends string> = { [key in K]?: FilterMatchMode.IN | FilterMatchMode.EQUALS }
 
-interface Props<T, K extends string> {
+interface Props<T extends DataTableValueArray, K extends string> {
     data: T[] | undefined;
     columnOrder: (K | StringKeys<T>)[];                           // Defines order for the columns. NB! Only the specified columns here will be rendered.
     ignoreFilters?: K[];                                          // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
@@ -37,12 +37,12 @@ interface Props<T, K extends string> {
     setSelected?: (value: any,                                    // Callback for selection. Provides the selected row/rows.
         contextMenuClick: boolean) => void,
     contextMenu?: Object[],                                       // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
-    rowEditHandler?: (event: DataTableRowEditCompleteParams)
+    rowEditHandler?: (event: DataTableRowEditCompleteEvent)
         => void,                                                  // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
     specialEditors?: { [key in K]?: any },                        // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
     cellEditHandler?: (element: Object) => void,                  // Same as rowEditHandler.
     selectionHandler?: (e: any) => void,                          // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
-    selectionMode?: DataTableSelectionModeType | undefined,       // Selection mode.
+    selectionMode?: "multiple" | "checkbox" | undefined,          // Selection mode.
     selectionKey?: string,                                        // Key used for selection. Default value is 'id'. Important for proper selection.
     onRowUnselect?: (e: any) => void,                             // Callback invoked when row is unselected.
     selectedIds?: string[] | number[],                            // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
@@ -65,7 +65,7 @@ interface Props<T, K extends string> {
     sortableColumns?: K[];                                        // Array of columns which should be sortable.
     virtualScroll?: boolean;                                      // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string;                                        // Height for the scroll
-    dtProps?: Partial<DataTableProps>;                            // Additional properties to be passed directly to the datatable.
+    dtProps?: Partial<DataTableBaseProps<T>>;                         // Additional properties to be passed directly to the datatable.
     doubleClick?: (e: any) => void;                               // Double click handler function
     showSkeleton?: boolean;                                       // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                   // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
@@ -82,14 +82,14 @@ interface Props<T, K extends string> {
         => void
     columnStyle?: { [key in K]?: { header: any, body: any } }     // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean                                       // Whether to show to paginator or no
-    footerTemplate?: () => JSX.Element                            // A function that returns a template for the footer of the table
+    footerTemplate?: (options: DataTableFooterTemplateOptions<T>) => ReactNode                         // A function that returns a template for the footer of the table
     initialFilters?: { [key in K]?: string | number | Date | boolean | string[] | number[] | Date[] | boolean[] },
     frozenColumns?: K[]                                           // Specify which columns should be frozen (default right aligned)
     expandable?: boolean                                          // When true expander column is added at the beginning
     rebuildColumns?: number;
 }
 
-export const SimpleDataTable = <T, K extends string>(
+export const SimpleDataTable = <T extends DataTableValueArray, K extends string>(
     props: Props<T, K>
 ) => {
     const { formatMessage: f } = useIntl();
@@ -112,10 +112,10 @@ export const SimpleDataTable = <T, K extends string>(
     const [excelFilters, setExcelFilters] = useState({});
     const [areFiltersInited, setAreFiltersInited] = useState(false);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
-    const cm = useRef<any>();
-    const dt = useRef<any>();
-    const skeletonDtRef = useRef<any>();
-    const filterRef = useRef<any>();
+    const cm = useRef<any>(undefined);
+    const dt = useRef<any>(undefined);
+    const skeletonDtRef = useRef<any>(undefined);
+    const filterRef = useRef<any>(undefined);
 
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
@@ -357,7 +357,7 @@ export const SimpleDataTable = <T, K extends string>(
         return res;
     }
 
-    const handleFilter = (e: DataTableFilterParams) => {
+    const handleFilter = (e: DataTableFilterEvent) => {
         let result;
         filterRef.current = { ...filterRef.current, ...e ?? {} };
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
@@ -601,11 +601,11 @@ export const SimpleDataTable = <T, K extends string>(
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
     };
 
-    const onRowEditComplete = (e: DataTableRowEditCompleteParams) => {
-        let newItems = [...items];
+    const onRowEditComplete = (e: DataTableRowEditCompleteEvent) => {
+        let newItems: T[] = [...items];
         let { newData, index } = e;
 
-        newItems[index] = newData;
+        newItems[index] = newData as T;
 
         setItems(newItems);
         props.rowEditHandler!(e);
@@ -670,8 +670,6 @@ export const SimpleDataTable = <T, K extends string>(
 
                     <DataTable
                         rowHover
-                        //editMode={"row"} rowEditorValidator={props.onRowEditorValidator} onRowEditInit={props.onRowEditInit} onRowEditSave={props.onRowEditSave} onRowEditCancel={props.onRowEditCancel}
-                        //footerColumnGroup={props.subTotals ? buildSubTotals() : null}
                         ref={setRef}
                         value={items}
                         filters={filters}
@@ -684,10 +682,8 @@ export const SimpleDataTable = <T, K extends string>(
                         dataKey={props.selectionKey}
                         className="p-datatable-sm p-datatable-striped"
                         filterDisplay={props.showFilters ? 'row' : undefined}
-                        // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
                         sortMode={'multiple'}
-                        //@ts-ignore
-                        selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
+                        selectionMode={props.selectionMode || undefined}
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
                         emptyMessage="No records found"
@@ -703,9 +699,8 @@ export const SimpleDataTable = <T, K extends string>(
                         loading={loading}
                         onRowUnselect={props.onRowUnselect}
                         onContextMenuSelectionChange={(e: any) => {
-                            //set{selectedRow: e.value});
                             if (props.setSelected !== undefined && props.contextMenu) {
-                                if (["multiple", 'checkbox'].includes(props.selectionMode!)) {
+                                if (props.selectionMode) {
                                     props.setSelected([e.value], true);
                                     setSelectedRow([e.value]);
                                     const page = Math.floor(first / rows) + 1;
@@ -729,7 +724,6 @@ export const SimpleDataTable = <T, K extends string>(
                             }
                         }}
                         onContextMenu={e => {
-                            //if(items[0].id !== null)
                             if (props.contextMenu)
                                 cm.current!.show(e.originalEvent)
                         }}
@@ -753,32 +747,3 @@ export const SimpleDataTable = <T, K extends string>(
         }
     </>
 };
-
-SimpleDataTable.defaultProps = {
-    showFilters: true,
-    ignoreFilters: [],
-    showHeader: true,
-    selectionMode: undefined,
-    selectionHandler: () => 0,
-    onRowUnselect: undefined,
-    selectedIds: [],
-    columnTemplate: {},
-    columnOrder: undefined,
-    selectionKey: "id",
-    formatDateToLocal: true,
-    // refreshButton: true,
-    headerButtons: [],
-    rightHeaderButtons: [],
-    sortableColumns: [],
-    specialEditors: {},
-    specialColumns: {},
-    specialFilters: {},
-    virtualScroll: false,
-    scrollHeight: undefined,
-    showSkeleton: true,
-    disableArrowKeys: false,
-    forOverlay: false,
-    editableColumns: [],
-    showPaginator: true,
-    initialFilters: {}
-}

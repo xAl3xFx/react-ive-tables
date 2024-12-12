@@ -1,0 +1,30 @@
+# Exclude example project folder and other development-related files
+/example/
+*.test.ts
+*.test.tsx
+*.stories.tsx
+*.md
+*.log
+
+# Exclude TypeScript source files
+/src/
+/example/
+
+# Exclude TypeScript configuration and build artifacts
+/tsconfig.json
+/tsdx.config.js
+/.rollup.cache/
+*.tsbuildinfo
+
+# Exclude test files and directories
+/tests/
+
+# Exclude local development files like the node_modules
+/node_modules/
+
+# Exclude any other unnecessary development or configuration files
+*.config.js
+*.config.ts
+
+# If using Git, exclude git-related files if you don't want to publish them
+/.git/

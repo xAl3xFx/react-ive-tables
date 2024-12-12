@@ -1,12 +1,16 @@
 import {useIntl} from "react-intl";
-import React, {useEffect, useRef, useState} from "react";
-import {Column, ColumnBodyOptions, ColumnEventParams} from "primereact/column";
+import React, {JSX, ReactNode, useEffect, useRef, useState} from "react";
+import {Column, ColumnBodyOptions, ColumnEvent} from "primereact/column";
 import {
     DataTable,
-    DataTableFilterParams,
     DataTableFilterMetaData,
-    DataTableProps, DataTableRowEditCompleteParams,
-    DataTableSelectionModeType, DataTableFilterMatchModeType, DataTablePFSEvent, DataTableSortMeta,
+    DataTableProps,
+    DataTableSortMeta,
+    DataTableFooterTemplateOptions,
+    DataTableStateEvent,
+    DataTableValueArray,
+    DataTableRowEditCompleteEvent,
+    DataTableFilterEvent, DataTableBaseProps, DataTableValue,
 } from "primereact/datatable";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
@@ -49,7 +53,7 @@ export interface ExportConfig {
     onExportExcel: (params: ExportExcelParams) => void;
 }
 
-interface Props<T, K extends string> {
+interface Props<T extends DataTableValue , K extends string> {
     data?: T[] | undefined;                                                      // This property gives all the data for the table when not using lazy fetching or when using SWR
     fetchData?: (params: FetchDataParams)                                        // Function which is responsible for fetching data when using lazy fetching. When 'swr' prop is false it fetches and returns Promise with data. When 'swr' is true it is responsible to trigger SWR refetch which on its hand will refresh 'data' prop.
         => Promise<{ rows: any[], totalRecords: number } | AxiosResponse | void>
@@ -65,12 +69,12 @@ interface Props<T, K extends string> {
     setSelected?: (value: any,                                                  // Callback for selection. Provides the selected row/rows.
                    contextMenuClick: boolean) => void,
     contextMenu?: Object[],                                                     // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
-    rowEditHandler?: (event: DataTableRowEditCompleteParams)
+    rowEditHandler?: (event: DataTableRowEditCompleteEvent)
         => void,                                                                // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
     specialEditors?: { [key in K]?: any },                                      // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
-    cellEditHandler?: (element:  ColumnEventParams) => void,                    // Same as rowEditHandler.
+    cellEditHandler?: (element:  ColumnEvent) => void,                    // Same as rowEditHandler.
     selectionHandler?: (e: any) => void,                                        // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
-    selectionMode?: DataTableSelectionModeType | undefined,                     // Selection mode.
+    selectionMode?: "multiple" | "checkbox" | undefined,             // Selection mode.
     selectionKey?: string,                                                      // Key used for selection. Default value is 'id'. Important for proper selection.
     onRowUnselect?: (e: any) => void,                                           // Callback invoked when row is unselected.
     selectedIds?: string[] | number[],                                          // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
@@ -98,7 +102,7 @@ interface Props<T, K extends string> {
     sortableColumns?: K[];                                        // Array of columns which should be sortable.
     virtualScroll?: boolean;                                      // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string;                                        // Height for the scroll
-    dtProps?: Partial<DataTableProps>;                            // Additional properties to be passed directly to the datatable.
+    dtProps?: Partial<DataTableBaseProps<T[]>>;                   // Additional properties to be passed directly to the datatable.
     doubleClick?: (e: any) => void;                               // Double click handler function. !!! SHOULD BE DEPRECATED !!! the datatable support onRowDoubleClick!
     showSkeleton?: boolean;                                       // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                   // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
@@ -115,21 +119,21 @@ interface Props<T, K extends string> {
         => void
     columnStyle?: { [key in K]?: { header: any, body: any } }     // Object to specify the style of the columns. It is split into header and body, corresponding to styling the column header and body
     showPaginator?: boolean                                       // Whether to show to paginator or no
-    footerTemplate?: () => JSX.Element                            // A function that returns a template for the footer of the table
+    footerTemplate?: (options: DataTableFooterTemplateOptions<T[]>) => ReactNode                           // A function that returns a template for the footer of the table
     initialFilters?: { [key in keyof T]?: string | number | Date | boolean | string[] | number[] | Date[] | boolean[] },
     frozenColumns?: K[]                                           // Specify which columns should be frozen (default right aligned)
     expandable?: boolean                                          // When true expander column is added at the beginning
     rebuildColumns?: number;
     refresher?: number;                                           // Used to manually refresh the table from parent component
     textAlign?: 'left' | 'center' | 'right'                       // Used to override columns body text align which defaults to 'center'
-    setDtRef?: (ref: DataTable) => void;                          // Used to pass the table's ref back to parent
+    setDtRef?: (ref: DataTable<T[]>) => void;                          // Used to pass the table's ref back to parent
     resetFilters?: number;
     paginatorOptions?: number[];                                  // Used to overwrite the default paginator options, which are [20, 30, 50]
     wrapperClassName?: string;
     defaultFilterPlaceholder?: string;                            // Set placeholder for default (text) filters
 }
 
-export const ReactiveTable = <T, K extends string>(
+export const ReactiveTable = <T extends DataTableValue, K extends string>(
     props: Props<T, K>
 ) => {
     const {formatMessage: f} = useIntl();
@@ -156,10 +160,10 @@ export const ReactiveTable = <T, K extends string>(
     const [paginatorOptions, setPaginatorOptions] = useState([20,30,50]);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const [refresher, setRefresher] = useState<number>();
-    const cm = useRef<any>();
-    const dt = useRef<any>();
-    const skeletonDtRef = useRef<any>();
-    const filterRef = useRef<any>();
+    const cm = useRef<any>(undefined);
+    const dt = useRef<any>(undefined);
+    const skeletonDtRef = useRef<any>(undefined);
+    const filterRef = useRef<any>(undefined);
     const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([]);
 
     // const doubleClickHandler = useCallback((e:any) => {
@@ -355,7 +359,7 @@ export const ReactiveTable = <T, K extends string>(
 
 
     const listener = (event: any) => {
-        if(props.selectionMode !== 'single') return;
+        if(props.selectionMode !== 'checkbox') return;
         if (event.code === "ArrowUp") {
             if (selectedRowIndex - 1 >= 0) {
                 const newSelectedElement = items[selectedRowIndex - 1];
@@ -416,7 +420,7 @@ export const ReactiveTable = <T, K extends string>(
         }
     }, [items, columns, filters]);
 
-    const initFilters = () => {
+    const initFilters = () : DataTableStateEvent => {
         const initialFilters = props.columnOrder.reduce((acc: any, el) => {
             let matchMode = "contains";
             //@ts-ignore
@@ -531,7 +535,7 @@ export const ReactiveTable = <T, K extends string>(
         return res;
     }
 
-    const handleFilter = (e: DataTableFilterParams) => {
+    const handleFilter = (e: DataTableFilterEvent) => {
         let result;
         filterRef.current = {...filterRef.current, ...e ?? {}};
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
@@ -604,8 +608,8 @@ export const ReactiveTable = <T, K extends string>(
                 //TO BE TESTED
                 // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
                 return <Column
-                    body={props.columnTemplate![cName] ? (rowData: T, columnOptions) => props.columnTemplate![cName](rowData, columnOptions) : undefined}
-                    editor={props.specialEditors![cName] || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
+                    body={(props.columnTemplate && props.columnTemplate[cName]) ? (rowData: T, columnOptions) => props.columnTemplate![cName](rowData, columnOptions) : undefined}
+                    editor={(props.specialEditors && props.specialEditors[cName]) || (editMode && props.editableColumns!.includes(cName) ? textEditor : undefined)}
                     filterFunction={handleFilter}
                     frozen={props.frozenColumns?.includes(cName)}
                     alignFrozen={"right"}
@@ -649,7 +653,7 @@ export const ReactiveTable = <T, K extends string>(
         })
     }
 
-    const onPage = (event: DataTablePFSEvent) => {
+    const onPage = (event: DataTableStateEvent) => {
         setSelectedRowIndex(event.first)
         focusRow(true);
         if (props.fetchData) {
@@ -812,17 +816,17 @@ export const ReactiveTable = <T, K extends string>(
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
     };
 
-    const onRowEditComplete = (e: DataTableRowEditCompleteParams) => {
-        let newItems = [...items];
+    const onRowEditComplete = (e: DataTableRowEditCompleteEvent) => {
+        let newItems: T[] = [...items];
         let {newData, index} = e;
 
-        newItems[index] = newData;
+        newItems[index] = newData as T;
 
         setItems(newItems);
         props.rowEditHandler!(e);
     }
 
-    const onCellEditComplete = (e: ColumnEventParams) => {
+    const onCellEditComplete = (e: ColumnEvent) => {
         const {rowData, newRowData, rowIndex} = e;
 
         setItems((prevState) => {
@@ -862,7 +866,7 @@ export const ReactiveTable = <T, K extends string>(
         return f({id: cName});
     }
 
-    const setRef = (ref: DataTable) => {
+    const setRef = (ref: DataTable<T[]>) => {
         if(props.setDtRef)
             props.setDtRef(ref);
         dt.current = ref;
@@ -879,6 +883,7 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     return <>
+        <h2>THIS IS THE TABLE</h2>
         {props.forOverlay || (showTable && ((filters && items) || !props.showSkeleton)) ?
             <>
                 <div onKeyDown={props.disableArrowKeys ? () => 0 : listener} className={"datatable-responsive-demo " + props.wrapperClassName || ""}>
@@ -902,7 +907,6 @@ export const ReactiveTable = <T, K extends string>(
                         footer={props.footerTemplate || null}
                         onFilter={handleFilter}
                         onSort={handleSort}
-                        responsiveLayout={'stack'}
                         dataKey={props.selectionKey || "id"}
                         className="p-datatable-sm p-datatable-striped"
                         filterDisplay={props.showFilters ? 'row' : undefined}
@@ -910,7 +914,7 @@ export const ReactiveTable = <T, K extends string>(
                         multiSortMeta={multiSortMeta}
                         sortMode={'multiple'}
                         //@ts-ignore
-                        selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
+                        selectionMode={props.selectionMode || undefined}
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
                         tableStyle={{tableLayout: "auto"}}
@@ -927,7 +931,7 @@ export const ReactiveTable = <T, K extends string>(
                         onContextMenuSelectionChange={(e: any) => {
                             //set{selectedRow: e.value});
                             if (props.setSelected !== undefined && props.contextMenu) {
-                                if (["multiple", 'checkbox'].includes(props.selectionMode!)) {
+                                if (props.selectionMode) {
                                     props.setSelected([e.value], true);
                                     setSelectedRow([e.value]);
                                     const page = Math.floor(first / rows) + 1;
@@ -976,32 +980,32 @@ export const ReactiveTable = <T, K extends string>(
     </>
 };
 
-ReactiveTable.defaultProps = {
-    showFilters: true,
-    ignoreFilters: [],
-    showHeader: false,
-    selectionMode: undefined,
-    selectionHandler: () => 0,
-    onRowUnselect: undefined,
-    selectedIds: [],
-    columnTemplate: {},
-    columnOrder: undefined,
-    selectionKey: "id",
-    formatDateToLocal: true,
-    // refreshButton: true,
-    headerButtons: [],
-    rightHeaderButtons: [],
-    sortableColumns: [],
-    specialEditors: {},
-    specialColumns: {},
-    specialFilters: {},
-    virtualScroll: false,
-    scrollHeight: undefined,
-    showSkeleton: true,
-    disableArrowKeys: false,
-    forOverlay: false,
-    editableColumns: [],
-    showPaginator: true,
-    initialFilters: {},
-    swr: false,
-}
+// ReactiveTable.defaultProps = {
+//     showFilters: true,
+//     ignoreFilters: [],
+//     showHeader: false,
+//     selectionMode: undefined,
+//     selectionHandler: () => 0,
+//     onRowUnselect: undefined,
+//     selectedIds: [],
+//     columnTemplate: {},
+//     columnOrder: undefined,
+//     selectionKey: "id",
+//     formatDateToLocal: true,
+//     // refreshButton: true,
+//     headerButtons: [],
+//     rightHeaderButtons: [],
+//     sortableColumns: [],
+//     specialEditors: {},
+//     specialColumns: {},
+//     specialFilters: {},
+//     virtualScroll: false,
+//     scrollHeight: undefined,
+//     showSkeleton: true,
+//     disableArrowKeys: false,
+//     forOverlay: false,
+//     editableColumns: [],
+//     showPaginator: true,
+//     initialFilters: {},
+//     swr: false,
+// }

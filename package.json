@@ -19,7 +19,7 @@
     "analyze": "size-limit --why"
   },
   "peerDependencies": {
-    "axios": ">=0.23.0",
+    "axios": ">=1",
     "moment": ">=2",
     "primereact": ">7.2",
     "react": ">=16",
@@ -44,16 +44,16 @@
   },
   "name": "react-ive-tables",
   "author": "Alex Petrov & Alexander Bakalov",
-  "module": "dist/react-ive-tables-new.esm.js",
+  "module": "dist/react-ive-tables.esm.js",
   "description": "A set of handy DataTable components based on PrimeReact.",
   "repository": "https://github.com/xAl3xFx/react-ive-tables",
   "size-limit": [
     {
-      "path": "dist/react-ive-tables-new.cjs.production.min.js",
+      "path": "dist/react-ive-tables.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/react-ive-tables-new.esm.js",
+      "path": "dist/react-ive-tables.esm.js",
       "limit": "10 KB"
     }
   ],
@@ -63,20 +63,18 @@
     "@types/lodash.clone": "^4.5.7",
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/lodash.isequal": "^4.5.6",
-    "@types/react": "^18.0.17",
-    "@types/react-dom": "^18.0.6",
-    "axios": "^0.27.2",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "axios": "1.7.4",
     "husky": "^8.0.1",
     "moment": "^2.29.4",
     "postcss": "^8.4.16",
-    "primereact": "^8.4.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-intl": "^6.0.8",
+    "primereact": "^10.8.5",
+    "react-intl": "^7.0.4",
     "rollup-plugin-postcss": "^4.0.2",
     "size-limit": "^8.0.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.7.2"
   }
 }

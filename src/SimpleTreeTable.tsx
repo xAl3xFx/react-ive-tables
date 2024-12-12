@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {ReactNode, useEffect, useRef, useState} from 'react';
 import {useIntl} from "react-intl";
 import {TreeTable} from "primereact/treetable";
-import {Column, ColumnFilterMatchModeType} from "primereact/column";
+import {Column} from "primereact/column";
 import "./DataTable.css";
 import {ContextMenu} from 'primereact/contextmenu';
 import {FilterMatchMode} from "primereact/api";
@@ -10,7 +10,7 @@ interface Props {
     data: any[],
     columnOrder : string[],
     specialLabels? : {[key: string]: string;},
-    extraButton? : {[key: number] : JSX.Element},
+    extraButton? : {[key: number] : React.ReactNode},
     ignoreFilters? : string[],
     specialFilters?: { [key: string]: any };
     setSelected? : (key : string, contextMenuClick: boolean) => void,
@@ -23,12 +23,12 @@ interface Props {
     scrollHeight?: string,                                       // Height for the scroll
     columnTemplate? : any,
     showContextMenuOnRootElements?: boolean,
-    matchMode?: ColumnFilterMatchModeType
+    matchMode?: FilterMatchMode
 }
 
 export const SimpleTreeTable :  React.FC<Props> = (props) => {
     const {formatMessage : f} = useIntl();
-    const [columns, setColumns] = useState<JSX.Element[]>([]);
+    const [columns, setColumns] = useState<ReactNode>([]);
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(20);
     const [items, setItems] = useState<any>();
@@ -37,7 +37,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
     const [selectedElement, setSelectedElement] = useState(null);
     const [expandedKeys, setExpandedKeys] = useState<any>({});
     const [selectedElementIndex, setSelectedElementIndex] = useState<string | null>(null);
-    const cm = useRef<any>();
+    const cm = useRef<any>(undefined);
 
     const generateColumns = () => {
         let columns: any[] = [];
@@ -125,7 +125,7 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
                 emptyMessage="No records found"
                 onSelectionChange={handleSelection}
                 selectionKeys={selectedElementIndex}
-                selectionMode={'single'}
+                // selectionMode={'single'}
                 scrollable={props.scrollable} scrollHeight={props.scrollHeight}
                 onContextMenuSelectionChange={(e:any) => {
                     //set{selectedRow: e.value});
@@ -157,15 +157,15 @@ export const SimpleTreeTable :  React.FC<Props> = (props) => {
     </>
 };
 
-SimpleTreeTable.defaultProps = {
-    ignoreFilters: [],
-    showFilters: true,
-    columnOrder: [],
-    showHeader: true,
-    sortableColumns: [],
-    specialFilters: {},
-    scrollable: false,
-    scrollHeight: undefined,
-    columnTemplate: {},
-    showContextMenuOnRootElements: true
-};
+// SimpleTreeTable.defaultProps = {
+//     ignoreFilters: [],
+//     showFilters: true,
+//     columnOrder: [],
+//     showHeader: true,
+//     sortableColumns: [],
+//     specialFilters: {},
+//     scrollable: false,
+//     scrollHeight: undefined,
+//     columnTemplate: {},
+//     showContextMenuOnRootElements: true
+// };
