@@ -3,3 +3,6 @@
 node_modules
 .cache
 dist
+./example-react-ive-tables/.parcel-cache
+./example-react-ive-tables/dist
+./example-react-ive-tables/node_modules
