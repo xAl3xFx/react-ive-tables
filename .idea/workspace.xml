@@ -4,32 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler">
-      <change afterPath="$PROJECT_DIR$/.npmignore" afterDir="false" />
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="First steps to support react 19">
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/react-ive-tables.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/react-ive-tables.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/.npmignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/FakeApi.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ManyColumns.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/SimpleDT.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/TreeTableExample.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/globals.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/index.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/customers.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/products.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/node-service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/public/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/types.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/yarn.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LazyDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/LazyDataTable.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SimpleTreeTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleTreeTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -72,31 +50,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;JavaScript Debug.Debug.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/alex/Stuff/Local/packages/react-ive-tables/example/src&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;npm.run example.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.typescriptcompiler&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.Debug.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/Users/alex/Stuff/Local/packages/react-ive-tables/example/src",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "npm.run example.executor": "Run",
+    "settings.editor.selected.configurable": "settings.typescriptcompiler",
+    "ts.external.directory.path": "/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;JavaScript&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "JavaScript"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/example/src" />
@@ -104,6 +82,7 @@
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/example/src" />
       <recent name="$PROJECT_DIR$/example/public" />
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables\src" />
@@ -220,6 +199,7 @@
       <workItem from="1733928115769" duration="12083000" />
       <workItem from="1734000875741" duration="9000" />
       <workItem from="1734003056065" duration="9687000" />
+      <workItem from="1734096209443" duration="2119000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -627,22 +607,22 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>799</line>
+          <line>826</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>781</line>
+          <line>808</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>829</line>
+          <line>856</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>731</line>
+          <line>758</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
