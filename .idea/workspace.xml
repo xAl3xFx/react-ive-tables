@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="First steps to support react 19">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Added the example project back into the library. Handled default props change -&gt; default params as ES6">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example-react-ive-tables/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/example-react-ive-tables/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example-react-ive-tables/src/FakeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example-react-ive-tables/src/FakeApi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example-react-ive-tables/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example-react-ive-tables/yarn.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +66,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
     "npm.run example.executor": "Run",
+    "npm.start.executor": "Run",
     "settings.editor.selected.configurable": "settings.typescriptcompiler",
     "ts.external.directory.path": "/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
@@ -88,16 +90,24 @@
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables\src" />
     </key>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.Debug">
+  <component name="RunManager" selected="npm.start">
     <configuration name="Debug" type="JavascriptDebugType" uri="http://localhost:1234">
       <method v="2" />
     </configuration>
     <configuration name="scratch_2.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
+    <configuration name="start" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/example-react-ive-tables/package.json" />
+      <command value="start" />
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="JavaScript Debug.Debug" />
       <item itemvalue="Node.js.scratch_2.js" />
+      <item itemvalue="npm.start" />
     </list>
     <recent_temporary>
       <list>
@@ -199,7 +209,8 @@
       <workItem from="1733928115769" duration="12083000" />
       <workItem from="1734000875741" duration="9000" />
       <workItem from="1734003056065" duration="9687000" />
-      <workItem from="1734096209443" duration="2119000" />
+      <workItem from="1734096209443" duration="7200000" />
+      <workItem from="1734610865170" duration="1439000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -544,7 +555,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="70" />
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -575,8 +586,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="workspace" />
-    <MESSAGE value="Added resetFilters to ReactiveTable.tsx" />
     <MESSAGE value="ReactiveTable -&gt; New concept of initializing filters in order to prevent two calls to props.fetchData upon receiving initialFilters." />
     <MESSAGE value="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization." />
     <MESSAGE value="ReactiveTable.tsx -&gt; Risky optimization which doesn't call props.fetchData on the first change of filters when using swr." />
@@ -600,7 +609,9 @@
     <MESSAGE value="ReactiveTable -&gt; Do not hardcore empty message." />
     <MESSAGE value="ReactiveTable -&gt; Default filter placeholder;" />
     <MESSAGE value="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler" />
+    <MESSAGE value="Updated git ignore" />
+    <MESSAGE value="Added the example project back into the library. Handled default props change -&gt; default params as ES6" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added the example project back into the library. Handled default props change -&gt; default params as ES6" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

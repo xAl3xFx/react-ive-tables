@@ -721,7 +721,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                 {/*    : null*/}
                 {/*}*/}
                 {
-                    headerButtons!.map((el, index) => <Button key={index} type="button" icon={el.icon}
+                    headerButtons?.map((el, index) => <Button key={index} type="button" icon={el.icon}
                                                                     onClick={el.onClick}
                                                                     tooltip={el.tooltipLabel} label={el.label}
                                                                     ref={el.ref}
@@ -731,7 +731,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
             </div>
             <div>
                 {
-                    rightHeaderButtons!.map((el, index) => <Button key={index} type="button" icon={el.icon}
+                    rightHeaderButtons?.map((el, index) => <Button key={index} type="button" icon={el.icon}
                                                                          onClick={el.onClick}
                                                                          tooltip={el.tooltipLabel} label={el.label}
                                                                          ref={el.ref}

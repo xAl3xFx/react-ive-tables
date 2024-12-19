@@ -41,10 +41,10 @@ export const FakeApi: React.FC<Props> = props => {
     const {formatMessage: f} = useIntl();
     const didMountRef = useRef(false);
     const [contextMenu, setContextMenu] = useState<any>([]);
-    const [selection, setSelection] = useState<'checkbox'>('checkbox');
     const [rebuildColumns, setRebuildColumns] = useState<number>();
     const [resetFilters, setResetFilters] = useState<number>();
     const [products, setProducts] = useState<Product[]>();
+    const [selected, setSelected] = useState<Product>()
 
     useEffect(() => {
         if (!didMountRef.current) {
@@ -58,7 +58,7 @@ export const FakeApi: React.FC<Props> = props => {
             // setSelection('single');
         } else {
             setContextMenu(undefined);
-            setSelection('checkbox');
+            // setSelection('checkbox');
         }
 
         setRebuildColumns(new Date().getTime())
@@ -132,8 +132,9 @@ export const FakeApi: React.FC<Props> = props => {
         <ReactiveTable fetchData={fetcher}
                         frozenColumns={['title', 'operations']}
                         columnOrder={['title', 'description', 'price', 'rating', 'brand', 'operations']}
-                        setSelected={() => 0}
-                        selectionMode={selection}
+                        setSelected={setSelected}
+                       selectedIds={[selected?.id!]}
+                        // selectionMode={selection}
                         doubleClick={console.log}
                         contextMenu={contextMenu}
                         columnTemplate={getColumnTemplate()}
