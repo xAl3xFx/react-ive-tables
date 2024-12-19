@@ -139,7 +139,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                                                                               selectionMode = undefined,
                                                                               selectionHandler = () => 0,
                                                                               onRowUnselect = undefined,
-                                                                              selectedIds = [],
                                                                               columnTemplate = {},
                                                                               columnOrder = undefined,
                                                                               selectionKey = "id",
@@ -419,7 +418,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
 
     useEffect(() => {
         handleExternalSelection();
-    }, [selectedIds]);
+    }, [props.selectedIds]);
 
     useEffect(() => {
         if (props.selectionResetter && props.selectionResetter !== selectionResetter) {
@@ -459,7 +458,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
             const elements: typeof items = [];
             let selectedRowIndex = undefined;
             for (let i = 0; i < items.length; i++) {
-                if (selectedIds!.includes(items[i][selectionKey] as never)) {
+                if (props.selectedIds?.includes(items[i][selectionKey] as never)) {
                     if (!selectedRowIndex) {
                         selectedRowIndex = i;
                     }
@@ -475,7 +474,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
         } else {
             let element: any = undefined;
             for (let i = 0; i < items.length; i++) {
-                if (selectedIds.includes(items[i][selectionKey] as never)) {
+                if (props.selectedIds?.includes(items[i][selectionKey] as never)) {
                     element = {...items[i]};
                     setSelectedRowIndex(i);
                     break;
