@@ -1,6 +1,6 @@
 import {useIntl} from "react-intl";
 import React, {useEffect, useRef, useState} from "react";
-import {Column, ColumnBodyOptions, ColumnEventParams} from "primereact/column";
+import {Column, ColumnBodyOptions, ColumnEventParams, ColumnHeaderOptions} from "primereact/column";
 import {
     DataTable,
     DataTableFilterParams,
@@ -127,6 +127,10 @@ interface Props<T, K extends string> {
     paginatorOptions?: number[];                                  // Used to overwrite the default paginator options, which are [20, 30, 50]
     wrapperClassName?: string;
     defaultFilterPlaceholder?: string;                            // Set placeholder for default (text) filters
+    columnHeaderTemplate?:{
+        [key in K]?:
+        React.ReactNode | ((options: ColumnHeaderOptions) => React.ReactNode)
+    };
 }
 
 export const ReactiveTable = <T, K extends string>(
@@ -617,7 +621,11 @@ export const ReactiveTable = <T, K extends string>(
                     onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                     filter={props.showFilters && !props.ignoreFilters!.includes(cName)}
                     filterHeaderStyle={{textAlign: 'center'}}
-                    key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle}/>
+                    key={cName} field={cName}
+                    //Generate the header column template if it exists for the current column
+                    header={props.columnHeaderTemplate !== undefined && props.columnHeaderTemplate[cName] !== undefined ? props.columnHeaderTemplate[cName] :  columnHeader}
+                    headerStyle={columnHeaderStyle}
+                />
             });
             //@ts-ignore
             if (props.rowEditHandler !== undefined && !props.columnOrder.includes('operations'))
