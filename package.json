@@ -21,7 +21,8 @@
   "devDependencies": {
     "tsdx": "^0.14.1",
     "typescript": "^5.4.5",
-    "rollup-plugin-postcss": "^4.0.2"
+    "rollup-plugin-postcss": "^4.0.2",
+    "postcss": "^8.5.6"
   },
   "repository": {
     "type": "git",
