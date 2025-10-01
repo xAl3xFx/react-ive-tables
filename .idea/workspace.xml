@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="..">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Attempt to make the library compatible with vite">
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsdx.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tsdx.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +206,7 @@
       <workItem from="1731921920723" duration="6938000" />
       <workItem from="1758021275599" duration="979000" />
       <workItem from="1758807747468" duration="596000" />
-      <workItem from="1759325496051" duration="986000" />
+      <workItem from="1759325496051" duration="1146000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -555,7 +551,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -586,7 +582,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactiveTable -&gt; New concept of initializing filters in order to prevent two calls to props.fetchData upon receiving initialFilters." />
     <MESSAGE value="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization." />
     <MESSAGE value="ReactiveTable.tsx -&gt; Risky optimization which doesn't call props.fetchData on the first change of filters when using swr." />
     <MESSAGE value="Addition to previous commit" />
@@ -611,6 +606,7 @@
     <MESSAGE value="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler" />
     <MESSAGE value="ReactiveTable - added column header template" />
     <MESSAGE value=".." />
-    <option name="LAST_COMMIT_MESSAGE" value=".." />
+    <MESSAGE value="Attempt to make the library compatible with vite" />
+    <option name="LAST_COMMIT_MESSAGE" value="Attempt to make the library compatible with vite" />
   </component>
 </project>
