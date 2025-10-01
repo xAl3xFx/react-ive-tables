@@ -3,8 +3,15 @@
   "version": "1.6.15",
   "description": "A set of handy DataTable components based on PrimeReact.",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/react-ive-tables.esm.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/react-ive-tables.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
