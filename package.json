@@ -1,11 +1,13 @@
 {
   "name": "react-ive-tables",
-  "version": "1.6.13",
+  "version": "1.6.14",
   "description": "A set of handy DataTable components based on PrimeReact.",
   "main": "dist/react-ive-tables-new.cjs.js",
   "module": "dist/react-ive-tables-new.esm.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
@@ -13,16 +15,16 @@
     "lint": "tsdx lint"
   },
   "peerDependencies": {
-    "react": ">=16",
-    "react-dom": ">=16",
+    "axios": ">=0.23.0",
     "primereact": ">=7.2",
-    "axios": ">=0.23.0"
+    "react": ">=16",
+    "react-dom": ">=16"
   },
   "devDependencies": {
-    "tsdx": "^0.14.1",
-    "typescript": "^5.4.5",
+    "postcss": "^8.5.6",
     "rollup-plugin-postcss": "^4.0.2",
-    "postcss": "^8.5.6"
+    "tsdx": "^0.14.1",
+    "typescript": "^5.4.5"
   },
   "repository": {
     "type": "git",
