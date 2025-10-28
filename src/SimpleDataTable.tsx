@@ -1,12 +1,10 @@
 import { useIntl } from "react-intl";
 import React, { useEffect, useRef, useState } from "react";
-import {Column, ColumnBodyOptions, ColumnEventParams} from "primereact/column";
+import {Column, ColumnBodyOptions} from "primereact/column";
 import {
     DataTable,
-    DataTableFilterParams,
     DataTableFilterMetaData,
-    DataTableProps, DataTableRowEditCompleteParams,
-    DataTableSelectionModeType, DataTableFilterMatchModeType,
+    DataTableProps, DataTableRowEditCompleteEvent, DataTableStateEvent
 } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -37,12 +35,12 @@ interface Props<T, K extends string> {
     setSelected?: (value: any,                                    // Callback for selection. Provides the selected row/rows.
         contextMenuClick: boolean) => void,
     contextMenu?: Object[],                                       // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
-    rowEditHandler?: (event: DataTableRowEditCompleteParams)
+    rowEditHandler?: (event: DataTableRowEditCompleteEvent)
         => void,                                                  // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
     specialEditors?: { [key in K]?: any },                        // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
     cellEditHandler?: (element: Object) => void,                  // Same as rowEditHandler.
     selectionHandler?: (e: any) => void,                          // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
-    selectionMode?: DataTableSelectionModeType | undefined,       // Selection mode.
+    selectionMode?: "checkbox" | "multiple" | "single" | undefined,       // Selection mode.
     selectionKey?: string,                                        // Key used for selection. Default value is 'id'. Important for proper selection.
     onRowUnselect?: (e: any) => void,                             // Callback invoked when row is unselected.
     selectedIds?: string[] | number[],                            // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
@@ -65,7 +63,7 @@ interface Props<T, K extends string> {
     sortableColumns?: K[];                                        // Array of columns which should be sortable.
     virtualScroll?: boolean;                                      // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string;                                        // Height for the scroll
-    dtProps?: Partial<DataTableProps>;                            // Additional properties to be passed directly to the datatable.
+    dtProps?: Partial<DataTableProps<T[]>>;                            // Additional properties to be passed directly to the datatable.
     doubleClick?: (e: any) => void;                               // Double click handler function
     showSkeleton?: boolean;                                       // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                   // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
@@ -357,7 +355,7 @@ export const SimpleDataTable = <T, K extends string>(
         return res;
     }
 
-    const handleFilter = (e: DataTableFilterParams) => {
+    const handleFilter = (e: DataTableStateEvent) => {
         let result;
         filterRef.current = { ...filterRef.current, ...e ?? {} };
         const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
@@ -601,11 +599,11 @@ export const SimpleDataTable = <T, K extends string>(
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
     };
 
-    const onRowEditComplete = (e: DataTableRowEditCompleteParams) => {
+    const onRowEditComplete = (e: DataTableRowEditCompleteEvent) => {
         let newItems = [...items];
         let { newData, index } = e;
 
-        newItems[index] = newData;
+        newItems[index] = newData as T;
 
         setItems(newItems);
         props.rowEditHandler!(e);

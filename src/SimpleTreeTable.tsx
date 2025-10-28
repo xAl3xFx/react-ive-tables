@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useIntl} from "react-intl";
 import {TreeTable} from "primereact/treetable";
-import {Column, ColumnFilterMatchModeType} from "primereact/column";
+import {Column} from "primereact/column";
 import "./DataTable.css";
 import {ContextMenu} from 'primereact/contextmenu';
 import {FilterMatchMode} from "primereact/api";
@@ -23,7 +23,7 @@ interface Props {
     scrollHeight?: string,                                       // Height for the scroll
     columnTemplate? : any,
     showContextMenuOnRootElements?: boolean,
-    matchMode?: ColumnFilterMatchModeType
+    matchMode?: FilterMatchMode
 }
 
 export const SimpleTreeTable :  React.FC<Props> = (props) => {

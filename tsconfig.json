@@ -9,7 +9,7 @@
     "outDir": "dist",
     "rootDir": "./src",
     "moduleResolution": "node",
-    "jsx": "react-jsx",
+    "jsx": "react",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
