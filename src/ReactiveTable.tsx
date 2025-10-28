@@ -1,12 +1,14 @@
 import {useIntl} from "react-intl";
-import React, {useEffect, useRef, useState} from "react";
-import {Column, ColumnBodyOptions, ColumnEventParams, ColumnHeaderOptions} from "primereact/column";
+import React, {ReactElement, useEffect, useRef, useState} from "react";
+import {Column, ColumnBodyOptions, ColumnEvent, ColumnHeaderOptions} from "primereact/column";
 import {
     DataTable,
-    DataTableFilterParams,
     DataTableFilterMetaData,
-    DataTableProps, DataTableRowEditCompleteParams,
-    DataTableSelectionModeType, DataTableFilterMatchModeType, DataTablePFSEvent, DataTableSortMeta,
+    DataTableProps,
+    DataTableRowEditCompleteEvent,
+    DataTableSortMeta,
+    DataTableStateEvent, DataTableValue,
+    DataTableValueArray,
 } from "primereact/datatable";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
@@ -19,11 +21,16 @@ import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
 import {HeaderButton} from "./types";
 import {AxiosResponse} from "axios";
-import {FilterMatchMode} from "primereact/api";
+import {FilterMatchMode, FilterService} from "primereact/api";
+import {MobileDataView} from "./mobile/MobileDataView";
+import {Dialog} from "primereact/dialog";
+import {MobileFilters} from "./mobile/MobileFilters";
+import filter = FilterService.filter;
 
 export type StringKeys<T> = Extract<keyof T, string>;
 export type SpecialFilter<K extends string> = { [key in K]?: (options: any, cName: string) => JSX.Element }
-export type FiltersMatchMode<K extends string> = { [key in K]?: FilterMatchMode.IN | FilterMatchMode.EQUALS }
+export type FiltersMatchMode<K> = { [key in keyof K]: FilterMatchMode.IN | FilterMatchMode.EQUALS }
+
 export interface FetchDataParams {
     offset: number;
     limit: number;
@@ -32,7 +39,7 @@ export interface FetchDataParams {
     //Add type for this
     sort?: any;
     excelName?: string;
-    page? : number;
+    page?: number;
 }
 
 export interface ExportExcelParams {
@@ -49,14 +56,14 @@ export interface ExportConfig {
     onExportExcel: (params: ExportExcelParams) => void;
 }
 
-interface Props<T, K extends string> {
+interface Props<T extends DataTableValue, K extends string> {
     data?: T[] | undefined;                                                      // This property gives all the data for the table when not using lazy fetching or when using SWR
     fetchData?: (params: FetchDataParams)                                        // Function which is responsible for fetching data when using lazy fetching. When 'swr' prop is false it fetches and returns Promise with data. When 'swr' is true it is responsible to trigger SWR refetch which on its hand will refresh 'data' prop.
         => Promise<{ rows: any[], totalRecords: number } | AxiosResponse | void>
     totalRecords?: number;                                                      // When using lazy fetching this prop gives the total count of records in 'data' prop.
     swr?: boolean;                                                              // Defines if SWR will be used or not.
     columnOrder: (K | StringKeys<T>)[];                                         // Defines order for the columns. NB! Only the specified columns here will be rendered.
-    ignoreFilters?: K[];                                                        // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
+    ignoreFilters?: (K | StringKeys<T>)[];                                                        // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
     specialFilters?: SpecialFilter<K>;                                          // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
     filtersMatchMode?: FiltersMatchMode<K>
     specialLabels?: { [key in K]?: string; };                                   // Used for special labels. By default the table is trying to use intl for translation of each label. If specialLabels is used it overrides the column name for translation. The key is the cName and the value is the translation string used in text properties for intl.
@@ -65,12 +72,12 @@ interface Props<T, K extends string> {
     setSelected?: (value: any,                                                  // Callback for selection. Provides the selected row/rows.
                    contextMenuClick: boolean) => void,
     contextMenu?: Object[],                                                     // Context menu model. For reference : https://primefaces.org/primereact/showcase/#/datatable/contextmenu
-    rowEditHandler?: (event: DataTableRowEditCompleteParams)
+    rowEditHandler?: (event: DataTableRowEditCompleteEvent)
         => void,                                                                // Handler for row editing. NB! Even if a specific handler is not required, this property must be provided in order to trigger row editing. The function is invoked after saving the row. The event containing newData, rowIndex and other metadata is returned.
     specialEditors?: { [key in K]?: any },                                      // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
-    cellEditHandler?: (element:  ColumnEventParams) => void,                    // Same as rowEditHandler.
+    cellEditHandler?: (element: ColumnEvent) => void,                           // Same as rowEditHandler.
     selectionHandler?: (e: any) => void,                                        // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
-    selectionMode?: DataTableSelectionModeType | undefined,                     // Selection mode.
+    selectionMode?: "checkbox" | "multiple" | "single" | undefined,                          // Selection mode.
     selectionKey?: string,                                                      // Key used for selection. Default value is 'id'. Important for proper selection.
     onRowUnselect?: (e: any) => void,                                           // Callback invoked when row is unselected.
     selectedIds?: string[] | number[],                                          // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
@@ -98,7 +105,7 @@ interface Props<T, K extends string> {
     sortableColumns?: K[];                                        // Array of columns which should be sortable.
     virtualScroll?: boolean;                                      // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string;                                        // Height for the scroll
-    dtProps?: Partial<DataTableProps>;                            // Additional properties to be passed directly to the datatable.
+    dtProps?: Partial<DataTableProps<T[]>>;                            // Additional properties to be passed directly to the datatable.
     doubleClick?: (e: any) => void;                               // Double click handler function. !!! SHOULD BE DEPRECATED !!! the datatable support onRowDoubleClick!
     showSkeleton?: boolean;                                       // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                   // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
@@ -122,26 +129,28 @@ interface Props<T, K extends string> {
     rebuildColumns?: number;
     refresher?: number;                                           // Used to manually refresh the table from parent component
     textAlign?: 'left' | 'center' | 'right'                       // Used to override columns body text align which defaults to 'center'
-    setDtRef?: (ref: DataTable) => void;                          // Used to pass the table's ref back to parent
+    setDtRef?: (ref: DataTable<T[]>) => void;                          // Used to pass the table's ref back to parent
     resetFilters?: number;
     paginatorOptions?: number[];                                  // Used to overwrite the default paginator options, which are [20, 30, 50]
     wrapperClassName?: string;
     defaultFilterPlaceholder?: string;                            // Set placeholder for default (text) filters
-    columnHeaderTemplate?:{
+    columnHeaderTemplate?: {
         [key in K]?:
         React.ReactNode | ((options: ColumnHeaderOptions) => React.ReactNode)
     };
+    isMobile?: boolean;                                           // Used to determine when to render the mobile (responsive) view
+    mobileDataTemplate?: (rowData: T) => any          // Specifies what to render in the mobile view
 }
 
-export const ReactiveTable = <T, K extends string>(
+export const ReactiveTable = <T extends DataTableValue, K extends string>(
     props: Props<T, K>
-) => {
+): ReactElement => {
     const {formatMessage: f} = useIntl();
 
     const [items, setItems] = useState<T[]>([]);
     const [originalItems, setOriginalItems] = useState<any>([]);
-    const [filters, setFilters] = useState<any>(null);
-    const [prevFilters, setPrevFilters] = useState<any>(null);
+    const [filters, setFilters] = useState<any>({});
+    const [prevFilters, setPrevFilters] = useState<any>({});
     const [columns, setColumns] = useState<any>([]);
     const [rows, setRows] = useState(20);
     const [first, setFirst] = useState(0);
@@ -157,21 +166,23 @@ export const ReactiveTable = <T, K extends string>(
     const [prevInitialFilters, setPrevInitialFilters] = useState<any>(); //Used for comparison with props.initialFilters to escape inifinite loop
     const [excelFilters, setExcelFilters] = useState({});
     const [areFiltersInited, setAreFiltersInited] = useState(false);
-    const [paginatorOptions, setPaginatorOptions] = useState([20,30,50]);
-    const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
+    const [paginatorOptions, setPaginatorOptions] = useState([20, 30, 50]);
     const [refresher, setRefresher] = useState<number>();
+    const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([]);
+    const [mobileFiltersDialogShown, setMobileFiltersDialogShown] = useState(false);
+
     const cm = useRef<any>();
     const dt = useRef<any>();
     const skeletonDtRef = useRef<any>();
     const filterRef = useRef<any>();
-    const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([]);
+    const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
 
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
     // }, [selectedElement])
 
     useEffect(() => {
-        if(props.paginatorOptions && props.paginatorOptions.length > 0 && !isEqual(props.paginatorOptions, paginatorOptions)){
+        if (props.paginatorOptions && props.paginatorOptions.length > 0 && !isEqual(props.paginatorOptions, paginatorOptions)) {
             setRows(props.paginatorOptions[0]);
             setPaginatorOptions(props.paginatorOptions);
         }
@@ -204,8 +215,9 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     useEffect(() => {
-        if(props.resetFilters === undefined) return;
+        if (props.resetFilters === undefined) return;
         const newFilters = initFilters();
+        //@ts-ignore
         handleFilter({filters: newFilters});
         setTimeout(() => {
             Object.keys(filters).forEach(key => {
@@ -215,7 +227,7 @@ export const ReactiveTable = <T, K extends string>(
                     filter.value = "";
                 }
             })
-        },  100);
+        }, 100);
 
     }, [props.resetFilters]);
 
@@ -236,9 +248,9 @@ export const ReactiveTable = <T, K extends string>(
     useEffect(() => {
         if (filters && Object.keys(filters).length > 0 && !isEqual(filters, prevFilters)) {
             //Da ne refreshva kogato sme na purvo vlizane toest prevFilters === null i v sushtoto vreme nqmame nikakvi filtri
-            if(props.swr && prevFilters === null && Object.values(filters).every((filter: any) => filter.value === null)){
+            if (props.swr && prevFilters === null && Object.values(filters).every((filter: any) => filter.value === null)) {
                 //Do nothing
-            }else{
+            } else {
                 setLoading(true);
                 refreshTable();
             }
@@ -284,7 +296,7 @@ export const ReactiveTable = <T, K extends string>(
         if (equal && props.initialFilters !== undefined) return;
 
         let newFilters = cloneDeep(filters);
-        if(newFilters == null)
+        if (newFilters == null)
             newFilters = initFilters();
 
         if (props.initialFilters) {
@@ -303,21 +315,25 @@ export const ReactiveTable = <T, K extends string>(
             //@ts-ignore
             setPrevInitialFilters(props.initialFilters);
         }
+        //@ts-ignore
         handleFilter({filters: newFilters});
-        if(!props.fetchData)
+        if (!props.fetchData)
             setFilters(newFilters);
     }, [props.initialFilters]);
 
 
     useEffect(() => {
+        console.log("ITEMS CHANGED TO ", items);
+    }, [items])
+
+    useEffect(() => {
         // if (filters === null)
         //     initFilters();
-        if(props.swr && props.data !== undefined){
+        if (props.swr && props.data !== undefined) {
             setItems(props.data);
             setShowTable(true);
             setLoading(false);
-        }
-        else if (props.data !== undefined || !props.showSkeleton) {
+        } else if (props.data !== undefined || !props.showSkeleton) {
             setItems(props.data);
             setOriginalItems(props.data);
             setShowTable(true);
@@ -333,7 +349,7 @@ export const ReactiveTable = <T, K extends string>(
     useEffect(() => {
         if (columns.length)
             initFilters();
-            // setFilters(initFilters());
+        // setFilters(initFilters());
     }, [columns])
 
     // useEffect(() => {
@@ -359,11 +375,11 @@ export const ReactiveTable = <T, K extends string>(
 
 
     const listener = (event: any) => {
-        if(props.selectionMode !== 'single') return;
+        if (props.selectionMode !== 'single') return;
         if (event.code === "ArrowUp") {
             if (selectedRowIndex - 1 >= 0) {
                 const newSelectedElement = items[selectedRowIndex - 1];
-                if(selectedRowIndex % rows === 0){
+                if (selectedRowIndex % rows === 0) {
                     focusRow(false);
                 }
                 setSelectedRowIndex(selectedRowIndex - 1);
@@ -376,7 +392,7 @@ export const ReactiveTable = <T, K extends string>(
         } else if (event.code === "ArrowDown") {
             if (selectedRowIndex + 1 < items.length) {
                 const newSelectedElement = items[selectedRowIndex + 1];
-                if((selectedRowIndex + 1) % rows === 0){
+                if ((selectedRowIndex + 1) % rows === 0) {
                     focusRow(true);
                 }
                 setSelectedRowIndex(selectedRowIndex + 1);
@@ -428,14 +444,16 @@ export const ReactiveTable = <T, K extends string>(
             return {...acc, [el]: {value: null, matchMode: matchMode || "contains"}}
         }, {});
 
-        // setFilters(initialFilters);
+        if(!filters || Object.keys(filters).length === 0) {
+            setFilters(initialFilters);
+        }
         return initialFilters;
     }
 
     const handleExternalSelection = () => {
         // if (selectedRow !== undefined) {
         if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
-            const elements: typeof items = [];
+            const elements: any[] = [];
             let selectedRowIndex = undefined;
             for (let i = 0; i < items.length; i++) {
                 //@ts-ignore
@@ -486,14 +504,14 @@ export const ReactiveTable = <T, K extends string>(
         setTimeout(() => {
             if (dt.current && dt.current.getTable && dt.current.getTable()) {
                 const trs = dt.current.getTable().querySelectorAll('tr');
-                if(focusFirstRow){
-                    if(props.showFilters === false && trs.length >= 2)
+                if (focusFirstRow) {
+                    if (props.showFilters === false && trs.length >= 2)
                         trs[1].focus();
-                    else if(trs.length >= 3){
+                    else if (trs.length >= 3) {
                         trs[2].focus();
                     }
-                }else{
-                    if(trs.length >= 2){
+                } else {
+                    if (trs.length >= 2) {
                         trs[trs.length - 1].focus();
                     }
                 }
@@ -520,7 +538,12 @@ export const ReactiveTable = <T, K extends string>(
         //     return acc;
         // }, {})
         // props.exportConfig.onExportExcel({sort: multiSortMeta, filters: excelFilters, columns: props.columnOrder, labelsMap});
-        props.exportConfig.onExportExcel({sort: multiSortMeta, filters: filters, columns: props.columnOrder, labelsMap});
+        props.exportConfig.onExportExcel({
+            sort: multiSortMeta,
+            filters: filters,
+            columns: props.columnOrder,
+            labelsMap
+        });
 
     }
 
@@ -535,23 +558,26 @@ export const ReactiveTable = <T, K extends string>(
         return res;
     }
 
-    const handleFilter = (e: DataTableFilterParams) => {
+    const handleFilter = (event: DataTableStateEvent) => {
         let result;
-        filterRef.current = {...filterRef.current, ...e ?? {}};
-        const actualFilters = Object.keys(e.filters).reduce((acc: any, key: string) => {
-            //@ts-ignore
-            if (e.filters[key].value === null || e.filters[key].value === '' || e.filters[key].value === undefined)
+        filterRef.current = {...filterRef.current, ...event.filters ?? {}};
+
+        const actualFilters = event.filters ? Object.keys(event.filters).reduce((acc: any, key: string) => {
+            const currentFilter = event.filters[key] as DataTableFilterMetaData;
+
+            if (currentFilter.value === null || currentFilter.value === '' || currentFilter.value === undefined)
                 return acc;
-            acc[key] = {...e.filters[key]};
+            acc[key] = {...event.filters[key]};
             return acc;
-        }, {});
+        }, {}) : {};
 
         if (props.fetchData) {
-            e['first'] = 0;
+            event.first = 0;
             setFirst(0);
-            setFilters(e.filters);
+            setFilters(event.filters);
             setExcelFilters(actualFilters);
             if (props.onFilterCb) props.onFilterCb(undefined, actualFilters);
+            setMobileFiltersDialogShown(false);
             return;
         }
 
@@ -586,6 +612,7 @@ export const ReactiveTable = <T, K extends string>(
         }
         setExcelFilters(actualFilters);
         if (props.onFilterCb) props.onFilterCb(result, actualFilters);
+        setMobileFiltersDialogShown(false)
     }
 
     const textEditor = (options: any, cName: string) => {
@@ -593,7 +620,8 @@ export const ReactiveTable = <T, K extends string>(
     }
 
     const defaultFilter = (options: any, cName: string) => {
-        return <InputText id={'filter-' + cName} type="text" value={options.value} style={{minWidth: '100px'}} placeholder={props.defaultFilterPlaceholder}
+        return <InputText id={'filter-' + cName} type="text" value={options.value} style={{minWidth: '100px'}}
+                          placeholder={props.defaultFilterPlaceholder}
                           onChange={(e) => options.filterApplyCallback(e.target.value)}/>;
     }
 
@@ -623,7 +651,7 @@ export const ReactiveTable = <T, K extends string>(
                     filterHeaderStyle={{textAlign: 'center'}}
                     key={cName} field={cName}
                     //Generate the header column template if it exists for the current column
-                    header={props.columnHeaderTemplate !== undefined && props.columnHeaderTemplate[cName] !== undefined ? props.columnHeaderTemplate[cName] :  columnHeader}
+                    header={props.columnHeaderTemplate !== undefined && props.columnHeaderTemplate[cName] !== undefined ? props.columnHeaderTemplate[cName] : columnHeader}
                     headerStyle={columnHeaderStyle}
                 />
             });
@@ -657,7 +685,7 @@ export const ReactiveTable = <T, K extends string>(
         })
     }
 
-    const onPage = (event: DataTablePFSEvent) => {
+    const onPage = (event: DataTableStateEvent) => {
         setSelectedRowIndex(event.first)
         focusRow(true);
         if (props.fetchData) {
@@ -693,7 +721,8 @@ export const ReactiveTable = <T, K extends string>(
             <div>
                 {props.exportConfig ?
                     <Button type="button" icon={props.exportConfig.exportButtonIcon || ''} onClick={exportExcel}
-                            className="p-button-success p-mr-2" data-pr-tooltip="XLS">{props.exportConfig.exportButtonLabel || ''}</Button>
+                            className="p-button-success p-mr-2"
+                            data-pr-tooltip="XLS">{props.exportConfig.exportButtonLabel || ''}</Button>
                     : null
                 }
                 {/*{props.toggleSelect ?*/}
@@ -702,20 +731,22 @@ export const ReactiveTable = <T, K extends string>(
                 {/*    : null*/}
                 {/*}*/}
                 {
-                    props.headerButtons!.map((el, index) => <Button key={index} type="button" icon={el.icon} onClick={el.onClick}
-                                                           tooltip={el.tooltipLabel} label={el.label}
-                                                           ref={el.ref}
-                                                           tooltipOptions={{position: 'top'}}
-                                                           className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
+                    props.headerButtons!.map((el, index) => <Button key={index} type="button" icon={el.icon}
+                                                                    onClick={el.onClick}
+                                                                    tooltip={el.tooltipLabel} label={el.label}
+                                                                    ref={el.ref}
+                                                                    tooltipOptions={{position: 'top'}}
+                                                                    className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>
             <div>
                 {
-                    props.rightHeaderButtons!.map((el, index) => <Button key={index} type="button" icon={el.icon} onClick={el.onClick}
-                                                                tooltip={el.tooltipLabel} label={el.label}
-                                                                ref={el.ref}
-                                                                tooltipOptions={{position: 'top'}}
-                                                                className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
+                    props.rightHeaderButtons!.map((el, index) => <Button key={index} type="button" icon={el.icon}
+                                                                         onClick={el.onClick}
+                                                                         tooltip={el.tooltipLabel} label={el.label}
+                                                                         ref={el.ref}
+                                                                         tooltipOptions={{position: 'top'}}
+                                                                         className={`${el.className} table-header-left-align-buttons p-mr-2`}/>)
                 }
             </div>
         </div>
@@ -731,7 +762,7 @@ export const ReactiveTable = <T, K extends string>(
             cm.current.hide(e.originalEvent);
         }
 
-        if(!e.value) return;
+        if (!e.value) return;
 
         const page = Math.floor(first / rows) + 1;
 
@@ -739,9 +770,9 @@ export const ReactiveTable = <T, K extends string>(
         let itemUnselected = false;
 
         //Handle selection of all/none of the records
-        if(e.type === "all" || e.type === "checkbox") {
+        if (e.type === "all" || e.type === "checkbox") {
             //Handle unselecting all records
-            if(e.value.length === 0) {
+            if (e.value.length === 0) {
                 newSelectedRowsPerPage = [];
             }
             //Handle selecting all records
@@ -753,7 +784,7 @@ export const ReactiveTable = <T, K extends string>(
                     numberOfRecords -= rows;
                     currentPage++;
                 }
-                while(numberOfRecords > 0)
+                while (numberOfRecords > 0)
             }
         } else if (Array.isArray(e.value)) {
             //Add elems
@@ -774,14 +805,14 @@ export const ReactiveTable = <T, K extends string>(
                     newElementsForPage.push(row)
             }
 
-            if(newSelectedRowsPerPage[page] !== undefined && newSelectedRowsPerPage[page].length !== newElementsForPage.length)
+            if (newSelectedRowsPerPage[page] !== undefined && newSelectedRowsPerPage[page].length !== newElementsForPage.length)
                 itemUnselected = true;
 
             newSelectedRowsPerPage[page] = newElementsForPage;
         } else if (!Array.isArray(e.value)) {
             if (props.setSelected) props.setSelected(e.value, false)
             if (props.selectionHandler) props.selectionHandler(e);
-            if(Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
+            if (Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
                 for (let i = 0; i < items.length; i++) {
                     if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
                         setSelectedRowIndex((props.fetchData !== undefined && props.fetchData !== null) ? first + i : i);
@@ -794,7 +825,7 @@ export const ReactiveTable = <T, K extends string>(
         } else {
             //In order to prevent switching page to the page that corresponds to the last selected row when using multiple select
             //We only will set selectedRowIndex if we do not unselect item
-            if(!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0){
+            if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
                 for (let i = 0; i < items.length; i++) {
                     if (e.value.length === 0) {
                         setSelectedRowIndex(0);
@@ -820,27 +851,27 @@ export const ReactiveTable = <T, K extends string>(
         if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
     };
 
-    const onRowEditComplete = (e: DataTableRowEditCompleteParams) => {
+    const onRowEditComplete = (e: DataTableRowEditCompleteEvent) => {
         let newItems = [...items];
         let {newData, index} = e;
 
-        newItems[index] = newData;
+        newItems[index] = newData as T;
 
         setItems(newItems);
         props.rowEditHandler!(e);
     }
 
-    const onCellEditComplete = (e: ColumnEventParams) => {
+    const onCellEditComplete = (e: ColumnEvent) => {
         const {rowData, newRowData, rowIndex} = e;
 
         setItems((prevState) => {
             const newItems = cloneDeep(prevState);
-            if(props.selectionKey) {
+            if (props.selectionKey) {
                 const selectionKeyOfRowData = rowData[props.selectionKey];
                 const index = items.findIndex(el => el[props.selectionKey] === selectionKeyOfRowData);
                 newItems[index] = newRowData;
                 return newItems
-            }else {
+            } else {
                 newItems[rowIndex] = newRowData;
                 return newItems
             }
@@ -870,8 +901,8 @@ export const ReactiveTable = <T, K extends string>(
         return f({id: cName});
     }
 
-    const setRef = (ref: DataTable) => {
-        if(props.setDtRef)
+    const setRef = (ref: DataTable<T[]>) => {
+        if (props.setDtRef)
             props.setDtRef(ref);
         dt.current = ref;
         if (ref && ref.getTable && ref.getTable() && props.tableHeight) {
@@ -888,89 +919,120 @@ export const ReactiveTable = <T, K extends string>(
 
     return <>
         {props.forOverlay || (showTable && ((filters && items) || !props.showSkeleton)) ?
-            <>
-                <div onKeyDown={props.disableArrowKeys ? () => 0 : listener} className={"datatable-responsive-demo " + props.wrapperClassName || ""}>
-                    {props.contextMenu ?
-                        <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
-                                     appendTo={document.body}/> : null}
-                    <Tooltip target=".export-buttons>button" position="bottom"/>
+            (props.isMobile !== undefined && props.isMobile && props.mobileDataTemplate) ?
+                <div>
+                    <Dialog header={f({id: 'filters'})} position={"top"} onHide={() => setMobileFiltersDialogShown(false)}
+                            visible={mobileFiltersDialogShown} breakpoints={{'960px': '75vw', '640px': '100vw'}}
+                            style={{width: '50vw'}}>
+                        <MobileFilters
+                            onFilterApply={handleFilter}
+                            initialFilters={filters}
+                            filterColumns={props.columnOrder.filter(column => !props.ignoreFilters?.includes(column))}
+                            specialFilters={props.specialFilters}
+                        />
+                    </Dialog>
 
-                    <DataTable
-                        rowHover
-                        //editMode={"row"} rowEditorValidator={props.onRowEditorValidator} onRowEditInit={props.onRowEditInit} onRowEditSave={props.onRowEditSave} onRowEditCancel={props.onRowEditCancel}
-                        //footerColumnGroup={props.subTotals ? buildSubTotals() : null}
-                        ref={setRef}
-                        value={items}
-                        filters={filters}
-                        first={first}
-                        rows={rows}
+                    <Button icon={'pi pi-filter'} label={f({id: 'filters'})} className={"mb-3"}
+                            onClick={() => setMobileFiltersDialogShown(true)}/>
+
+                    <MobileDataView
+                        data={items}
                         totalRecords={totalRecords}
+                        first={first}
                         lazy={props.fetchData !== undefined}
-                        paginator={props.showPaginator && !props.virtualScroll}
-                        footer={props.footerTemplate || null}
-                        onFilter={handleFilter}
-                        onSort={handleSort}
-                        responsiveLayout={'stack'}
-                        dataKey={props.selectionKey || "id"}
-                        className="p-datatable-sm p-datatable-striped"
-                        filterDisplay={props.showFilters ? 'row' : undefined}
-                        // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
-                        multiSortMeta={multiSortMeta}
-                        sortMode={'multiple'}
-                        //@ts-ignore
-                        selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
-                        selection={selectedRow}
-                        onSelectionChange={handleSelection}
-                        tableStyle={{tableLayout: "auto"}}
-                        header={props.showHeader ? getHeader() : null}
-                        rowsPerPageOptions={paginatorOptions}
-                        editMode={editMode}
-                        onRowEditComplete={onRowEditComplete}
-                        scrollable={props.virtualScroll || props.frozenColumns !== undefined}
-                        scrollHeight={props.scrollHeight ? props.scrollHeight : undefined}
-                        virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
-                        onPage={(e) => onPage(e)}
-                        loading={loading}
-                        onRowUnselect={props.onRowUnselect}
-                        onContextMenuSelectionChange={(e: any) => {
-                            //set{selectedRow: e.value});
-                            if (props.setSelected !== undefined && props.contextMenu) {
-                                if (["multiple", 'checkbox'].includes(props.selectionMode!)) {
-                                    props.setSelected([e.value], true);
-                                    setSelectedRow([e.value]);
-                                    const page = Math.floor(first / rows) + 1;
-                                    setSelectedRowPerPage({[page]: [e.value]});
-                                    for (let i = 0; i < items.length; i++) {
-                                        if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
-                                            setSelectedRowIndex(props.fetchData ? first + i : i);
-                                            break;
+                        rows={rows}
+                        paginator={props.showPaginator}
+                        rowTemplate={props.mobileDataTemplate}
+                        filters={filters}
+                        filtersMatchMode={props.filtersMatchMode}
+                        onPage={onPage}
+                    />
+                </div>
+                :
+                <>
+                    <div onKeyDown={props.disableArrowKeys ? () => 0 : listener}
+                         className={"datatable-responsive-demo " + props.wrapperClassName || ""}>
+                        {props.contextMenu ?
+                            <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
+                                         appendTo={document.body}/> : null}
+                        <Tooltip target=".export-buttons>button" position="bottom"/>
+
+                        <DataTable
+                            rowHover
+                            //editMode={"row"} rowEditorValidator={props.onRowEditorValidator} onRowEditInit={props.onRowEditInit} onRowEditSave={props.onRowEditSave} onRowEditCancel={props.onRowEditCancel}
+                            //footerColumnGroup={props.subTotals ? buildSubTotals() : null}
+                            ref={setRef}
+                            value={items}
+                            filters={filters}
+                            first={first}
+                            rows={rows}
+                            totalRecords={totalRecords}
+                            lazy={props.fetchData !== undefined}
+                            paginator={props.showPaginator && !props.virtualScroll}
+                            footer={props.footerTemplate || null}
+                            onFilter={handleFilter}
+                            onSort={handleSort}
+                            responsiveLayout={'stack'}
+                            dataKey={props.selectionKey || "id"}
+                            className="p-datatable-sm p-datatable-striped"
+                            filterDisplay={props.showFilters ? 'row' : undefined}
+                            // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
+                            multiSortMeta={multiSortMeta}
+                            sortMode={'multiple'}
+                            //@ts-ignore
+                            selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
+                            selection={selectedRow}
+                            onSelectionChange={handleSelection}
+                            tableStyle={{tableLayout: "auto"}}
+                            header={props.showHeader ? getHeader() : null}
+                            rowsPerPageOptions={paginatorOptions}
+                            editMode={editMode}
+                            onRowEditComplete={onRowEditComplete}
+                            scrollable={props.virtualScroll || props.frozenColumns !== undefined}
+                            scrollHeight={props.scrollHeight ? props.scrollHeight : undefined}
+                            virtualScrollerOptions={props.scrollHeight ? {itemSize: 32} : undefined}
+                            onPage={(e) => onPage(e)}
+                            loading={loading}
+                            onRowUnselect={props.onRowUnselect}
+                            onContextMenuSelectionChange={(e: any) => {
+                                //set{selectedRow: e.value});
+                                if (props.setSelected !== undefined && props.contextMenu) {
+                                    if (["multiple", 'checkbox'].includes(props.selectionMode!)) {
+                                        props.setSelected([e.value], true);
+                                        setSelectedRow([e.value]);
+                                        const page = Math.floor(first / rows) + 1;
+                                        setSelectedRowPerPage({[page]: [e.value]});
+                                        for (let i = 0; i < items.length; i++) {
+                                            if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
+                                                setSelectedRowIndex(props.fetchData ? first + i : i);
+                                                break;
+                                            }
                                         }
-                                    }
-                                } else {
-                                    props.setSelected(e.value, true);
-                                    setSelectedRow(e.value);
-                                    for (let i = 0; i < items.length; i++) {
-                                        if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
-                                            setSelectedRowIndex(props.fetchData ? first + i : i);
-                                            break;
+                                    } else {
+                                        props.setSelected(e.value, true);
+                                        setSelectedRow(e.value);
+                                        for (let i = 0; i < items.length; i++) {
+                                            if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
+                                                setSelectedRowIndex(props.fetchData ? first + i : i);
+                                                break;
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        }}
-                        onContextMenu={e => {
-                            //if(items[0].id !== null)
-                            if (props.contextMenu)
-                                cm.current!.show(e.originalEvent)
-                        }}
-                        {...props.dtProps}
-                    >
-                        {columns}
+                            }}
+                            onContextMenu={e => {
+                                //if(items[0].id !== null)
+                                if (props.contextMenu)
+                                    cm.current!.show(e.originalEvent)
+                            }}
+                            {...props.dtProps}
+                        >
+                            {columns}
 
-                    </DataTable>
+                        </DataTable>
 
-                </div>
-            </>
+                    </div>
+                </>
             :
             <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={5} paginator={true}
                        className="p-datatable-striped">
