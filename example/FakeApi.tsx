@@ -168,6 +168,9 @@ export const FakeApi: React.FC<Props> = props => {
                            rebuildColumns={rebuildColumns}
                            ignoreFilters={isMobile ? ["description"] : []}
                            specialFilters={getSpecialFilters()}
+                           specialLabels={{
+                               title: "TEST"
+                           }}
 
             />
         </>
