@@ -14,6 +14,7 @@ interface Props<T extends DataTableValue> {
     initialFilters: MobileFilters<T>,
     filterColumns: StringKeys<T>[],
     specialFilters?: SpecialFilter<StringKeys<T>>;
+    specialLabels?: { [key in StringKeys<T>]?: string; };
 }
 
 export const MobileFilters = <T extends DataTableValue>(props: Props<T>): ReactElement => {
@@ -46,15 +47,17 @@ export const MobileFilters = <T extends DataTableValue>(props: Props<T>): ReactE
                         />
                     );
 
+                let label: string = columnName;
+                if(props.specialLabels && props.specialLabels[columnName]) {
+                    label = props.specialLabels[columnName]
+                }
+
+
                 return (
                     <div key={columnName as string} className="p-field col-12 md:col-6">
-              {/*<span className="p-float-label">*/}
-              {/*  {input}*/}
-              {/*    <label>{f({id: columnName})}</label>*/}
-              {/*</span>*/}
                         <FloatLabel>
                             {input}
-                            <label>{f({id: columnName})}</label>
+                            <label>{f({id: label})}</label>
                         </FloatLabel>
                     </div>
                 );

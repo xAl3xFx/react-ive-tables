@@ -927,6 +927,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
                             initialFilters={filters}
                             filterColumns={props.columnOrder.filter(column => !props.ignoreFilters?.includes(column))}
                             specialFilters={props.specialFilters}
+                            specialLabels={props.specialLabels}
                         />
                     </Dialog>
 
