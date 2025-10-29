@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Removed LazyDataTable.tsx">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SimpleDataTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SimpleDataTable.tsx" afterDir="false" />
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable and SimpleDataTable - fixed a typescript bug with the types of the primereact datatable">
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,7 +223,7 @@
       <workItem from="1759325496051" duration="3009000" />
       <workItem from="1759331243539" duration="23000" />
       <workItem from="1761568100098" duration="27132000" />
-      <workItem from="1761725632018" duration="1499000" />
+      <workItem from="1761725632018" duration="1793000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -570,7 +568,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -601,7 +599,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactiveTable now takes exportExcel function instead of just excelUrl string prop." />
     <MESSAGE value="Added TreeTableExample.tsx" />
     <MESSAGE value="Comment." />
     <MESSAGE value="ReactiveTable -&gt; Added exportConfig prop." />
@@ -626,7 +623,8 @@
     <MESSAGE value="ReactiveTable - added MobileDataView and MobileFilters - functionality for displaying datatable for mobile devices" />
     <MESSAGE value="Adjusted types for SimpleDataTable and SimpleTreeTable to work with the latest version of Primereact" />
     <MESSAGE value="Removed LazyDataTable.tsx" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed LazyDataTable.tsx" />
+    <MESSAGE value="ReactiveTable and SimpleDataTable - fixed a typescript bug with the types of the primereact datatable" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable and SimpleDataTable - fixed a typescript bug with the types of the primereact datatable" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
