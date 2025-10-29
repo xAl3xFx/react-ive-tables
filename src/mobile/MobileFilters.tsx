@@ -5,6 +5,7 @@ import {Button} from "primereact/button";
 import {DataTableStateEvent, DataTableValue} from "primereact/datatable";
 import {SpecialFilter, StringKeys} from "../ReactiveTable";
 import {InputText} from "primereact/inputtext";
+import {FloatLabel} from "primereact/floatlabel";
 
 export type MobileFilters<T> = { [key in StringKeys<T>]: any };
 
@@ -47,10 +48,14 @@ export const MobileFilters = <T extends DataTableValue>(props: Props<T>): ReactE
 
                 return (
                     <div key={columnName as string} className="p-field col-12 md:col-6">
-              <span className="p-float-label">
-                {input}
-                  <label>{f({id: columnName})}</label>
-              </span>
+              {/*<span className="p-float-label">*/}
+              {/*  {input}*/}
+              {/*    <label>{f({id: columnName})}</label>*/}
+              {/*</span>*/}
+                        <FloatLabel>
+                            {input}
+                            <label>{f({id: columnName})}</label>
+                        </FloatLabel>
                     </div>
                 );
             })
