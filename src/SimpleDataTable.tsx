@@ -40,7 +40,7 @@ interface Props<T, K extends string> {
     specialEditors?: { [key in K]?: any },                        // Just like specialFilters, specialEditors is used when specific editor element is needed. Reference:  https://primefaces.org/primereact/showcase/#/datatable/edit
     cellEditHandler?: (element: Object) => void,                  // Same as rowEditHandler.
     selectionHandler?: (e: any) => void,                          // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
-    selectionMode?: "checkbox" | "multiple" | "single" | undefined,       // Selection mode.
+    selectionMode?: "checkbox" | "single" | undefined,       // Selection mode.
     selectionKey?: string,                                        // Key used for selection. Default value is 'id'. Important for proper selection.
     onRowUnselect?: (e: any) => void,                             // Callback invoked when row is unselected.
     selectedIds?: string[] | number[],                            // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
@@ -63,7 +63,7 @@ interface Props<T, K extends string> {
     sortableColumns?: K[];                                        // Array of columns which should be sortable.
     virtualScroll?: boolean;                                      // When true virtual scroller is enabled and paginator is hidden
     scrollHeight?: string;                                        // Height for the scroll
-    dtProps?: Partial<DataTableProps<T[]>>;                            // Additional properties to be passed directly to the datatable.
+    dtProps?: Partial<Omit<DataTableProps<T[]>, "cellSelection" | "selectionMode">>;                             // Additional properties to be passed directly to the datatable.
     doubleClick?: (e: any) => void;                               // Double click handler function
     showSkeleton?: boolean;                                       // Used to indicate whether a skeleton should be shown or not *defaults to true*
     selectionResetter?: number;                                   // Used to reset selected items in the state of the datatable. It works similarly `refresh` prop of LazyDT.
@@ -217,7 +217,7 @@ export const SimpleDataTable = <T, K extends string>(
             if (selectedRowIndex - 1 >= 0) {
                 const newSelectedElement = items[selectedRowIndex - 1];
                 setSelectedRowIndex(selectedRowIndex - 1);
-                if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
+                if (props.selectionMode === "checkbox") {
                     setSelectedRow([newSelectedElement]);
                 } else {
                     setSelectedRow(newSelectedElement);
@@ -227,7 +227,7 @@ export const SimpleDataTable = <T, K extends string>(
             if (selectedRowIndex + 1 < items.length) {
                 const newSelectedElement = items[selectedRowIndex + 1];
                 setSelectedRowIndex(selectedRowIndex + 1);
-                if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
+                if (props.selectionMode === "checkbox") {
                     setSelectedRow([newSelectedElement]);
                 } else {
                     setSelectedRow(newSelectedElement);
@@ -277,7 +277,7 @@ export const SimpleDataTable = <T, K extends string>(
 
     const handleExternalSelection = () => {
         // if (selectedRow !== undefined) {
-        if (props.selectionMode === "multiple" || props.selectionMode === "checkbox") {
+        if (props.selectionMode === "checkbox") {
             const elements: typeof items = [];
             let selectedRowIndex = undefined;
             for (let i = 0; i < items.length; i++) {
@@ -684,8 +684,8 @@ export const SimpleDataTable = <T, K extends string>(
                         filterDisplay={props.showFilters ? 'row' : undefined}
                         // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
                         sortMode={'multiple'}
-                        //@ts-ignore
-                        selectionMode={["single", "multiple", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
+                        cellSelection={undefined} // ✅ makes TS pick row-selection overload
+                        selectionMode={["single", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
                         selection={selectedRow}
                         onSelectionChange={handleSelection}
                         emptyMessage="No records found"
@@ -703,7 +703,7 @@ export const SimpleDataTable = <T, K extends string>(
                         onContextMenuSelectionChange={(e: any) => {
                             //set{selectedRow: e.value});
                             if (props.setSelected !== undefined && props.contextMenu) {
-                                if (["multiple", 'checkbox'].includes(props.selectionMode!)) {
+                                if (['checkbox'].includes(props.selectionMode!)) {
                                     props.setSelected([e.value], true);
                                     setSelectedRow([e.value]);
                                     const page = Math.floor(first / rows) + 1;
@@ -731,7 +731,7 @@ export const SimpleDataTable = <T, K extends string>(
                             if (props.contextMenu)
                                 cm.current!.show(e.originalEvent)
                         }}
-                        {...props.dtProps}
+                        {...props.dtProps as any}
                     >
                         {columns}
 
