@@ -319,11 +319,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
             setFilters(newFilters);
     }, [props.initialFilters]);
 
-
-    useEffect(() => {
-        console.log("ITEMS CHANGED TO ", items);
-    }, [items])
-
     useEffect(() => {
         // if (filters === null)
         //     initFilters();
