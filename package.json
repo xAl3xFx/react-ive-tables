@@ -1,6 +1,6 @@
 {
   "name": "react-ive-tables",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "description": "A set of handy DataTable components based on PrimeReact.",
   "main": "dist/index.js",
   "module": "dist/react-ive-tables.esm.js",
