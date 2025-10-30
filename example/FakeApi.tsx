@@ -7,6 +7,7 @@ import {Dropdown} from "primereact/dropdown";
 import useSWR from "swr";
 import {LazyFetchingService} from "./lib/lazy-fetching-service";
 import {Tag} from "primereact/tag";
+import {HeaderButton} from "../src";
 
 interface Props {
 
@@ -137,6 +138,15 @@ export const FakeApi: React.FC<Props> = props => {
             return () => window.removeEventListener('resize', onResize);
         }, []);
 
+    const headerButtons: HeaderButton[] = [
+        {
+            onClick: () => 0,
+            icon: 'pi pi-plus',
+            className: 'p-button-success',
+            label: f({id: "create"})
+        }
+        ]
+
 
         return <>
             <Button onClick={() => test()}>Trigger multiple selection</Button>
@@ -164,6 +174,8 @@ export const FakeApi: React.FC<Props> = props => {
                            data={allRecords?.rows || []}
                            mobileDataTemplate={getMobileTemplate}
                            isMobile={isMobile}
+                           showHeader={true}
+                           headerButtons={headerButtons}
                            columnOrder={['title', 'description', 'price', 'rating', 'brand', 'operations']}
                            rebuildColumns={rebuildColumns}
                            ignoreFilters={isMobile ? ["description"] : []}

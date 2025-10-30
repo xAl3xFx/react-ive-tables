@@ -931,6 +931,8 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
                         />
                     </Dialog>
 
+                    {props.showHeader ? getHeader() : null}
+
                     <Button icon={'pi pi-filter'} label={f({id: 'filters'})} className={"mb-3"}
                             onClick={() => setMobileFiltersDialogShown(true)}/>
 
