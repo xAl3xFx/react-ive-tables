@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Test in FakeApi">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Removed console logs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/FakeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/FakeApi.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mobile/MobileDataView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mobile/MobileDataView.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -228,7 +228,7 @@
       <workItem from="1761568100098" duration="27132000" />
       <workItem from="1761725632018" duration="7272000" />
       <workItem from="1761734138311" duration="2079000" />
-      <workItem from="1761825922713" duration="1939000" />
+      <workItem from="1761825922713" duration="2577000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -573,7 +573,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -604,8 +604,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Removed a json file with dummy data" />
-    <MESSAGE value="ReactIveTable - when simple - removed page switch on selection when sorting is enabled" />
     <MESSAGE value="ReactiveTable - cellEdit now uses selection key to determine which row should be updated" />
     <MESSAGE value="ReactIveTable - added a check on handle selection - if unselecting - do nothing" />
     <MESSAGE value="ReactiveTable -&gt; Do not hardcore empty message." />
@@ -629,7 +627,9 @@
     <MESSAGE value="Lock" />
     <MESSAGE value="MobileFilters - now respect special labels" />
     <MESSAGE value="Test in FakeApi" />
-    <option name="LAST_COMMIT_MESSAGE" value="Test in FakeApi" />
+    <MESSAGE value="ReactiveTable - added header rendering on mobile" />
+    <MESSAGE value="Removed console logs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed console logs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -641,12 +641,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>623</line>
+          <line>620</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ReactiveTable.tsx</url>
-          <line>620</line>
+          <line>617</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>

@@ -24,6 +24,7 @@ import {FilterMatchMode, FilterService} from "primereact/api";
 import {MobileDataView} from "./mobile/MobileDataView";
 import {Dialog} from "primereact/dialog";
 import {MobileFilters} from "./mobile/MobileFilters";
+import {DataViewProps} from "primereact/dataview";
 
 export type StringKeys<T> = Extract<keyof T, string>;
 export type SpecialFilter<K extends string> = { [key in K]?: (options: any, cName: string) => JSX.Element }
@@ -137,7 +138,8 @@ interface Props<T extends DataTableValue, K extends string> {
         React.ReactNode | ((options: ColumnHeaderOptions) => React.ReactNode)
     };
     isMobile?: boolean;                                           // Used to determine when to render the mobile (responsive) view
-    mobileDataTemplate?: (rowData: T) => any          // Specifies what to render in the mobile view
+    mobileDataTemplate?: (rowData: T) => any                      // Specifies what to render in the mobile view
+    dataViewProps?: DataViewProps
 }
 
 export const ReactiveTable = <T extends DataTableValue, K extends string>(
@@ -932,6 +934,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
                             onClick={() => setMobileFiltersDialogShown(true)}/>
 
                     <MobileDataView
+                        dataViewProps={props.dataViewProps}
                         data={items}
                         totalRecords={totalRecords}
                         first={first}

@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {DataView, DataViewPageEvent} from "primereact/dataview";
+import {DataView, DataViewPageEvent, DataViewProps} from "primereact/dataview";
 import {FilterMatchMode} from "primereact/api";
 import {FiltersMatchMode} from "../ReactiveTable";
 import {DataTableStateEvent} from "primereact/datatable";
@@ -20,6 +20,7 @@ interface Props<T, K extends string> {
     selectedRecords?: (record: T[]) => void;
     selectionKey?: keyof T;
     splitButtonItems?: any[];
+    dataViewProps?: DataViewProps
 }
 
 type Filters<T> = {
@@ -90,6 +91,7 @@ export const MobileDataView = <T, K extends string>(props: Props<T, K>) => {
                   totalRecords={props.totalRecords}
                   rows={props.rows}
                   paginator={true}
+                  {...props.dataViewProps}
         />
     </>
 }
