@@ -712,7 +712,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
     }
 
     const getHeader = () => {
-        return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
+        return <div className="export-buttons" style={{display: "flex", gap: "1rem"}}>
             {(props.isMobile !== undefined && props.isMobile && props.mobileDataTemplate) ?
                 <Button icon={'pi pi-filter'} label={f({id: 'filters'})} className={"mb-3"}
                         onClick={() => setMobileFiltersDialogShown(true)}/> :
