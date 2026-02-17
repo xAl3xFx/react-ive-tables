@@ -439,7 +439,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
             return {...acc, [el]: {value: null, matchMode: matchMode || "contains"}}
         }, {});
 
-        if(!filters || Object.keys(filters).length === 0) {
+        if (!filters || Object.keys(filters).length === 0) {
             setFilters(initialFilters);
         }
         return initialFilters;
@@ -713,6 +713,11 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
 
     const getHeader = () => {
         return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
+            {(props.isMobile !== undefined && props.isMobile && props.mobileDataTemplate) ?
+                <Button icon={'pi pi-filter'} label={f({id: 'filters'})} className={"mb-3"}
+                        onClick={() => setMobileFiltersDialogShown(true)}/> :
+                null
+            }
             <div>
                 {props.exportConfig ?
                     <Button type="button" icon={props.exportConfig.exportButtonIcon || ''} onClick={exportExcel}
@@ -916,7 +921,8 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
         {props.forOverlay || (showTable && ((filters && items) || !props.showSkeleton)) ?
             (props.isMobile !== undefined && props.isMobile && props.mobileDataTemplate) ?
                 <div>
-                    <Dialog header={f({id: 'filters'})} position={"top"} onHide={() => setMobileFiltersDialogShown(false)}
+                    <Dialog header={f({id: 'filters'})} position={"top"}
+                            onHide={() => setMobileFiltersDialogShown(false)}
                             visible={mobileFiltersDialogShown} breakpoints={{'960px': '75vw', '640px': '100vw'}}
                             style={{width: '50vw'}}>
                         <MobileFilters
@@ -929,9 +935,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
                     </Dialog>
 
                     {props.showHeader ? getHeader() : null}
-
-                    <Button icon={'pi pi-filter'} label={f({id: 'filters'})} className={"mb-3"}
-                            onClick={() => setMobileFiltersDialogShown(true)}/>
 
                     <MobileDataView
                         dataViewProps={props.dataViewProps}
