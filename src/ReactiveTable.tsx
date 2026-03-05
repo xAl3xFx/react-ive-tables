@@ -38,7 +38,7 @@ export interface FetchDataParams {
     //Add type for this
     sort?: any;
     excelName?: string;
-    page?: number;
+    page: number;
 }
 
 export interface ExportExcelParams {
@@ -154,6 +154,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
     const [columns, setColumns] = useState<any>([]);
     const [rows, setRows] = useState(20);
     const [first, setFirst] = useState(0);
+    const [page, setPage] = useState(0);
     const [totalRecords, setTotalRecords] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showTable, setShowTable] = useState(false);
@@ -197,12 +198,12 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
 
 
         if (props.swr) {
-            props.fetchData({offset: first, limit: rows, filters, sort}).then(() => {
+            props.fetchData({offset: first, limit: rows, filters, sort, page}).then(() => {
                 setLoading(false);
             });
         } else {
             //@ts-ignore
-            props.fetchData({offset: first, limit: rows, filters, sort}).then((response) => {
+            props.fetchData({offset: first, limit: rows, filters, sort, page}).then((response) => {
                 //@ts-ignore
                 setItems(response.rows);
                 //@ts-ignore
@@ -682,6 +683,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
 
     const onPage = (event: DataTableStateEvent) => {
         setSelectedRowIndex(event.first)
+        setPage(event.page);
         focusRow(true);
         if (props.fetchData) {
             if (event.first === first && event.rows === rows) return;
@@ -696,7 +698,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
             } else {
                 //'fetchData' should return new items.
                 //@ts-ignore
-                props.fetchData({offset: event.first, limit: event.rows, filters}).then((response) => {
+                props.fetchData({offset: event.first, limit: event.rows, filters, page: event.page}).then((response) => {
                     //@ts-ignore
                     setItems(response.rows);
                     //@ts-ignore
