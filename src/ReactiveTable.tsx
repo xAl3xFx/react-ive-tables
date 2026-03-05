@@ -1038,7 +1038,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
                     </div>
                 </>
             :
-            <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={5} paginator={true}
+            <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={5} paginator={props.showPaginator}
                        className="p-datatable-striped">
                 {
                     props.columnOrder.map(column => <Column field={column} header={getColumnHeaderTranslated(column)}

@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable -&gt; props.fetchData always passes page">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="..">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -237,6 +237,8 @@
       <workItem from="1771331848484" duration="393000" />
       <workItem from="1772117349859" duration="3709000" />
       <workItem from="1772707778846" duration="5000" />
+      <workItem from="1772708092523" duration="566000" />
+      <workItem from="1772709003043" duration="753000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -581,7 +583,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -617,7 +619,6 @@
     <MESSAGE value="ReactiveTable -&gt; Default filter placeholder;" />
     <MESSAGE value="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler" />
     <MESSAGE value="ReactiveTable - added column header template" />
-    <MESSAGE value=".." />
     <MESSAGE value="Attempt to make the library compatible with vite" />
     <MESSAGE value="Attempt to make the library compatible with vite v2" />
     <MESSAGE value="Attempt to make the library compatible with vite v3" />
@@ -637,7 +638,8 @@
     <MESSAGE value="ReactiveTable - added header rendering on mobile" />
     <MESSAGE value="Removed console logs" />
     <MESSAGE value="ReactiveTable -&gt; Mobile filters button (header row) fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable -&gt; Mobile filters button (header row) fix" />
+    <MESSAGE value=".." />
+    <option name="LAST_COMMIT_MESSAGE" value=".." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
