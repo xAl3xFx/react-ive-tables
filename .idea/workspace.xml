@@ -93,7 +93,7 @@
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables\src" />
     </key>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.Debug">
+  <component name="RunManager" selected="npm.build">
     <configuration name="Debug" type="JavascriptDebugType" uri="http://localhost:1234">
       <method v="2">
         <option name="NpmBeforeRunTask" enabled="true">
@@ -110,6 +110,16 @@
     <configuration name="scratch_2.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="run example" type="js.build_tools.npm">
       <package-json value="$PROJECT_DIR$/example/package.json" />
       <command value="start" />
@@ -122,9 +132,11 @@
       <item itemvalue="JavaScript Debug.Debug" />
       <item itemvalue="Node.js.scratch_2.js" />
       <item itemvalue="npm.run example" />
+      <item itemvalue="npm.build" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.build" />
         <item itemvalue="Node.js.scratch_2.js" />
         <item itemvalue="Node.js.scratch_2.js" />
       </list>
