@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable -&gt; Mobile filters button (header row) fix">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable -&gt; props.fetchData always passes page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -236,6 +236,7 @@
       <workItem from="1761825922713" duration="2577000" />
       <workItem from="1771331848484" duration="393000" />
       <workItem from="1772117349859" duration="3709000" />
+      <workItem from="1772707778846" duration="5000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
