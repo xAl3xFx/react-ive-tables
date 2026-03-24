@@ -1,6 +1,6 @@
 import {useIntl} from "react-intl";
-import React, {useEffect, useRef, useState} from "react";
-import {Column, ColumnBodyOptions, ColumnEventParams} from "primereact/column";
+import React, {ReactNode, useEffect, useRef, useState} from "react";
+import {Column, ColumnBodyOptions, ColumnEvent, ColumnHeaderOptions} from "primereact/column";
 import {
     DataTable,
     DataTableFilterMetaData,
@@ -22,9 +22,13 @@ import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
 import {HeaderButton} from "./types";
 import {FilterMatchMode} from "primereact/api";
+import {DataViewProps} from "primereact/dataview";
+import {Dialog} from "primereact/dialog";
+import {MobileFilters} from "./mobile/MobileFilters";
+import {MobileDataView} from "./mobile/MobileDataView";
 
 export type StringKeys<T> = Extract<keyof T, string>;
-export type SpecialFilter<K extends string> = { [key in K]?: (options: any, cName: string) => JSX.Element }
+export type SpecialFilter<K extends string> = { [key in K]?: (options: any, cName: string) => React.ReactNode }
 export type FiltersMatchMode<K extends string> = { [key in K]?: FilterMatchMode.IN | FilterMatchMode.EQUALS }
 
 export interface FetchDataParams {
@@ -80,7 +84,7 @@ interface Props<T extends DataTableValue, K extends string> {
     specialColumns?: {                                                          // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
         [key in K]?:                                                            // if the column should be put at the beginning or at the end.
         {
-            element: JSX.Element,
+            element: React.ReactNode,
             handler: (rowData: T) => void,
             atStart: boolean
         }
@@ -189,7 +193,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     const [excelFilters, setExcelFilters] = useState({});
     const [areFiltersInited, setAreFiltersInited] = useState(false);
     const [paginatorOptions, setPaginatorOptions] = useState([20, 30, 50]);
-    const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
     const [refresher, setRefresher] = useState<number>();
     const cm = useRef<any>(undefined);
     const dt = useRef<any>(undefined);
@@ -926,7 +929,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     }
 
     return <>
-        {props.forOverlay || (showTable && ((filters && items) || !props.showSkeleton)) ?
+        {forOverlay || (showTable && ((filters && items) || !showSkeleton)) ?
             (props.isMobile !== undefined && props.isMobile && props.mobileDataTemplate) ?
                 <div>
                     <Dialog header={f({id: 'filters'})} position={"top"}
@@ -936,13 +939,13 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                         <MobileFilters
                             onFilterApply={handleFilter}
                             initialFilters={filters}
-                            filterColumns={props.columnOrder.filter(column => !props.ignoreFilters?.includes(column))}
-                            specialFilters={props.specialFilters}
+                            filterColumns={columnOrder.filter(column => !ignoreFilters?.includes(column))}
+                            specialFilters={specialFilters}
                             specialLabels={props.specialLabels}
                         />
                     </Dialog>
 
-                    {props.showHeader ? getHeader() : null}
+                    {showHeader ? getHeader() : null}
 
                     <MobileDataView
                         dataViewProps={props.dataViewProps}
@@ -951,7 +954,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                         first={first}
                         lazy={props.fetchData !== undefined}
                         rows={rows}
-                        paginator={props.showPaginator}
+                        paginator={showPaginator}
                         rowTemplate={props.mobileDataTemplate}
                         filters={filters}
                         filtersMatchMode={props.filtersMatchMode}

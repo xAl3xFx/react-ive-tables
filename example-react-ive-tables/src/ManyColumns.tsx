@@ -1,7 +1,7 @@
-import {ReactiveTable} from "../src";
+import {ReactiveTable} from "../../src";
 import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
-import * as customers from './lib/customers.json'
+import * as customers from '../lib/customers.json'
 import {Button} from "primereact/button";
 import {Dropdown} from "primereact/dropdown";
 import {Customer} from "./types";
@@ -10,6 +10,7 @@ import {Column, ColumnBodyOptions} from "primereact/column";
 import {ColumnGroup} from "primereact/columngroup";
 import {Row} from "primereact/row";
 import {OverlayPanel} from "primereact/overlaypanel";
+import { Tag } from "primereact/tag";
 
 interface IDropdownOption {
     key: number;
@@ -215,7 +216,7 @@ export const ManyColumns = () => {
         return [];
     }
 
-    const getMobileTemplate = (rowData: Customer): ReactElement => {
+    const getMobileTemplate = (rowData: Customer): React.ReactNode => {
         console.log("THE ROWDATA IS: ", rowData);
         return <div className="col-12" key={rowData.id}>
             <div
