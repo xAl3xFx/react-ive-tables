@@ -1,6 +1,6 @@
 import {useIntl} from "react-intl";
-import React, {JSX, ReactNode, useEffect, useRef, useState} from "react";
-import {Column, ColumnBodyOptions, ColumnEvent} from "primereact/column";
+import React, {useEffect, useRef, useState} from "react";
+import {Column, ColumnBodyOptions, ColumnEventParams} from "primereact/column";
 import {
     DataTable,
     DataTableFilterMetaData,
@@ -35,7 +35,7 @@ export interface FetchDataParams {
     //Add type for this
     sort?: any;
     excelName?: string;
-    page?: number;
+    page? : number;
 }
 
 export interface ExportExcelParams {
@@ -59,7 +59,7 @@ interface Props<T extends DataTableValue, K extends string> {
     totalRecords?: number;                                                      // When using lazy fetching this prop gives the total count of records in 'data' prop.
     swr?: boolean;                                                              // Defines if SWR will be used or not.
     columnOrder: (K | StringKeys<T>)[];                                         // Defines order for the columns. NB! Only the specified columns here will be rendered.
-    ignoreFilters?: K[];                                                        // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
+    ignoreFilters?: (K | StringKeys<T>)[];                                                        // Defines which filters should be ignored. By default all are shown if `showFilters` is set to true.
     specialFilters?: SpecialFilter<K>;                                          // Used for special filter elements. The key is the cName and the value is a function which handles filtering. For reference : https://primefaces.org/primereact/showcase/#/datatable/filter
     filtersMatchMode?: FiltersMatchMode<K>
     specialLabels?: { [key in K]?: string; };                                   // Used for special labels. By default the table is trying to use intl for translation of each label. If specialLabels is used it overrides the column name for translation. The key is the cName and the value is the translation string used in text properties for intl.
@@ -130,6 +130,13 @@ interface Props<T extends DataTableValue, K extends string> {
     paginatorOptions?: number[];                                  // Used to overwrite the default paginator options, which are [20, 30, 50]
     wrapperClassName?: string;
     defaultFilterPlaceholder?: string;                            // Set placeholder for default (text) filters
+    columnHeaderTemplate?: {
+        [key in K]?:
+        React.ReactNode | ((options: ColumnHeaderOptions) => React.ReactNode)
+    };
+    isMobile?: boolean;                                           // Used to determine when to render the mobile (responsive) view
+    mobileDataTemplate?: (rowData: T) => any                      // Specifies what to render in the mobile view
+    dataViewProps?: DataViewProps
 }
 
 export const ReactiveTable = <T extends DataTableValue, K extends string>({
@@ -164,8 +171,8 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
 
     const [items, setItems] = useState<T[]>([]);
     const [originalItems, setOriginalItems] = useState<any>([]);
-    const [filters, setFilters] = useState<any>(null);
-    const [prevFilters, setPrevFilters] = useState<any>(null);
+    const [filters, setFilters] = useState<any>({});
+    const [prevFilters, setPrevFilters] = useState<any>({});
     const [columns, setColumns] = useState<any>([]);
     const [rows, setRows] = useState(20);
     const [first, setFirst] = useState(0);
@@ -188,14 +195,17 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     const dt = useRef<any>(undefined);
     const skeletonDtRef = useRef<any>(undefined);
     const filterRef = useRef<any>(undefined);
+
     const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([]);
+    const [mobileFiltersDialogShown, setMobileFiltersDialogShown] = useState(false);
+    const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
 
     // const doubleClickHandler = useCallback((e:any) => {
     //     props.doubleClick!(selectedElement);
     // }, [selectedElement])
 
     useEffect(() => {
-        if (props.paginatorOptions && props.paginatorOptions.length > 0 && !isEqual(props.paginatorOptions, paginatorOptions)) {
+        if(props.paginatorOptions && props.paginatorOptions.length > 0 && !isEqual(props.paginatorOptions, paginatorOptions)){
             setRows(props.paginatorOptions[0]);
             setPaginatorOptions(props.paginatorOptions);
         }
@@ -352,7 +362,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     useEffect(() => {
         if (columns.length)
             initFilters();
-        // setFilters(initFilters());
+            // setFilters(initFilters());
     }, [columns])
 
     // useEffect(() => {
@@ -575,6 +585,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
             setFilters(e.filters);
             setExcelFilters(actualFilters);
             if (props.onFilterCb) props.onFilterCb(undefined, actualFilters);
+            setMobileFiltersDialogShown(false);
             return;
         }
 
@@ -609,6 +620,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
         }
         setExcelFilters(actualFilters);
         if (props.onFilterCb) props.onFilterCb(result, actualFilters);
+        setMobileFiltersDialogShown(false)
     }
 
     const textEditor = (options: any, cName: string) => {
@@ -645,7 +657,11 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                     onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                     filter={showFilters && !ignoreFilters!.includes(cName)}
                     filterHeaderStyle={{textAlign: 'center'}}
-                    key={cName} field={cName} header={columnHeader} headerStyle={columnHeaderStyle}/>
+                    key={cName} field={cName}
+                    //Generate the header column template if it exists for the current column
+                    header={props.columnHeaderTemplate !== undefined && props.columnHeaderTemplate[cName] !== undefined ? props.columnHeaderTemplate[cName] : columnHeader}
+                    headerStyle={columnHeaderStyle}
+                />
             });
             //@ts-ignore
             if (props.rowEditHandler !== undefined && !props.columnOrder.includes('operations'))
@@ -707,6 +723,11 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
 
     const getHeader = () => {
         return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
+            {(props.isMobile !== undefined && props.isMobile && props.mobileDataTemplate) ?
+                <Button icon={'pi pi-filter'} label={f({id: 'filters'})} className={"mb-3"}
+                        onClick={() => setMobileFiltersDialogShown(true)}/> :
+                null
+            }
             <div>
                 {props.exportConfig ?
                     <Button type="button" icon={props.exportConfig.exportButtonIcon || ''} onClick={exportExcel}
@@ -751,7 +772,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
             cm.current.hide(e.originalEvent);
         }
 
-        if (!e.value) return;
+        if(!e.value) return;
 
         const page = Math.floor(first / rows) + 1;
 
@@ -773,7 +794,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                     numberOfRecords -= rows;
                     currentPage++;
                 }
-                while (numberOfRecords > 0)
+                while(numberOfRecords > 0)
             }
         } else if (Array.isArray(e.value)) {
             //Add elems
@@ -793,7 +814,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                     newElementsForPage.push(row)
             }
 
-            if (newSelectedRowsPerPage[page] !== undefined && newSelectedRowsPerPage[page].length !== newElementsForPage.length)
+            if(newSelectedRowsPerPage[page] !== undefined && newSelectedRowsPerPage[page].length !== newElementsForPage.length)
                 itemUnselected = true;
 
             newSelectedRowsPerPage[page] = newElementsForPage;
@@ -813,7 +834,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
         } else {
             //In order to prevent switching page to the page that corresponds to the last selected row when using multiple select
             //We only will set selectedRowIndex if we do not unselect item
-            if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
+            if(!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0){
                 for (let i = 0; i < items.length; i++) {
                     if (e.value.length === 0) {
                         setSelectedRowIndex(0);
@@ -905,14 +926,46 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     }
 
     return <>
-        {forOverlay || (showTable && ((filters && items) || !showSkeleton)) ?
-            <>
-                <div onKeyDown={disableArrowKeys ? () => 0 : listener}
-                     className={"datatable-responsive-demo " + props.wrapperClassName || ""}>
-                    {props.contextMenu ?
-                        <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
-                                     appendTo={document.body}/> : null}
-                    <Tooltip target=".export-buttons>button" position="bottom"/>
+        {props.forOverlay || (showTable && ((filters && items) || !props.showSkeleton)) ?
+            (props.isMobile !== undefined && props.isMobile && props.mobileDataTemplate) ?
+                <div>
+                    <Dialog header={f({id: 'filters'})} position={"top"}
+                            onHide={() => setMobileFiltersDialogShown(false)}
+                            visible={mobileFiltersDialogShown} breakpoints={{'960px': '75vw', '640px': '100vw'}}
+                            style={{width: '50vw'}}>
+                        <MobileFilters
+                            onFilterApply={handleFilter}
+                            initialFilters={filters}
+                            filterColumns={props.columnOrder.filter(column => !props.ignoreFilters?.includes(column))}
+                            specialFilters={props.specialFilters}
+                            specialLabels={props.specialLabels}
+                        />
+                    </Dialog>
+
+                    {props.showHeader ? getHeader() : null}
+
+                    <MobileDataView
+                        dataViewProps={props.dataViewProps}
+                        data={items}
+                        totalRecords={totalRecords}
+                        first={first}
+                        lazy={props.fetchData !== undefined}
+                        rows={rows}
+                        paginator={props.showPaginator}
+                        rowTemplate={props.mobileDataTemplate}
+                        filters={filters}
+                        filtersMatchMode={props.filtersMatchMode}
+                        onPage={onPage}
+                    />
+                </div>
+                :
+                <>
+                    <div onKeyDown={disableArrowKeys ? () => 0 : listener}
+                         className={"datatable-responsive-demo " + props.wrapperClassName || ""}>
+                        {props.contextMenu ?
+                            <ContextMenu model={props.contextMenu} ref={cm} onHide={() => setSelectedElement(null)}
+                                         appendTo={document.body}/> : null}
+                        <Tooltip target=".export-buttons>button" position="bottom"/>
 
                     <DataTable
                         rowHover
@@ -932,9 +985,11 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                         dataKey={selectionKey as string || "id"}
                         className="p-datatable-sm p-datatable-striped"
                         filterDisplay={showFilters ? 'row' : undefined}
+                        responsiveLayout={'stack'}
                         // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
                         multiSortMeta={multiSortMeta}
                         sortMode={'multiple'}
+                        cellSelection={undefined} // ✅ makes TS pick row-selection overload
                         selectionMode={selectionMode || "single" as "multiple"}
                         selection={selectedRow}
                         onSelectionChange={handleSelection}

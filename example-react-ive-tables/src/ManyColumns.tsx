@@ -1,14 +1,15 @@
+import {ReactiveTable} from "../src";
 import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
-import customers from "../lib/customers.json"
+import * as customers from './lib/customers.json'
 import {Button} from "primereact/button";
 import {Dropdown} from "primereact/dropdown";
 import {Customer} from "./types";
 import {InputText} from "primereact/inputtext";
+import {Column, ColumnBodyOptions} from "primereact/column";
 import {ColumnGroup} from "primereact/columngroup";
 import {Row} from "primereact/row";
 import {OverlayPanel} from "primereact/overlaypanel";
-import {ReactiveTable} from "react-ive-tables"
 
 interface IDropdownOption {
     key: number;
@@ -35,6 +36,7 @@ export const ManyColumns = () => {
     const [rebuildColumns, setRebuildColumns] = useState(0);
     const [resetFilters, setResetFilters] = useState<number>();
     const [selectedOperation, setSelectedOperation] = useState<any>();
+    const [isMobile, setIsMobile] = useState(false);
 
     const overlayRef = useRef<OverlayPanel>(null);
 
@@ -54,7 +56,7 @@ export const ManyColumns = () => {
     useEffect(() => {
         // getData().then(setData);
         const addedOptions: number[] = [];
-        const activityOptions = customers.data.slice(0, 30).reduce((acc: any, el: Customer) => {
+        const activityOptions = customers.data.slice(0, 30).reduce((acc, el: Customer) => {
             if (addedOptions.includes(el.activity)) {
                 return acc;
             } else {
@@ -75,7 +77,7 @@ export const ManyColumns = () => {
     }, []);
 
     useEffect(() => {
-        if (!selectedOperation) return;
+        if(!selectedOperation) return;
         handleSelectionFromOperation();
     }, [selectedOperation])
 
@@ -159,6 +161,14 @@ export const ManyColumns = () => {
         setFiltered(rowData)
     }
 
+    // const footerGroup = <ColumnGroup>
+    //     <Row>
+    //         <Column
+    //             footer={filtered?.reduce((a, b) => a + b.balance, 0).toFixed(2) + '.'}
+    //             footerStyle={{textAlign: 'center', fontWeight: 'bold'}}/>
+    //         <Column colSpan={3}/>
+    //     </Row>
+    // </ColumnGroup>;
     const footerGroup = <ColumnGroup>
         <Row>
             {/*<Column*/}
@@ -180,6 +190,21 @@ export const ManyColumns = () => {
         }
     }
 
+    useEffect(() => {
+        setIsMobile(window.innerWidth <= 1920);
+        const onResize = () => {
+            setIsMobile(window.innerWidth <= 1920);
+        }
+        window.addEventListener("resize", (onResize));
+
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
+    useEffect(() => {
+        console.log(isMobile);
+    }, [isMobile])
+
+
     const getColumnOrder = () => {
         // 'balance', 'name', 'verified', 'activity', 'operations'
         const ignoreColumns = ["id", "country", "company", "date", "status", "representative"];
@@ -189,6 +214,34 @@ export const ManyColumns = () => {
         }
         return [];
     }
+
+    const getMobileTemplate = (rowData: Customer): ReactElement => {
+        console.log("THE ROWDATA IS: ", rowData);
+        return <div className="col-12" key={rowData.id}>
+            <div
+                className={'flex flex-column xl:flex-row xl:align-items-start p-4 gap-4'}>
+                <div
+                    className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                    <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+                        <div className="text-2xl font-bold text-900">{rowData.name}</div>
+                        <div className="flex align-items-center gap-3">
+                                <span className="flex align-items-center gap-2">
+                                    <i className="pi pi-tag"></i>
+                                    <span className="font-semibold">{rowData.representative.name}</span>
+                                </span>
+                            <Tag value={rowData.status} severity={"info"}></Tag>
+                        </div>
+                    </div>
+                    <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
+                        <span className="text-2xl font-semibold">${rowData.balance}</span>
+                        <Button icon="pi pi-shopping-cart" className="p-button-rounded"
+                                />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
 
     return <>
         <Button label={"Reset selection"} onClick={() => setResetter(new Date().getTime())}/>
@@ -253,15 +306,15 @@ export const ManyColumns = () => {
         >
 
             <div className="datatable-responsive-demo">
-                {/*<ReactiveTable*/}
-                {/*    data={data}*/}
-                {/*    selectionMode={"checkbox"}*/}
-                {/*    columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}*/}
-                {/*    forOverlay={true}*/}
-                {/*    ignoreFilters={['edit', 'delete']}*/}
-                {/*    showHeader={false}*/}
-                {/*    paginatorOptions={[5,10,20]}*/}
-                {/*/>*/}
+                <ReactiveTable
+                    data={data}
+                    selectionMode={"checkbox"}
+                    columnOrder={['balance', 'name', 'verified', 'activity', 'operations']}
+                    forOverlay={true}
+                    ignoreFilters={['edit', 'delete']}
+                    showHeader={false}
+                    paginatorOptions={[5,10,20]}
+                />
             </div>
             {/*<div className={"p-grid p-jc-center p-fluid"}>*/}
             {/*    <div className={"p-col-6"} >*/}

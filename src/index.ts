@@ -1,7 +1,6 @@
-import {SimpleDataTable} from "./SimpleDataTable";
-import {LazyDataTable} from "./LazyDataTable";
-import {SimpleTreeTable} from "./SimpleTreeTable";
-import {FetchDataParams, ReactiveTable, ExportConfig} from "./ReactiveTable";
-import {HeaderButton} from './types'
-
-export {ReactiveTable, SimpleDataTable, LazyDataTable, SimpleTreeTable, HeaderButton, FetchDataParams, ExportConfig}
+export { ReactiveTable, FetchDataParams, ExportConfig } from './ReactiveTable';
+export { SimpleDataTable } from './SimpleDataTable';
+export { SimpleTreeTable } from './SimpleTreeTable';
+export { MobileFilters } from "./mobile/MobileFilters"
+export { MobileDataView } from "./mobile/MobileDataView"
+export { HeaderButton } from './types';
