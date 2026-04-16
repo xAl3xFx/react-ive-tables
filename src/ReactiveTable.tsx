@@ -980,6 +980,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
                             dataKey={props.selectionKey || "id"}
                             className="p-datatable-sm p-datatable-striped"
                             filterDisplay={props.showFilters ? 'row' : undefined}
+                            filterDelay={props.swr ? 700 : 300}
                             // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
                             multiSortMeta={multiSortMeta}
                             sortMode={'multiple'}

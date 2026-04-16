@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="..">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +68,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
     &quot;npm.run example.executor&quot;: &quot;Debug&quot;,
     &quot;npm.start.executor&quot;: &quot;Run&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;settings.typescriptcompiler&quot;,
@@ -250,7 +252,9 @@
       <workItem from="1772117349859" duration="3709000" />
       <workItem from="1772707778846" duration="5000" />
       <workItem from="1772708092523" duration="566000" />
-      <workItem from="1772709003043" duration="753000" />
+      <workItem from="1772709003043" duration="943000" />
+      <workItem from="1772711861057" duration="1211000" />
+      <workItem from="1776349324873" duration="733000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -595,7 +599,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -626,7 +630,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactIveTable - added a check on handle selection - if unselecting - do nothing" />
     <MESSAGE value="ReactiveTable -&gt; Do not hardcore empty message." />
     <MESSAGE value="ReactiveTable -&gt; Default filter placeholder;" />
     <MESSAGE value="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler" />
@@ -650,6 +653,7 @@
     <MESSAGE value="ReactiveTable - added header rendering on mobile" />
     <MESSAGE value="Removed console logs" />
     <MESSAGE value="ReactiveTable -&gt; Mobile filters button (header row) fix" />
+    <MESSAGE value="DT skeleton -&gt; display paginator based on props.showPaginator" />
     <MESSAGE value=".." />
     <option name="LAST_COMMIT_MESSAGE" value=".." />
   </component>
