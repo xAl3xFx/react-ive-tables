@@ -38,7 +38,7 @@ export interface FetchDataParams {
     //Add type for this
     sort?: any;
     excelName?: string;
-    page: number;
+    page?: number;
 }
 
 export interface ExportExcelParams {
