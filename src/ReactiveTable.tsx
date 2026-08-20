@@ -772,43 +772,33 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
 
         // Handle all array-based selections (Select All, Checkbox, Multiple Row Select)
         if (Array.isArray(e.value)) {
-            if (newSelectedRowsPerPage[page] === undefined) {
-                newSelectedRowsPerPage[page] = [];
-            }
 
-            // Add elements: Check if row is already tracked across ANY page
-            for (let row of e.value) {
-                const isAlreadySelected = Object.values(newSelectedRowsPerPage)
-                    .flat()
-                    .some((el: any) => el[props.selectionKey!] === row[props.selectionKey!]);
-
-                if (!isAlreadySelected) {
-                    newSelectedRowsPerPage[page].push(row);
-                }
-            }
-
-            // Remove elements: Check if elements currently tracked for THIS page were unselected
-            const currPageElements = newSelectedRowsPerPage[page] || [];
+            // INTERSECTION LOGIC: Isolate the update entirely to the current page.
+            // We filter the current page's `items` to see exactly which ones are present in `e.value`.
+            // This ensures we never accidentally touch or overwrite other pages.
             const newElementsForPage = [];
-
-            for (let row of currPageElements) {
-                const stillSelected = e.value.some(
-                    (el: any) => el[props.selectionKey!] === row[props.selectionKey!]
+            for (let item of items) {
+                const isSelected = e.value.some(
+                    (el: any) => el[props.selectionKey!] === item[props.selectionKey!]
                 );
 
-                if (stillSelected) {
-                    newElementsForPage.push(row);
+                if (isSelected) {
+                    newElementsForPage.push(item);
                 }
             }
 
-            if (newSelectedRowsPerPage[page].length !== newElementsForPage.length) {
+            const currPageElements = newSelectedRowsPerPage[page] || [];
+
+            // If the current page previously had more elements selected, an item was unselected
+            if (currPageElements.length > newElementsForPage.length) {
                 itemUnselected = true;
             }
 
+            // Strictly update ONLY the current page's slot in the dictionary
             newSelectedRowsPerPage[page] = newElementsForPage;
 
         } else {
-            // Handle single (non-array) selection (e.g., single row click)
+            // Handle single (non-array) selection (e.g., single row click without multiple mode)
             if (props.setSelected) props.setSelected(e.value, false);
             if (props.selectionHandler) props.selectionHandler(e);
 
@@ -824,7 +814,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
             return; // Exit early for single selections
         }
 
-        // Multiple Selection post-processing (moved out of the previously unreachable 'else' block)
+        // Multiple Selection index post-processing
         if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
             for (let i = 0; i < items.length; i++) {
                 if (e.value.length === 0) {
@@ -847,6 +837,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
         if (props.selectionHandler) props.selectionHandler({ value: newSelectedRow });
         if (props.setSelected) props.setSelected(newSelectedRow, false);
     };
+
 
 
     const onRowEditComplete = (e: DataTableRowEditCompleteEvent) => {

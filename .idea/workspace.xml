@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable - FetchDataParams - page is now again nullable">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable - handle selection - fixed a bug with lazi pagination and checkbox selection" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -61,40 +58,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JavaScript Debug.Debug.executor": "Debug",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "v1",
-    "javascript.preferred.runtime.type.id": "node",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/alex/Stuff/Local/packages/react-ive-tables/example",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "npm.run example.executor": "Debug",
-    "npm.start.executor": "Run",
-    "settings.editor.selected.configurable": "settings.typescriptcompiler",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JavaScript Debug.Debug.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;v1&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/alex/Stuff/Local/packages/react-ive-tables/example&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.run example.executor&quot;: &quot;Debug&quot;,
+    &quot;npm.start.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.typescriptcompiler&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "JavaScript"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JavaScript&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/example" />
@@ -253,7 +250,7 @@
       <workItem from="1761825922713" duration="2577000" />
       <workItem from="1771331848484" duration="393000" />
       <workItem from="1776943581307" duration="703000" />
-      <workItem from="1787150569737" duration="4947000" />
+      <workItem from="1787150569737" duration="5138000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -598,7 +595,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -629,7 +626,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactIveTable - added a check on handle selection - if unselecting - do nothing" />
     <MESSAGE value="ReactiveTable -&gt; Do not hardcore empty message." />
     <MESSAGE value="ReactiveTable -&gt; Default filter placeholder;" />
     <MESSAGE value="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler" />
@@ -654,7 +650,8 @@
     <MESSAGE value="ReactiveTable - added header rendering on mobile" />
     <MESSAGE value="Removed console logs" />
     <MESSAGE value="ReactiveTable - FetchDataParams - page is now again nullable" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable - FetchDataParams - page is now again nullable" />
+    <MESSAGE value="ReactiveTable - handle selection - fixed a bug with lazi pagination and checkbox selection" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReactiveTable - handle selection - fixed a bug with lazi pagination and checkbox selection" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
