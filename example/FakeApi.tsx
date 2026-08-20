@@ -42,6 +42,9 @@ export const FakeApi: React.FC<Props> = props => {
         const [rebuildColumns, setRebuildColumns] = useState<number>();
         const [resetFilters, setResetFilters] = useState<number>();
         const [isMobile, setIsMobile] = useState(false);
+        const [selectionResetter, setSelectionResetter] = useState<number>();
+        const [selectedRecords, setSelectedRecords] = useState<any[]>([]);
+
 
         const fetcher = lazyFetchingService.getLazyFetcher;
         const fetchData = lazyFetchingService.getDataFetcher;
@@ -138,13 +141,13 @@ export const FakeApi: React.FC<Props> = props => {
             return () => window.removeEventListener('resize', onResize);
         }, []);
 
-    const headerButtons: HeaderButton[] = [
-        {
-            onClick: () => 0,
-            icon: 'pi pi-plus',
-            className: 'p-button-success',
-            label: f({id: "create"})
-        }
+        const headerButtons: HeaderButton[] = [
+            {
+                onClick: () => 0,
+                icon: 'pi pi-plus',
+                className: 'p-button-success',
+                label: f({id: "create"})
+            }
         ]
 
 
@@ -180,6 +183,14 @@ export const FakeApi: React.FC<Props> = props => {
                            rebuildColumns={rebuildColumns}
                            ignoreFilters={isMobile ? ["description"] : []}
                            specialFilters={getSpecialFilters()}
+                           //@ts-ignore
+                           selectionMode={"checkbox"}
+                           selectionResetter={selectionResetter}
+                           selectionKey={"id"}
+                           selectionHandler={(e) => {
+                               console.log(e);
+                               setSelectedRecords(e.value || [])
+                           }}
                            specialLabels={{
                                title: "TEST"
                            }}

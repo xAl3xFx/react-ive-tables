@@ -760,6 +760,9 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
     }
 
     const handleSelection = (e: any) => {
+        console.log("In the handle selection", e);
+
+
         if (cm.current) {
             cm.current.hide(e.originalEvent);
         }
