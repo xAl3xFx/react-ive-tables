@@ -767,91 +767,87 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
         if (!e.value) return;
 
         const page = Math.floor(first / rows) + 1;
-
-        let newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage);
+        let newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage) || {};
         let itemUnselected = false;
 
-        //Handle selection of all/none of the records
-        if (e.type === "all" || e.type === "checkbox") {
-            //Handle unselecting all records
-            if (e.value.length === 0) {
-                newSelectedRowsPerPage = [];
+        // Handle all array-based selections (Select All, Checkbox, Multiple Row Select)
+        if (Array.isArray(e.value)) {
+            if (newSelectedRowsPerPage[page] === undefined) {
+                newSelectedRowsPerPage[page] = [];
             }
-            //Handle selecting all records
-            else {
-                let numberOfRecords = e.value.length;
-                let currentPage = 1;
-                do {
-                    newSelectedRowsPerPage[currentPage] = e.value.splice(0, rows);
-                    numberOfRecords -= rows;
-                    currentPage++;
-                }
-                while (numberOfRecords > 0)
-            }
-        } else if (Array.isArray(e.value)) {
-            //Add elems
+
+            // Add elements: Check if row is already tracked across ANY page
             for (let row of e.value) {
-                //@ts-ignore
-                if (Object.values(newSelectedRowsPerPage).flat().find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) === undefined) {
-                    if (newSelectedRowsPerPage[page] === undefined)
-                        newSelectedRowsPerPage[page] = [];
+                const isAlreadySelected = Object.values(newSelectedRowsPerPage)
+                    .flat()
+                    .some((el: any) => el[props.selectionKey!] === row[props.selectionKey!]);
+
+                if (!isAlreadySelected) {
                     newSelectedRowsPerPage[page].push(row);
                 }
             }
 
-            //Remove elems
+            // Remove elements: Check if elements currently tracked for THIS page were unselected
             const currPageElements = newSelectedRowsPerPage[page] || [];
             const newElementsForPage = [];
+
             for (let row of currPageElements) {
-                if (e.value.find((el: any) => el[props.selectionKey!] === row[props.selectionKey!]) !== undefined)
-                    newElementsForPage.push(row)
+                const stillSelected = e.value.some(
+                    (el: any) => el[props.selectionKey!] === row[props.selectionKey!]
+                );
+
+                if (stillSelected) {
+                    newElementsForPage.push(row);
+                }
             }
 
-            if (newSelectedRowsPerPage[page] !== undefined && newSelectedRowsPerPage[page].length !== newElementsForPage.length)
+            if (newSelectedRowsPerPage[page].length !== newElementsForPage.length) {
                 itemUnselected = true;
+            }
 
             newSelectedRowsPerPage[page] = newElementsForPage;
-        } else if (!Array.isArray(e.value)) {
-            if (props.setSelected) props.setSelected(e.value, false)
+
+        } else {
+            // Handle single (non-array) selection (e.g., single row click)
+            if (props.setSelected) props.setSelected(e.value, false);
             if (props.selectionHandler) props.selectionHandler(e);
+
             if (Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
                 for (let i = 0; i < items.length; i++) {
                     if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
-                        setSelectedRowIndex((props.fetchData !== undefined && props.fetchData !== null) ? first + i : i);
-                        break;
-                    }
-                }
-            }
-            setSelectedRow(e.value);
-            return;
-        } else {
-            //In order to prevent switching page to the page that corresponds to the last selected row when using multiple select
-            //We only will set selectedRowIndex if we do not unselect item
-            if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
-                for (let i = 0; i < items.length; i++) {
-                    if (e.value.length === 0) {
-                        setSelectedRowIndex(0);
-                        break;
-                    }
-                    if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
                         setSelectedRowIndex(props.fetchData ? first + i : i);
                         break;
                     }
                 }
             }
-
+            setSelectedRow(e.value);
+            return; // Exit early for single selections
         }
 
-        //@ts-ignore
+        // Multiple Selection post-processing (moved out of the previously unreachable 'else' block)
+        if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
+            for (let i = 0; i < items.length; i++) {
+                if (e.value.length === 0) {
+                    setSelectedRowIndex(0);
+                    break;
+                }
+                if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
+                    setSelectedRowIndex(props.fetchData ? first + i : i);
+                    break;
+                }
+            }
+        }
+
+        // Flatten dictionary and update states
         const newSelectedRow = Object.values(newSelectedRowsPerPage).flat();
 
-        setSelectedRowPerPage(newSelectedRowsPerPage)
+        setSelectedRowPerPage(newSelectedRowsPerPage);
         setSelectedRow(newSelectedRow);
 
-        if (props.selectionHandler) props.selectionHandler({value: newSelectedRow});
-        //@ts-ignore
-        if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat());
+        if (props.selectionHandler) props.selectionHandler({ value: newSelectedRow });
+        if (props.setSelected) props.setSelected(newSelectedRow, false);
     };
+
 
     const onRowEditComplete = (e: DataTableRowEditCompleteEvent) => {
         let newItems = [...items];
