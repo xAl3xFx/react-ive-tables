@@ -821,7 +821,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
         if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
             for (let i = 0; i < items.length; i++) {
                 if (e.value.length === 0) {
-                    setSelectedRowIndex(0);
+                    // setSelectedRowIndex(0);
                     break;
                 }
                 if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
