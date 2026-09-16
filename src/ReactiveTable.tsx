@@ -77,7 +77,7 @@ interface Props<T extends DataTableValue, K extends string> {
     cellEditHandler?: (element: ColumnEvent) => void,                           // Same as rowEditHandler.
     selectionHandler?: (e: any) => void,                                        // Pretty much like setSelected. Not sure why it is needed, but it is used in some projects.
     selectionMode?: "checkbox" | "single" | undefined,                          // Selection mode.
-    selectionKey?: string,                                                      // Key used for selection. Default value is 'id'. Important for proper selection.
+    selectionKey?: keyof T,                                                      // Key used for selection. Default value is 'id'. Important for proper selection.
     onRowUnselect?: (e: any) => void,                                           // Callback invoked when row is unselected.
     selectedIds?: string[] | number[],                                          // Used for external selection. When such array is passed, items are filtered so that all items matching those ids are set in selectedRow.
     specialColumns?: {                                                          // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
@@ -159,7 +159,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
     const [loading, setLoading] = useState(false);
     const [showTable, setShowTable] = useState(false);
     const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0); //Used for handling arrowUp and arrowDown. This is the index of the current selected row.
-    const [selectedRow, setSelectedRow] = useState<any>();
+    const [selectedRow, setSelectedRow] = useState<T | T[]>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
     const [rebuildColumns, setRebuildColumns] = useState<number>(props.rebuildColumns || 0);
@@ -447,38 +447,64 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
     }
 
     const handleExternalSelection = () => {
-        // if (selectedRow !== undefined) {
+        if (!props.selectedIds) return;
+
+        if(!props.selectionKey) return;
+
         if (props.selectionMode === "checkbox") {
-            const elements: any[] = [];
-            let selectedRowIndex = undefined;
-            for (let i = 0; i < items.length; i++) {
+            // 1. Remove items from the current selection that are no longer in selectedIds
+            const currentSelected = Array.isArray(selectedRow) ? selectedRow : [];
+            const updatedSelection = currentSelected.filter(item =>
                 //@ts-ignore
-                if (props.selectedIds!.includes(items[i][props.selectionKey!])) {
-                    if (!selectedRowIndex) {
-                        selectedRowIndex = props.fetchData ? first + i : i;
-                    }
-                    elements.push({...items[i]});
+                props.selectedIds!.includes(item[props.selectionKey!])
+            );
+
+            // 2. Add items from the current page that are in selectedIds but not yet in our state
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                //@ts-ignore
+                const isSelectedExternally = props.selectedIds!.includes(item[props.selectionKey!]);
+                const isAlreadySaved = updatedSelection.some(
+                    sel => sel[props.selectionKey!] === item[props.selectionKey!]
+                );
+
+                if (isSelectedExternally && !isAlreadySaved) {
+                    updatedSelection.push({ ...item });
                 }
             }
-            if (selectedRow)
-                setSelectedRow([...selectedRow, ...elements]);
-            else
-                setSelectedRow([...elements]);
-            if (selectedRowIndex !== undefined)
-                setSelectedRowIndex(selectedRowIndex);
+
+            // 3. Update the flat array
+            setSelectedRow(updatedSelection);
+
+            // 4. Sync the dictionary for the current page so pagination doesn't break later
+            const page = Math.floor(first / rows) + 1;
+            const currentPageSelections = updatedSelection.filter(sel =>
+                items.some(item => item[props.selectionKey!] === sel[props.selectionKey!])
+            );
+
+            setSelectedRowPerPage(prev => ({
+                ...prev,
+                [page]: currentPageSelections
+            }));
+
+            // Notice: We intentionally do NOT touch selectedRowIndex for checkboxes!
+
         } else {
+            // Single selection mode
             let element: any = undefined;
             for (let i = 0; i < items.length; i++) {
                 //@ts-ignore
                 if (props.selectedIds!.includes(items[i][props.selectionKey!])) {
-                    element = {...items[i]};
-                    setSelectedRowIndex(i);
+                    element = { ...items[i] };
+                    // Safe to set index here because arrow keys are active for single selection
+                    setSelectedRowIndex(props.fetchData ? first + i : i);
                     break;
                 }
             }
             setSelectedRow(element);
         }
     };
+
 
     useEffect(() => {
         const newPage = Math.floor(selectedRowIndex / rows) + 1;
@@ -760,9 +786,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
     }
 
     const handleSelection = (e: any) => {
-        console.log("In the handle selection", e);
-
-
         if (cm.current) {
             cm.current.hide(e.originalEvent);
         }
@@ -771,14 +794,10 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
 
         const page = Math.floor(first / rows) + 1;
         let newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage) || {};
-        let itemUnselected = false;
 
         // Handle all array-based selections (Select All, Checkbox, Multiple Row Select)
         if (Array.isArray(e.value)) {
-
-            // INTERSECTION LOGIC: Isolate the update entirely to the current page.
-            // We filter the current page's `items` to see exactly which ones are present in `e.value`.
-            // This ensures we never accidentally touch or overwrite other pages.
+            // INTERSECTION LOGIC: Restored to your exact original working logic.
             const newElementsForPage = [];
             for (let item of items) {
                 const isSelected = e.value.some(
@@ -788,13 +807,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
                 if (isSelected) {
                     newElementsForPage.push(item);
                 }
-            }
-
-            const currPageElements = newSelectedRowsPerPage[page] || [];
-
-            // If the current page previously had more elements selected, an item was unselected
-            if (currPageElements.length > newElementsForPage.length) {
-                itemUnselected = true;
             }
 
             // Strictly update ONLY the current page's slot in the dictionary
@@ -817,22 +829,8 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
             return; // Exit early for single selections
         }
 
-        // Multiple Selection index post-processing
-        // if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
-        //     for (let i = 0; i < items.length; i++) {
-        //         if (e.value.length === 0) {
-        //             // setSelectedRowIndex(0);
-        //             break;
-        //         }
-        //         if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
-        //             setSelectedRowIndex(props.fetchData ? first + i : i);
-        //             break;
-        //         }
-        //     }
-        // }
-
         // Flatten dictionary and update states
-        const newSelectedRow = Object.values(newSelectedRowsPerPage).flat();
+        const newSelectedRow: T[] = Object.values(newSelectedRowsPerPage).flat() as T[];
 
         setSelectedRowPerPage(newSelectedRowsPerPage);
         setSelectedRow(newSelectedRow);
@@ -840,6 +838,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
         if (props.selectionHandler) props.selectionHandler({ value: newSelectedRow });
         if (props.setSelected) props.setSelected(newSelectedRow, false);
     };
+
 
 
 
