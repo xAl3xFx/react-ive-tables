@@ -455,7 +455,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
                 //@ts-ignore
                 if (props.selectedIds!.includes(items[i][props.selectionKey!])) {
                     if (!selectedRowIndex) {
-                        selectedRowIndex = i;
+                        selectedRowIndex = props.fetchData ? first + i : i;
                     }
                     elements.push({...items[i]});
                 }
@@ -818,18 +818,18 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(
         }
 
         // Multiple Selection index post-processing
-        if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
-            for (let i = 0; i < items.length; i++) {
-                if (e.value.length === 0) {
-                    // setSelectedRowIndex(0);
-                    break;
-                }
-                if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
-                    setSelectedRowIndex(props.fetchData ? first + i : i);
-                    break;
-                }
-            }
-        }
+        // if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
+        //     for (let i = 0; i < items.length; i++) {
+        //         if (e.value.length === 0) {
+        //             // setSelectedRowIndex(0);
+        //             break;
+        //         }
+        //         if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
+        //             setSelectedRowIndex(props.fetchData ? first + i : i);
+        //             break;
+        //         }
+        //     }
+        // }
 
         // Flatten dictionary and update states
         const newSelectedRow = Object.values(newSelectedRowsPerPage).flat();

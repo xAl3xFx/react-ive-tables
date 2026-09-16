@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Test">
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Attempt to fix a bug with selection and paginator">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -254,7 +255,7 @@
       <workItem from="1776943581307" duration="703000" />
       <workItem from="1787150569737" duration="5138000" />
       <workItem from="1787215736805" duration="1321000" />
-      <workItem from="1789482409212" duration="1944000" />
+      <workItem from="1789482409212" duration="2725000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -599,7 +600,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -630,7 +631,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactiveTable -&gt; Default filter placeholder;" />
     <MESSAGE value="ReactiveTable.tsx -&gt; Added proper type to cellEditHandler" />
     <MESSAGE value="ReactiveTable - added column header template" />
     <MESSAGE value=".." />
@@ -655,7 +655,8 @@
     <MESSAGE value="ReactiveTable - FetchDataParams - page is now again nullable" />
     <MESSAGE value="ReactiveTable - handle selection - fixed a bug with lazi pagination and checkbox selection" />
     <MESSAGE value="Test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Test" />
+    <MESSAGE value="Attempt to fix a bug with selection and paginator" />
+    <option name="LAST_COMMIT_MESSAGE" value="Attempt to fix a bug with selection and paginator" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
