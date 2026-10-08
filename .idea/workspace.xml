@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable - attempt to fix a selection and pagination bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/example/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,6 +53,65 @@
     <commands />
     <urls />
   </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0245182530592734" />
+      <entry key="MS500" value="1.4763189990219687" />
+      <entry key="S2" value="1.8307578929497539" />
+      <entry key="S5" value="1.9285168523067289" />
+      <entry key="S10" value="1.963595793010082" />
+      <entry key="S30" value="1.9877149601612842" />
+      <entry key="S60" value="1.9938384980273627" />
+      <entry key="M2" value="1.996914488824073" />
+      <entry key="M5" value="1.9987646512003292" />
+      <entry key="M10" value="1.9993821347214134" />
+      <entry key="M15" value="1.999588047385123" />
+      <entry key="M30" value="1.9997940026421346" />
+      <entry key="H1" value="2.0000082034819506" />
+      <entry key="H2" value="2.092941030525028" />
+      <entry key="H4" value="4.705150758139281" />
+      <entry key="D1" value="47.00627584381631" />
+      <entry key="W1" value="74.89816104057955" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="1.2190684919688262E-168" />
+      <entry key="M5" value="1.0599893586264552E-67" />
+      <entry key="M10" value="5.815433666229174E-34" />
+      <entry key="M15" value="1.23721529054867E-22" />
+      <entry key="M30" value="3.2340998079772894E-11" />
+      <entry key="H1" value="1.8215479397264786E-5" />
+      <entry key="H2" value="0.014031315871345268" />
+      <entry key="H4" value="0.3920040453492978" />
+      <entry key="D1" value="6.308263474508382" />
+      <entry key="W1" value="10.159957502834972" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.11235706320277992" />
+      <entry key="MS500" value="0.9508162501006382" />
+      <entry key="S2" value="1.6404322344709892" />
+      <entry key="S5" value="1.8457066908015312" />
+      <entry key="S10" value="1.9209811570182689" />
+      <entry key="S30" value="1.9732317081797344" />
+      <entry key="S60" value="1.98656145890586" />
+      <entry key="M2" value="1.9932670690732766" />
+      <entry key="M5" value="1.9973035412217506" />
+      <entry key="M10" value="1.9986512222151678" />
+      <entry key="M15" value="1.9991006928953772" />
+      <entry key="M30" value="1.999550285677416" />
+      <entry key="H1" value="1.999904536079153" />
+      <entry key="H2" value="2.1069057693308455" />
+      <entry key="H4" value="5.097045126627995" />
+      <entry key="D1" value="53.3143210335558" />
+      <entry key="W1" value="85.05806873610628" />
+    </decayedShown>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -61,40 +121,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;JavaScript Debug.Debug.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;v1&quot;,
-    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/alex/Stuff/Local/packages/react-ive-tables/example&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;npm.run example.executor&quot;: &quot;Debug&quot;,
-    &quot;npm.start.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.typescriptcompiler&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.Debug.executor": "Debug",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "v1",
+    "javascript.preferred.runtime.type.id": "node",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/alex/Stuff/Local/packages/react-ive-tables/example",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "npm.run example.executor": "Debug",
+    "npm.start.executor": "Run",
+    "settings.editor.selected.configurable": "settings.typescriptcompiler",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/alex/Stuff/Local/packages/react-ive-tables/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;JavaScript&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "JavaScript"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/example" />
@@ -104,6 +166,7 @@
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/example/technicalManagerTest" />
       <recent name="$PROJECT_DIR$/src/mobile" />
       <recent name="$PROJECT_DIR$/example/public" />
       <recent name="C:\Users\alexp\WebstormProjects\react-ive-tables\src" />
@@ -255,7 +318,9 @@
       <workItem from="1776943581307" duration="703000" />
       <workItem from="1787150569737" duration="5138000" />
       <workItem from="1787215736805" duration="1321000" />
-      <workItem from="1789482409212" duration="4810000" />
+      <workItem from="1789482409212" duration="5649000" />
+      <workItem from="1789563954584" duration="384000" />
+      <workItem from="1791379617984" duration="7892000" />
     </task>
     <task id="LOCAL-00011" summary="example">
       <created>1664378644174</created>
@@ -600,7 +665,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

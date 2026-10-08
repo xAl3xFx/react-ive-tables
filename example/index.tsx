@@ -15,6 +15,7 @@ import axios from "axios";
 import {FakeApi} from "./FakeApi";
 import {SimpleDT} from "./SimpleDT";
 import {TreeTableExample} from "./TreeTableExample";
+import TechnicalManagerWaybills from "./technicalManagerTest/TechnicalManagerWaybills";
 
 const App = () => {
     const [selectedTable, setSelectedTable] = useState(<FakeApi />);
