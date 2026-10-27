@@ -142,6 +142,17 @@ interface Props<T extends DataTableValue, K extends string> {
     mobileDataTemplate?: (rowData: T) => any                      // Specifies what to render in the mobile view
     dataViewProps?: DataViewProps
 }
+function useDeepCompareMemoize<T>(value: T, propName: string): T {
+    const ref = useRef<T>(value);
+
+    if (!isEqual(value, ref.current)) {
+        ref.current = value;
+    } else if (value !== ref.current) {
+    }
+
+    return ref.current;
+}
+
 
 export const ReactiveTable = <T extends DataTableValue, K extends string>({
                                                                               showFilters = true,
@@ -171,23 +182,46 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                                                                               swr = false,
                                                                               ...props
                                                                           }: Props<T, K>) => {
+    const getDefaultFilters = () => {
+        if (!props.columnOrder) return {};
+        return props.columnOrder.reduce((acc: any, el) => {
+            let matchMode = "contains";
+            //@ts-ignore
+            if (props.filtersMatchMode && props.filtersMatchMode[el]) matchMode = props.filtersMatchMode[el];
+            return {...acc, [el]: {value: null, matchMode: matchMode || "contains"}}
+        }, {});
+    }
+
     const {formatMessage: f} = useIntl();
 
     const [items, setItems] = useState<T[]>([]);
     const [originalItems, setOriginalItems] = useState<any>([]);
-    const [filters, setFilters] = useState<any>({});
-    const [prevFilters, setPrevFilters] = useState<any>({});
-    const [columns, setColumns] = useState<any>([]);
+    const [filters, setFilters] = useState<any>(() => {
+        const defaults = getDefaultFilters();
+        if (props.initialFilters) {
+            Object.keys(props.initialFilters).forEach(key => {
+                if (defaults[key]) {
+                    //@ts-ignore
+                    defaults[key].value = props.initialFilters[key];
+                }
+            });
+        }
+        return defaults;
+    });
+    // FIX: was useState<any>({}) — the guard below (`prevFilters === null`) could never
+    // become true, so the very first fill of `filters` (all values null, from initFilters())
+    // always fell through to refreshTable(), causing a duplicate fetch on every mount.
+    const [prevFilters, setPrevFilters] = useState<any>(null);
     const [rows, setRows] = useState(20);
     const [first, setFirst] = useState(0);
+    const [page, setPage] = useState(0);
     const [totalRecords, setTotalRecords] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showTable, setShowTable] = useState(false);
     const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0); //Used for handling arrowUp and arrowDown. This is the index of the current selected row.
-    const [selectedRow, setSelectedRow] = useState<any>();
+    const [selectedRow, setSelectedRow] = useState<T | T[]>();
     const [selectedRowsPerPage, setSelectedRowPerPage] = useState<any>({});
     const [selectionResetter, setSelectionResetter] = useState<number>(props.selectionResetter || 0);
-    const [rebuildColumns, setRebuildColumns] = useState<number>(props.rebuildColumns || 0);
     const [selectedElement, setSelectedElement] = useState(null);
     const [prevInitialFilters, setPrevInitialFilters] = useState<any>(); //Used for comparison with props.initialFilters to escape inifinite loop
     const [excelFilters, setExcelFilters] = useState({});
@@ -201,6 +235,16 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
 
     const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([]);
     const [mobileFiltersDialogShown, setMobileFiltersDialogShown] = useState(false);
+
+    ///!!!
+    const latestProps = useRef(props);
+    latestProps.current = props;
+
+
+    const cm = useRef<any>();
+    const dt = useRef<any>();
+    const skeletonDtRef = useRef<any>();
+    const filterRef = useRef<any>();
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
 
     // const doubleClickHandler = useCallback((e:any) => {
@@ -239,7 +283,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
 
     useEffect(() => {
         if (props.resetFilters === undefined) return;
-        const newFilters = initFilters();
+        const newFilters = getDefaultFilters();
         handleFilter({filters: newFilters});
         setTimeout(() => {
             Object.keys(filters).forEach(key => {
@@ -311,35 +355,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     }, [initialFilters, areFiltersInited]);
 
 
-    useEffect(() => {
-
-        //Check if props.initialFilters and prevInitialFilters are equal in order to avoid infinite loop.
-        const equal = isEqual(initialFilters, prevInitialFilters);
-        if (equal && initialFilters !== undefined) return;
-
-        let newFilters = cloneDeep(filters);
-        if (newFilters == null)
-            newFilters = initFilters();
-
-        if (initialFilters) {
-            const tempFilters = Object.keys(initialFilters).reduce((acc, key) => {
-                let matchMode = "contains";
-                if (props.filtersMatchMode && props.filtersMatchMode[key]) matchMode = props.filtersMatchMode[key];
-                return {
-                    ...acc, [key]: {
-                        value: initialFilters![key],
-                        matchMode
-                    }
-                }
-            }, {...newFilters});
-            newFilters = tempFilters;
-
-            setPrevInitialFilters(initialFilters);
-        }
-        handleFilter({filters: newFilters});
-        if (!props.fetchData)
-            setFilters(newFilters);
-    }, [initialFilters]);
 
 
     useEffect(() => {
@@ -361,29 +376,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
         if (filterRef.current)
             handleFilter(filterRef.current);
     }, [originalItems])
-
-    useEffect(() => {
-        if (columns.length)
-            initFilters();
-            // setFilters(initFilters());
-    }, [columns])
-
-    // useEffect(() => {
-    //     if (props.toggleSelect)
-    //         generateColumns();
-    // }, [props.toggleSelect])
-
-    useEffect(() => {
-        if (showTable) {
-            generateColumns();
-        }
-    }, [showTable]);
-
-    useEffect(() => {
-        if (items && items.length > 0)
-            generateColumns();
-    }, [items]);
-
 
     useEffect(() => {
         if (filters && Object.keys(filters).length > 0) {
@@ -442,29 +434,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
         }
     }, [props.selectionResetter]);
 
-    useEffect(() => {
-        if (props.rebuildColumns && props.rebuildColumns !== rebuildColumns) {
-            generateColumns();
-        }
-    }, [props.rebuildColumns]);
 
-    useEffect(() => {
-        if (items && items.length > 0 && columns.length === 0 && filters && filters.length) {
-            generateColumns();
-        }
-    }, [items, columns, filters]);
-
-    const initFilters = (): DataTableStateEvent => {
-        const initialFilters = columnOrder.reduce((acc: any, el) => {
-            let matchMode = "contains";
-            //@ts-ignore
-            if (props.filtersMatchMode) matchMode = props.filtersMatchMode[el];
-            return {...acc, [el]: {value: null, matchMode: matchMode || "contains"}}
-        }, {});
-
-        // setFilters(initialFilters);
-        return initialFilters;
-    }
 
     const handleExternalSelection = () => {
         if (selectionMode === "multiple" || selectionMode === "checkbox") {
@@ -636,68 +606,162 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                           onChange={(e) => options.filterApplyCallback(e.target.value)}/>;
     }
 
-    const generateColumns = () => {
-        if (columns.length === 0 || (props.rebuildColumns && props.rebuildColumns !== rebuildColumns)) {
-            if (props.rebuildColumns)
-                setRebuildColumns(props.rebuildColumns);
-            const tempColumns = columnOrder.map((cName: any) => {
-                let columnHeader = getColumnHeaderTranslated(cName);
-                const columnHeaderStyle = {textAlign: 'center', ...(props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].header : {textAlign: 'center'}};
-                const columnBodyStyle = (props.columnStyle && props.columnStyle[cName]) ? props.columnStyle[cName].body : {textAlign: props.textAlign || 'center'};
-                //TO BE TESTED
-                // If there are specialColumns passed, for each of them we create a column with a body, generated from the templating function, which copies the element sent from the parent as prop
-                return <Column
-                    body={(columnTemplate && columnTemplate[cName]) ? (rowData: T, columnOptions) => columnTemplate![cName](rowData, columnOptions) : undefined}
-                    editor={(specialEditors && specialEditors[cName]) || (editMode && editableColumns!.includes(cName) ? textEditor : undefined)}
-                    filterFunction={handleFilter}
-                    frozen={props.frozenColumns?.includes(cName)}
-                    alignFrozen={"right"}
-                    rowEditor={cName === 'operations' && props.rowEditHandler !== undefined}
-                    sortable={sortableColumns?.includes(cName)}
-                    filterElement={options => specialFilters[cName] ? specialFilters[cName](options, cName) : defaultFilter(options, cName)}
-                    showClearButton={false}
-                    bodyStyle={columnBodyStyle} showFilterMenu={false} filterField={cName}
-                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
-                    filter={showFilters && !ignoreFilters!.includes(cName)}
-                    filterHeaderStyle={{textAlign: 'center'}}
-                    key={cName} field={cName}
-                    //Generate the header column template if it exists for the current column
-                    header={props.columnHeaderTemplate !== undefined && props.columnHeaderTemplate[cName] !== undefined ? props.columnHeaderTemplate[cName] : columnHeader}
-                    headerStyle={columnHeaderStyle}
-                />
-            });
-            //@ts-ignore
-            if (props.rowEditHandler !== undefined && !props.columnOrder.includes('operations'))
-                tempColumns.push(<Column rowEditor headerStyle={{width: '7rem'}}
-                                         bodyStyle={{textAlign: 'center'}}/>);
-            if (props.expandable)
-                tempColumns.unshift(<Column expander headerStyle={{width: '3em'}}/>)
-            if (selectionMode === "checkbox")
-                tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
-            //Put specialColumns in columns
-            Object.keys(specialColumns || []).forEach(cName => {
-                const col = <Column field={cName} header={f({id: cName})}
-                                    body={(rowData: any) => generateColumnBodyTemplate(cName, rowData)}/>
-                if (specialColumns![cName].atStart) {
-                    tempColumns.unshift(col);
-                } else {
-                    tempColumns.push(col);
-                }
-            })
-
-            setColumns(tempColumns);
-        }
-    };
-
-    //TO BE TESTED
-    const generateColumnBodyTemplate = (column: string, rowData: any) => {
-        return React.cloneElement(specialColumns![column].element, {
-            onClick: (e: any) => specialColumns![column].handler(rowData)
-        })
+    const getColumnHeaderTranslated = (cName: string) => {
+        // @ts-ignore
+        if (specialLabels && specialLabels[cName])
+            // @ts-ignore
+            return f({id: specialLabels[cName]})
+        return f({id: cName});
     }
+
+
+    const onCellEditComplete = (e: ColumnEvent) => {
+        const {rowData, newRowData, rowIndex} = e;
+
+        setItems((prevState) => {
+            const newItems = cloneDeep(prevState);
+            if (selectionKey) {
+                const selectionKeyOfRowData = rowData[selectionKey];
+                // @ts-ignore
+                const index = items.findIndex(el => el[selectionKey] === selectionKeyOfRowData);
+                newItems[index] = newRowData;
+                return newItems
+            } else {
+                newItems[rowIndex] = newRowData;
+                return newItems
+            }
+
+        });
+        props.cellEditHandler!(e);
+    }
+
+    const stableColumnOrder = useDeepCompareMemoize(columnOrder, 'columnOrder');
+    const stableColumnStyle = useDeepCompareMemoize(columnStyle, 'columnStyle');
+    const stableEditableColumns = useDeepCompareMemoize(editableColumns, 'editableColumns');
+    const stableFrozenColumns = useDeepCompareMemoize(frozenColumns, 'frozenColumns');
+    const stableSortableColumns = useDeepCompareMemoize(sortableColumns, 'sortableColumns');
+    const stableIgnoreFilters = useDeepCompareMemoize(ignoreFilters, 'ignoreFilters');
+
+    const specialColumnKeys = useDeepCompareMemoize(Object.keys(specialColumns || {}), 'specialColumnKeys');
+
+    const columns = useMemo(() => {
+        if (!stableColumnOrder) return [];
+
+        const tempColumns = stableColumnOrder.map((cName: any) => {
+            const columnHeaderStyle = {
+                textAlign: 'center',
+                //@ts-ignore
+                ...(stableColumnStyle && stableColumnStyle[cName] ? stableColumnStyle[cName].header : {})
+            };
+            //@ts-ignore
+            const columnBodyStyle = stableColumnStyle && stableColumnStyle[cName]
+                //@ts-ignore
+                ? stableColumnStyle[cName].body
+                : {textAlign: props.textAlign || 'center'};
+
+            return (
+                <Column
+                    key={cName}
+                    field={cName}
+                    headerStyle={columnHeaderStyle}
+                    bodyStyle={columnBodyStyle}
+                    frozen={stableFrozenColumns?.includes(cName)}
+                    alignFrozen="right"
+                    rowEditor={cName === 'operations' && props.rowEditHandler !== undefined}
+                    sortable={stableSortableColumns?.includes(cName)}
+                    showClearButton={false}
+                    showFilterMenu={false}
+                    filterField={cName}
+                    filter={props.showFilters && !stableIgnoreFilters?.includes(cName)}
+                    filterHeaderStyle={{textAlign: 'center'}}
+                    onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
+                    header={(options) => {
+                        //@ts-ignore
+                        const customHeader: any = latestProps.current.columnHeaderTemplate?.[cName];
+                        if (customHeader) {
+                            return typeof customHeader === 'function' ? customHeader(options) : customHeader;
+                        }
+                        return getColumnHeaderTranslated(cName);
+                    }}
+                    body={(rowData: T, columnOptions) => {
+                        //@ts-ignore
+                        const template: any = latestProps.current.columnTemplate?.[cName];
+                        return template ? template(rowData, columnOptions) : undefined;
+                    }}
+                    editor={(options) => {
+                        //@ts-ignore
+                        const customEditor: any = latestProps.current.specialEditors?.[cName];
+                        if (customEditor) return customEditor(options);
+                        return (editMode && stableEditableColumns?.includes(cName)) ? textEditor(options, cName) : undefined;
+                    }}
+                    filterElement={(options) => {
+                        //@ts-ignore
+                        const customFilter: any = latestProps.current.specialFilters?.[cName];
+                        return customFilter ? customFilter(options, cName) : defaultFilter(options, cName);
+                    }}
+                />
+            );
+        });
+        // @ts-ignore
+        if (props.rowEditHandler !== undefined && !stableColumnOrder.includes('operations')) {
+            tempColumns.push(
+                <Column key="rowEditor" rowEditor headerStyle={{width: '7rem'}} bodyStyle={{textAlign: 'center'}}/>
+            );
+        }
+
+        if (props.expandable) {
+            tempColumns.unshift(<Column key="expander" expander headerStyle={{width: '3em'}}/>);
+        }
+
+        if (props.selectionMode === "checkbox") {
+            tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
+        }
+
+        specialColumnKeys.forEach(cName => {
+            const col = (
+                <Column
+                    key={cName}
+                    field={cName}
+                    header={f({id: cName})}
+                    body={(rowData: any) => {
+                        // Отново четем директно от latestProps в момента на рендиране на клетката
+                        const specialColDef = latestProps.current.specialColumns![cName as K];
+                        if (!specialColDef) return null;
+                        return React.cloneElement(specialColDef.element, {
+                            onClick: () => specialColDef.handler(rowData)
+                        });
+                    }}
+                />
+            );
+
+            if (latestProps.current.specialColumns![cName as K]?.atStart) {
+                tempColumns.unshift(col);
+            } else {
+                tempColumns.push(col);
+            }
+        });
+
+        return tempColumns;
+
+    }, [
+        stableColumnOrder,
+        stableColumnStyle,
+        stableEditableColumns,
+        stableFrozenColumns,
+        stableSortableColumns,
+        stableIgnoreFilters,
+        specialColumnKeys,
+        props.showFilters,
+        props.expandable,
+        props.selectionMode,
+        props.textAlign,
+        props.rebuildColumns,
+        editMode
+    ]);
 
     const onPage = (event: DataTableStateEvent) => {
         setSelectedRowIndex(event.first)
+        setPage(event.page);
         focusRow(true);
         if (props.fetchData) {
             if (event.first === first && event.rows === rows) return;
@@ -713,6 +777,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                 //'fetchData' should return new items.
                 props.fetchData({offset: event.first, limit: event.rows, filters}).then((response) => {
                     setItems(response.rows);
+                    //@ts-ignore
                     setTotalRecords(response.totalRecords);
                     setLoading(false);
                 });
@@ -725,7 +790,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     }
 
     const getHeader = () => {
-        return <div className="export-buttons" style={{display: "flex", justifyContent: "space-between"}}>
+        return <div className="export-buttons" style={{display: "flex", gap: "0.5rem", flexWrap: "wrap"}}>
             {(props.isMobile !== undefined && props.isMobile && props.mobileDataTemplate) ?
                 <Button icon={'pi pi-filter'} label={f({id: 'filters'})} className={"mb-3"}
                         onClick={() => setMobileFiltersDialogShown(true)}/> :
@@ -778,89 +843,78 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
         if(!e.value) return;
 
         const page = Math.floor(first / rows) + 1;
-
-        let newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage);
+        let newSelectedRowsPerPage = cloneDeep(selectedRowsPerPage) || {};
         let itemUnselected = false;
 
-        //Handle selection of all/none of the records
-        if (e.type === "all" || e.type === "checkbox") {
-            //Handle unselecting all records
-            if (e.value.length === 0) {
-                newSelectedRowsPerPage = [];
-            }
-            //Handle selecting all records
-            else {
-                let numberOfRecords = e.value.length;
-                let currentPage = 1;
-                do {
-                    newSelectedRowsPerPage[currentPage] = e.value.splice(0, rows);
-                    numberOfRecords -= rows;
-                    currentPage++;
-                }
-                while(numberOfRecords > 0)
-            }
-        } else if (Array.isArray(e.value)) {
-            //Add elems
-            for (let row of e.value) {
-                if (Object.values(newSelectedRowsPerPage).flat().find((el: any) => el[selectionKey!] === row[selectionKey!]) === undefined) {
-                    if (newSelectedRowsPerPage[page] === undefined)
-                        newSelectedRowsPerPage[page] = [];
-                    newSelectedRowsPerPage[page].push(row);
-                }
-            }
+        // Handle all array-based selections (Select All, Checkbox, Multiple Row Select)
+        if (Array.isArray(e.value)) {
 
-            //Remove elems
-            const currPageElements = newSelectedRowsPerPage[page] || [];
+            // INTERSECTION LOGIC: Isolate the update entirely to the current page.
+            // We filter the current page's `items` to see exactly which ones are present in `e.value`.
+            // This ensures we never accidentally touch or overwrite other pages.
             const newElementsForPage = [];
-            for (let row of currPageElements) {
-                if (e.value.find((el: any) => el[selectionKey!] === row[selectionKey!]) !== undefined)
-                    newElementsForPage.push(row)
+            for (let item of items) {
+                const isSelected = e.value.some(
+                    (el: any) => el[props.selectionKey!] === item[props.selectionKey!]
+                );
+
+                if (isSelected) {
+                    newElementsForPage.push(item);
+                }
             }
 
-            if(newSelectedRowsPerPage[page] !== undefined && newSelectedRowsPerPage[page].length !== newElementsForPage.length)
-                itemUnselected = true;
+            const currPageElements = newSelectedRowsPerPage[page] || [];
 
+            // If the current page previously had more elements selected, an item was unselected
+            if (currPageElements.length > newElementsForPage.length) {
+                itemUnselected = true;
+            }
+
+            // Strictly update ONLY the current page's slot in the dictionary
             newSelectedRowsPerPage[page] = newElementsForPage;
-        } else if (!Array.isArray(e.value)) {
-            if (props.setSelected) props.setSelected(e.value, false)
-            if (selectionHandler) selectionHandler(e);
+
+        } else {
+            // Handle single (non-array) selection (e.g., single row click without multiple mode)
+            if (props.setSelected) props.setSelected(e.value, false);
+            if (props.selectionHandler) props.selectionHandler(e);
+
             if (Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
                 for (let i = 0; i < items.length; i++) {
-                    if (items[i][selectionKey!] === e.value[selectionKey!]) {
-                        setSelectedRowIndex((props.fetchData !== undefined && props.fetchData !== null) ? first + i : i);
-                        break;
-                    }
-                }
-            }
-            setSelectedRow(e.value);
-            return;
-        } else {
-            //In order to prevent switching page to the page that corresponds to the last selected row when using multiple select
-            //We only will set selectedRowIndex if we do not unselect item
-            if(!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0){
-                for (let i = 0; i < items.length; i++) {
-                    if (e.value.length === 0) {
-                        setSelectedRowIndex(0);
-                        break;
-                    }
-                    if (items[i][selectionKey!] === e.value.slice(-1)[0][selectionKey!]) {
+                    if (items[i][props.selectionKey!] === e.value[props.selectionKey!]) {
                         setSelectedRowIndex(props.fetchData ? first + i : i);
                         break;
                     }
                 }
             }
-
+            setSelectedRow(e.value);
+            return; // Exit early for single selections
         }
 
-        //@ts-ignore
-        const newSelectedRow = Object.values(newSelectedRowsPerPage).flat();
+        // Multiple Selection index post-processing
+        if (!itemUnselected && Array.isArray(multiSortMeta) && multiSortMeta.length === 0) {
+            for (let i = 0; i < items.length; i++) {
+                if (e.value.length === 0) {
+                    setSelectedRowIndex(0);
+                    break;
+                }
+                if (items[i][props.selectionKey!] === e.value.slice(-1)[0][props.selectionKey!]) {
+                    setSelectedRowIndex(props.fetchData ? first + i : i);
+                    break;
+                }
+            }
+        }
 
-        setSelectedRowPerPage(newSelectedRowsPerPage)
+        // Flatten dictionary and update states
+        const newSelectedRow = Object.values(newSelectedRowsPerPage as T[]).flat();
+
+        setSelectedRowPerPage(newSelectedRowsPerPage);
         setSelectedRow(newSelectedRow);
 
-        if (selectionHandler) selectionHandler({value: newSelectedRow});
-        if (props.setSelected) props.setSelected(Object.values(newSelectedRowsPerPage).flat(), false);
+        if (selectionHandler) selectionHandler({ value: newSelectedRow });
+        if (setSelected) props.setSelected(newSelectedRow, false);
     };
+
+
 
     const onRowEditComplete = (e: DataTableRowEditCompleteEvent) => {
         let newItems: T[] = [...items];
@@ -872,24 +926,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
         props.rowEditHandler!(e);
     }
 
-    const onCellEditComplete = (e: ColumnEvent) => {
-        const {rowData, newRowData, rowIndex} = e;
 
-        setItems((prevState) => {
-            const newItems = cloneDeep(prevState);
-            if (selectionKey) {
-                const selectionKeyOfRowData = rowData[selectionKey];
-                const index = items.findIndex(el => el[selectionKey] === selectionKeyOfRowData);
-                newItems[index] = newRowData;
-                return newItems
-            } else {
-                newItems[rowIndex] = newRowData;
-                return newItems
-            }
-
-        });
-        props.cellEditHandler!(e);
-    }
 
     const skeletonTemplate = () => {
         return <Skeleton></Skeleton>
@@ -906,11 +943,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
         return res;
     }
 
-    const getColumnHeaderTranslated = (cName: string) => {
-        if (props.specialLabels && props.specialLabels[cName])
-            return f({id: props.specialLabels[cName]})
-        return f({id: cName});
-    }
 
     const setRef = (ref: DataTable<T[]>) => {
         if (props.setDtRef)
@@ -970,84 +1002,85 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                                          appendTo={document.body}/> : null}
                         <Tooltip target=".export-buttons>button" position="bottom"/>
 
-                    <DataTable
-                        rowHover
-                        //editMode={"row"} rowEditorValidator={props.onRowEditorValidator} onRowEditInit={props.onRowEditInit} onRowEditSave={props.onRowEditSave} onRowEditCancel={props.onRowEditCancel}
-                        //footerColumnGroup={props.subTotals ? buildSubTotals() : null}
-                        ref={setRef}
-                        value={items}
-                        filters={filters}
-                        first={first}
-                        rows={rows}
-                        totalRecords={totalRecords}
-                        lazy={props.fetchData !== undefined}
-                        paginator={showPaginator && !virtualScroll}
-                        footer={props.footerTemplate || null}
-                        onFilter={handleFilter}
-                        onSort={handleSort}
-                        dataKey={selectionKey as string || "id"}
-                        className="p-datatable-sm p-datatable-striped"
-                        filterDisplay={showFilters ? 'row' : undefined}
-                        responsiveLayout={'stack'}
-                        // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
-                        multiSortMeta={multiSortMeta}
-                        sortMode={'multiple'}
-                        cellSelection={undefined} // ✅ makes TS pick row-selection overload
-                        selectionMode={selectionMode || "single" as "multiple"}
-                        selection={selectedRow}
-                        onSelectionChange={handleSelection}
-                        tableStyle={{tableLayout: "auto"}}
-                        header={showHeader ? getHeader() : null}
-                        rowsPerPageOptions={paginatorOptions}
-                        editMode={editMode}
-                        onRowEditComplete={onRowEditComplete}
-                        scrollable={virtualScroll || props.frozenColumns !== undefined}
-                        scrollHeight={scrollHeight ? scrollHeight : undefined}
-                        virtualScrollerOptions={scrollHeight ? {itemSize: 32} : undefined}
-                        onPage={(e) => onPage(e)}
-                        loading={loading}
-                        onRowUnselect={onRowUnselect}
-                        onContextMenuSelectionChange={(e: any) => {
-                            //set{selectedRow: e.value});
-                            if (props.setSelected !== undefined && props.contextMenu) {
-                                if (selectionMode) {
-                                    props.setSelected([e.value], true);
-                                    setSelectedRow([e.value]);
-                                    const page = Math.floor(first / rows) + 1;
-                                    setSelectedRowPerPage({[page]: [e.value]});
-                                    for (let i = 0; i < items.length; i++) {
-                                        if (items[i][selectionKey!] === e.value[selectionKey!]) {
-                                            setSelectedRowIndex(props.fetchData ? first + i : i);
-                                            break;
+                        <DataTable
+                            rowHover
+                            //editMode={"row"} rowEditorValidator={props.onRowEditorValidator} onRowEditInit={props.onRowEditInit} onRowEditSave={props.onRowEditSave} onRowEditCancel={props.onRowEditCancel}
+                            //footerColumnGroup={props.subTotals ? buildSubTotals() : null}
+                            ref={setRef}
+                            value={items}
+                            filters={filters}
+                            first={first}
+                            rows={rows}
+                            totalRecords={totalRecords}
+                            lazy={props.fetchData !== undefined}
+                            paginator={showPaginator && !virtualScroll}
+                            footer={props.footerTemplate || null}
+                            onFilter={handleFilter}
+                            onSort={handleSort}
+                            responsiveLayout={'stack'}
+                            dataKey={props.selectionKey || "id"}
+                            className="p-datatable-sm p-datatable-striped"
+                            filterDisplay={props.showFilters ? 'row' : undefined}
+                            filterDelay={props.swr ? 700 : 300}
+                            // sortField={sortField} sortOrder={sortOrder} onSort={ (e : any) => {setLoading(true); setTimeout(() => {setSortField(e.sortField); setSortOrder(e.sortOrder)}, 0)}}
+                            multiSortMeta={multiSortMeta}
+                            sortMode={'multiple'}
+                            cellSelection={undefined} // ✅ makes TS pick row-selection overload
+                            selectionMode={["single", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
+                            selection={selectedRow}
+                            onSelectionChange={handleSelection}
+                            tableStyle={{tableLayout: "auto"}}
+                            header={showHeader ? getHeader() : null}
+                            rowsPerPageOptions={paginatorOptions}
+                            editMode={editMode}
+                            onRowEditComplete={onRowEditComplete}
+                            scrollable={virtualScroll || props.frozenColumns !== undefined}
+                            scrollHeight={scrollHeight ? scrollHeight : undefined}
+                            virtualScrollerOptions={scrollHeight ? {itemSize: 32} : undefined}
+                            onPage={(e) => onPage(e)}
+                            loading={loading}
+                            onRowUnselect={onRowUnselect}
+                            onContextMenuSelectionChange={(e: any) => {
+                                //set{selectedRow: e.value});
+                                if (props.setSelected !== undefined && props.contextMenu) {
+                                    if (['checkbox'].includes(selectionMode!)) {
+                                        props.setSelected([e.value], true);
+                                        setSelectedRow([e.value]);
+                                        const page = Math.floor(first / rows) + 1;
+                                        setSelectedRowPerPage({[page]: [e.value]});
+                                        for (let i = 0; i < items.length; i++) {
+                                            if (items[i][selectionKey!] === e.value[selectionKey!]) {
+                                                setSelectedRowIndex(props.fetchData ? first + i : i);
+                                                break;
+                                            }
                                         }
-                                    }
-                                } else {
-                                    props.setSelected(e.value, true);
-                                    setSelectedRow(e.value);
-                                    for (let i = 0; i < items.length; i++) {
-                                        if (items[i][selectionKey!] === e.value[selectionKey!]) {
-                                            setSelectedRowIndex(props.fetchData ? first + i : i);
-                                            break;
+                                    } else {
+                                        props.setSelected(e.value, true);
+                                        setSelectedRow(e.value);
+                                        for (let i = 0; i < items.length; i++) {
+                                            if (items[i][selectionKey!] === e.value[selectionKey!]) {
+                                                setSelectedRowIndex(props.fetchData ? first + i : i);
+                                                break;
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        }}
-                        onContextMenu={e => {
-                            //if(items[0].id !== null)
-                            if (props.contextMenu)
-                                cm.current!.show(e.originalEvent)
-                        }}
-                        {...props.dtProps}
-                    >
-                        {columns}
+                            }}
+                            onContextMenu={e => {
+                                //if(items[0].id !== null)
+                                if (props.contextMenu)
+                                    cm.current!.show(e.originalEvent)
+                            }}
+                            {...props.dtProps}
+                        >
+                            {columns}
 
                     </DataTable>
 
                 </div>
             </>
             :
-            <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={5} paginator={true}
+            <DataTable ref={setSkeletonDtRef} value={getFakeData()} rows={5} paginator={showPaginator}
                        className="p-datatable-striped">
                 {
                     columnOrder.map(column => <Column field={column} header={getColumnHeaderTranslated(column)}
