@@ -22,6 +22,7 @@ import {Skeleton} from "primereact/skeleton";
 import moment from 'moment';
 import {HeaderButton} from "./types";
 import {FilterMatchMode} from "primereact/api";
+import {ObjectUtils} from "primereact/utils";
 import {DataViewProps} from "primereact/dataview";
 import {Dialog} from "primereact/dialog";
 import {MobileFilters} from "./mobile/MobileFilters";
@@ -637,6 +638,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(rawPro
     const stableIgnoreFilters = useDeepCompareMemoize(ignoreFilters, 'ignoreFilters');
 
     const specialColumnKeys = useDeepCompareMemoize(Object.keys(specialColumns || {}), 'specialColumnKeys');
+    const specialEditorKeys = useDeepCompareMemoize(Object.keys(specialEditors || {}), 'specialEditorKeys');
 
     const columns = useMemo(() => {
         if (!stableColumnOrder) return [];
@@ -680,14 +682,15 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(rawPro
                     body={(rowData: T, columnOptions) => {
                         //@ts-ignore
                         const template: any = latestProps.current.columnTemplate?.[cName];
-                        return template ? template(rowData, columnOptions) : undefined;
+                        // PrimeReact renders only what `body` returns, so fall back to the field value
+                        return template ? template(rowData, columnOptions) : ObjectUtils.resolveFieldData(rowData, cName);
                     }}
-                    editor={(options) => {
+                    // Only pass `editor` when the column has one: PrimeReact treats any column with an editor as editable
+                    editor={(specialEditorKeys.includes(cName) || (editMode && stableEditableColumns?.includes(cName))) ? (options) => {
                         //@ts-ignore
                         const customEditor: any = latestProps.current.specialEditors?.[cName];
-                        if (customEditor) return customEditor(options);
-                        return (editMode && stableEditableColumns?.includes(cName)) ? textEditor(options, cName) : undefined;
-                    }}
+                        return customEditor ? customEditor(options) : textEditor(options, cName);
+                    } : undefined}
                     filterElement={(options) => {
                         //@ts-ignore
                         const customFilter: any = latestProps.current.specialFilters?.[cName];
@@ -745,6 +748,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(rawPro
         stableSortableColumns,
         stableIgnoreFilters,
         specialColumnKeys,
+        specialEditorKeys,
         props.showFilters,
         props.expandable,
         props.selectionMode,
