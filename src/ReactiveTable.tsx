@@ -603,10 +603,8 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>(rawPro
     }
 
     const getColumnHeaderTranslated = (cName: string) => {
-        // @ts-ignore
-        if (specialLabels && specialLabels[cName])
-            // @ts-ignore
-            return f({id: specialLabels[cName]})
+        if (props.specialLabels && props.specialLabels[cName])
+            return f({id: props.specialLabels[cName]})
         return f({id: cName});
     }
 
