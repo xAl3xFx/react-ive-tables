@@ -1,5 +1,5 @@
 import {useIntl} from "react-intl";
-import React, {ReactNode, useEffect, useRef, useState} from "react";
+import React, {ReactNode, useEffect, useMemo, useRef, useState} from "react";
 import {Column, ColumnBodyOptions, ColumnEvent, ColumnHeaderOptions} from "primereact/column";
 import {
     DataTable,
@@ -84,7 +84,7 @@ interface Props<T extends DataTableValue, K extends string> {
     specialColumns?: {                                                          // Used for special columns that are not included in the `data` prop. The key is string used as 'cName' and the value is the JSX.Element, click handler and boolean specifying
         [key in K]?:                                                            // if the column should be put at the beginning or at the end.
         {
-            element: React.ReactNode,
+            element: React.ReactElement<any>,
             handler: (rowData: T) => void,
             atStart: boolean
         }
@@ -154,37 +154,37 @@ function useDeepCompareMemoize<T>(value: T, propName: string): T {
 }
 
 
-export const ReactiveTable = <T extends DataTableValue, K extends string>({
-                                                                              showFilters = true,
-                                                                              ignoreFilters = [],
-                                                                              showHeader = false,
-                                                                              selectionMode = undefined,
-                                                                              selectionHandler = () => 0,
-                                                                              onRowUnselect = undefined,
-                                                                              columnTemplate = {},
-                                                                              columnOrder = undefined,
-                                                                              selectionKey = "id",
-                                                                              formatDateToLocal = true,
-                                                                              headerButtons = [],
-                                                                              rightHeaderButtons = [],
-                                                                              sortableColumns = [],
-                                                                              specialEditors = {},
-                                                                              specialColumns = {},
-                                                                              specialFilters = {},
-                                                                              virtualScroll = false,
-                                                                              scrollHeight = undefined,
-                                                                              showSkeleton = true,
-                                                                              disableArrowKeys = false,
-                                                                              forOverlay = false,
-                                                                              editableColumns = [],
-                                                                              showPaginator = true,
-                                                                              initialFilters = {},
-                                                                              swr = false,
-                                                                              ...props
-                                                                          }: Props<T, K>) => {
+const defaultProps = {
+    showFilters: true,
+    ignoreFilters: [],
+    showHeader: false,
+    selectionHandler: () => 0,
+    columnTemplate: {},
+    selectionKey: "id",
+    formatDateToLocal: true,
+    headerButtons: [],
+    rightHeaderButtons: [],
+    sortableColumns: [],
+    specialEditors: {},
+    specialColumns: {},
+    specialFilters: {},
+    virtualScroll: false,
+    showSkeleton: true,
+    disableArrowKeys: false,
+    forOverlay: false,
+    editableColumns: [],
+    showPaginator: true,
+    initialFilters: {},
+    swr: false,
+};
+
+export const ReactiveTable = <T extends DataTableValue, K extends string>(rawProps: Props<T, K>) => {
+    // Explicit `undefined` props must not override defaults (same as destructuring defaults did).
+    const props = {...defaultProps, ...Object.fromEntries(Object.entries(rawProps).filter(([, v]) => v !== undefined))} as typeof defaultProps & Props<T, K>;
+    const {showFilters, ignoreFilters, showHeader, selectionMode, selectionHandler, onRowUnselect, columnTemplate, columnOrder, selectionKey, formatDateToLocal, headerButtons, rightHeaderButtons, sortableColumns, specialEditors, specialColumns, specialFilters, virtualScroll, scrollHeight, showSkeleton, disableArrowKeys, forOverlay, editableColumns, showPaginator, initialFilters, swr} = props;
     const getDefaultFilters = () => {
-        if (!props.columnOrder) return {};
-        return props.columnOrder.reduce((acc: any, el) => {
+        if (!columnOrder) return {};
+        return columnOrder.reduce((acc: any, el) => {
             let matchMode = "contains";
             //@ts-ignore
             if (props.filtersMatchMode && props.filtersMatchMode[el]) matchMode = props.filtersMatchMode[el];
@@ -198,8 +198,8 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     const [originalItems, setOriginalItems] = useState<any>([]);
     const [filters, setFilters] = useState<any>(() => {
         const defaults = getDefaultFilters();
-        if (props.initialFilters) {
-            Object.keys(props.initialFilters).forEach(key => {
+        if (initialFilters) {
+            Object.keys(initialFilters).forEach(key => {
                 if (defaults[key]) {
                     //@ts-ignore
                     defaults[key].value = props.initialFilters[key];
@@ -228,10 +228,6 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     const [areFiltersInited, setAreFiltersInited] = useState(false);
     const [paginatorOptions, setPaginatorOptions] = useState([20, 30, 50]);
     const [refresher, setRefresher] = useState<number>();
-    const cm = useRef<any>(undefined);
-    const dt = useRef<any>(undefined);
-    const skeletonDtRef = useRef<any>(undefined);
-    const filterRef = useRef<any>(undefined);
 
     const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([]);
     const [mobileFiltersDialogShown, setMobileFiltersDialogShown] = useState(false);
@@ -241,10 +237,10 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     latestProps.current = props;
 
 
-    const cm = useRef<any>();
-    const dt = useRef<any>();
-    const skeletonDtRef = useRef<any>();
-    const filterRef = useRef<any>();
+    const cm = useRef<any>(null);
+    const dt = useRef<any>(null);
+    const skeletonDtRef = useRef<any>(null);
+    const filterRef = useRef<any>(null);
     const editMode = props.cellEditHandler === undefined ? (props.rowEditHandler === undefined ? undefined : "row") : "cell";
 
     // const doubleClickHandler = useCallback((e:any) => {
@@ -449,7 +445,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                 }
             }
             if (selectedRow)
-                setSelectedRow([...selectedRow, ...elements]);
+                setSelectedRow([...(selectedRow as T[]), ...elements]);
             else
                 setSelectedRow([...elements]);
             if (selectedRowIndex !== undefined)
@@ -636,9 +632,9 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
     }
 
     const stableColumnOrder = useDeepCompareMemoize(columnOrder, 'columnOrder');
-    const stableColumnStyle = useDeepCompareMemoize(columnStyle, 'columnStyle');
+    const stableColumnStyle = useDeepCompareMemoize(props.columnStyle, 'columnStyle');
     const stableEditableColumns = useDeepCompareMemoize(editableColumns, 'editableColumns');
-    const stableFrozenColumns = useDeepCompareMemoize(frozenColumns, 'frozenColumns');
+    const stableFrozenColumns = useDeepCompareMemoize(props.frozenColumns, 'frozenColumns');
     const stableSortableColumns = useDeepCompareMemoize(sortableColumns, 'sortableColumns');
     const stableIgnoreFilters = useDeepCompareMemoize(ignoreFilters, 'ignoreFilters');
 
@@ -672,7 +668,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                     showClearButton={false}
                     showFilterMenu={false}
                     filterField={cName}
-                    filter={props.showFilters && !stableIgnoreFilters?.includes(cName)}
+                    filter={showFilters && !stableIgnoreFilters?.includes(cName)}
                     filterHeaderStyle={{textAlign: 'center'}}
                     onCellEditComplete={props.cellEditHandler ? onCellEditComplete : undefined}
                     header={(options) => {
@@ -713,7 +709,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
             tempColumns.unshift(<Column key="expander" expander headerStyle={{width: '3em'}}/>);
         }
 
-        if (props.selectionMode === "checkbox") {
+        if (selectionMode === "checkbox") {
             tempColumns.unshift(<Column key="checkbox" selectionMode="multiple" headerStyle={{width: '3em'}}/>);
         }
 
@@ -905,13 +901,13 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
         }
 
         // Flatten dictionary and update states
-        const newSelectedRow = Object.values(newSelectedRowsPerPage as T[]).flat();
+        const newSelectedRow = Object.values(newSelectedRowsPerPage as T[]).flat() as T[];
 
         setSelectedRowPerPage(newSelectedRowsPerPage);
         setSelectedRow(newSelectedRow);
 
         if (selectionHandler) selectionHandler({ value: newSelectedRow });
-        if (setSelected) props.setSelected(newSelectedRow, false);
+        if (props.setSelected) props.setSelected(newSelectedRow, false);
     };
 
 
@@ -1002,7 +998,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                                          appendTo={document.body}/> : null}
                         <Tooltip target=".export-buttons>button" position="bottom"/>
 
-                        <DataTable
+                        <DataTable<T[]>
                             rowHover
                             //editMode={"row"} rowEditorValidator={props.onRowEditorValidator} onRowEditInit={props.onRowEditInit} onRowEditSave={props.onRowEditSave} onRowEditCancel={props.onRowEditCancel}
                             //footerColumnGroup={props.subTotals ? buildSubTotals() : null}
@@ -1027,7 +1023,7 @@ export const ReactiveTable = <T extends DataTableValue, K extends string>({
                             sortMode={'multiple'}
                             cellSelection={undefined} // ✅ makes TS pick row-selection overload
                             selectionMode={["single", 'checkbox'].includes(props.selectionMode!) ? props.selectionMode : undefined}
-                            selection={selectedRow}
+                            selection={selectedRow as any} // selectionMode is dynamic, PrimeReact typings only accept one fixed mode
                             onSelectionChange={handleSelection}
                             tableStyle={{tableLayout: "auto"}}
                             header={showHeader ? getHeader() : null}
