@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="ReactiveTable - optimization with memoize and removing a lot of useEffects">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReactiveTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReactiveTable.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="df4175c7-ca74-4e21-9261-cc0f572f811d" name="Changes" comment="Added Claude.md" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,61 +47,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0000000000000002" />
-      <entry key="S5" value="1.0000013659079723" />
-      <entry key="S10" value="1.002683661072864" />
-      <entry key="S30" value="1.516485074002959" />
-      <entry key="S60" value="3.01789355170175" />
-      <entry key="M2" value="5.160680299063072" />
-      <entry key="M5" value="8.160881680036931" />
-      <entry key="M10" value="10.059979291350428" />
-      <entry key="M15" value="10.893254673692827" />
-      <entry key="M30" value="11.863298336328025" />
-      <entry key="H1" value="12.408691027417829" />
-      <entry key="H2" value="12.698314912183188" />
-      <entry key="H4" value="12.847611708440224" />
-      <entry key="D1" value="12.974383947595223" />
-      <entry key="W1" value="12.996335181253787" />
+      <entry key="MS100" value="1.0000001781707808" />
+      <entry key="MS500" value="1.0750262362411707" />
+      <entry key="S2" value="2.3894147677084927" />
+      <entry key="S5" value="3.6070362558435782" />
+      <entry key="S10" value="4.30646559221366" />
+      <entry key="S30" value="7.963132563048201" />
+      <entry key="S60" value="13.969976789935123" />
+      <entry key="M2" value="21.614037658138063" />
+      <entry key="M5" value="31.756059168784848" />
+      <entry key="M10" value="38.57386313889485" />
+      <entry key="M15" value="41.82531045857661" />
+      <entry key="M30" value="45.86703593654602" />
+      <entry key="H1" value="48.27367208821998" />
+      <entry key="H2" value="49.593445796410684" />
+      <entry key="H4" value="50.28541076675544" />
+      <entry key="D1" value="50.87928942897722" />
+      <entry key="W1" value="50.98271559586943" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="0.0" />
-      <entry key="S30" value="0.0" />
-      <entry key="S60" value="0.0" />
-      <entry key="M2" value="0.0" />
-      <entry key="M5" value="0.0" />
-      <entry key="M10" value="0.0" />
-      <entry key="M15" value="0.0" />
-      <entry key="M30" value="0.0" />
-      <entry key="H1" value="0.0" />
-      <entry key="H2" value="0.0" />
-      <entry key="H4" value="0.0" />
-      <entry key="D1" value="0.0" />
-      <entry key="W1" value="0.0" />
+      <entry key="MS100" value="7.7877473E-317" />
+      <entry key="MS500" value="6.0018117668001614E-64" />
+      <entry key="S2" value="1.5652027153754279E-16" />
+      <entry key="S5" value="4.7624259619010747E-7" />
+      <entry key="S10" value="6.901033228365939E-4" />
+      <entry key="S30" value="0.08836996971898611" />
+      <entry key="S60" value="0.2972708692741117" />
+      <entry key="M2" value="0.5452255214808928" />
+      <entry key="M5" value="0.7845677830987186" />
+      <entry key="M10" value="0.8857583096413599" />
+      <entry key="M15" value="0.922309800599404" />
+      <entry key="M30" value="0.9603696166577768" />
+      <entry key="H1" value="0.9799844981721788" />
+      <entry key="H2" value="0.9899416640247947" />
+      <entry key="H4" value="0.9949581217442234" />
+      <entry key="D1" value="0.9991579161836497" />
+      <entry key="W1" value="0.9998796588747038" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.27739236801696127" />
-      <entry key="MS500" value="0.7737824967711949" />
-      <entry key="S2" value="0.9378960901520147" />
-      <entry key="S5" value="0.9746809309308642" />
-      <entry key="S10" value="0.9898746264728956" />
-      <entry key="S30" value="1.5075581494977621" />
-      <entry key="S60" value="3.00645712796387" />
-      <entry key="M2" value="5.150066892808887" />
-      <entry key="M5" value="8.154236360511867" />
-      <entry key="M10" value="10.056004503071607" />
-      <entry key="M15" value="10.89042668156912" />
-      <entry key="M30" value="11.861784455388461" />
-      <entry key="H1" value="12.407906782539365" />
-      <entry key="H2" value="12.697915641545853" />
-      <entry key="H4" value="12.847410243726388" />
-      <entry key="D1" value="12.974350112364512" />
-      <entry key="W1" value="12.99633034128757" />
+      <entry key="MS100" value="2.444179437799298E-7" />
+      <entry key="MS500" value="0.1074755799241319" />
+      <entry key="S2" value="1.8112861523895878" />
+      <entry key="S5" value="3.3146614914604817" />
+      <entry key="S10" value="4.148141369608436" />
+      <entry key="S30" value="7.992566122573882" />
+      <entry key="S60" value="14.233450223974792" />
+      <entry key="M2" value="22.138652241583916" />
+      <entry key="M5" value="32.529088065728104" />
+      <entry key="M10" value="39.4522617367838" />
+      <entry key="M15" value="42.74215079946259" />
+      <entry key="M30" value="46.8243053121319" />
+      <entry key="H1" value="49.25199480601958" />
+      <entry key="H2" value="50.582525624075444" />
+      <entry key="H4" value="51.27992981869358" />
+      <entry key="D1" value="51.8783729976326" />
+      <entry key="W1" value="51.98258460453849" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -621,7 +618,7 @@
       <option name="project" value="LOCAL" />
       <updated>1698075026914</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -652,8 +649,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="ReactiveTable -&gt; Removed showTable from condition for initialFilters initialization." />
-    <MESSAGE value="ReactiveTable.tsx -&gt; Risky optimization which doesn't call props.fetchData on the first change of filters when using swr." />
     <MESSAGE value="Addition to previous commit" />
     <MESSAGE value="Fixed pagination for swr in ReactiveTable.tsx" />
     <MESSAGE value="ReactiveTable.tsx -&gt; showTable when data is not undefined when using swr." />
@@ -677,6 +672,8 @@
     <MESSAGE value="Updated git ignore" />
     <MESSAGE value="Added the example project back into the library. Handled default props change -&gt; default params as ES6" />
     <MESSAGE value="RightHeaderButtons - added ? on the map" />
-    <option name="LAST_COMMIT_MESSAGE" value="RightHeaderButtons - added ? on the map" />
+    <MESSAGE value="ReactiveTable - merge v1 into v2" />
+    <MESSAGE value="Added Claude.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Claude.md" />
   </component>
 </project>
